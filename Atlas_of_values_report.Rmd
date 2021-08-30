@@ -1,0 +1,31 @@
+---
+title: "Atlas of Values"
+author: "Joy A. Kumagai"
+date: "8/30/2021"
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
+# Creation of the Corpus
+
+# Georeferencing the Corpus
+
+# Indicator Analysis 
+## Selection of Indicators
+### IPBES Core Indicators
+### Other Indicators
+
+## Dataset Compilation
+
+## Trends Analysis Per Indicator
+
+## Pearson Correlations 
