@@ -1,19 +1,22 @@
 ---
 title: "Atlas of Values"
-author: "Joy A. Kumagai"
+subtitle: Associated with the IPBES assessment on the diverse values and valuation of nature and its contributiosn to people 
+author: "Aidin Niamir and Joy A. Kumagai"
 date: "8/30/2021"
 output: 
   html_document:
+    theme: sandstone
     number_sections: true
     toc: true
     toc_float: true
+    code_folding: show
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Overview
+# Overview {.unnumbered}
 
 # Creation of the Corpus
 
@@ -26,6 +29,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Dataset Compilation
 
-## Trends Analysis Per Indicator
+## Trends Analysis Per Indicator {.tabset .tabset-pills}
+### Indicator 1 {-}
+### Indicator 2 {-}
+### Indicator 3 {-}
+### Indicator 4 {-}
+### Indicator 5 {-}
 
 ## Pearson Correlations 
