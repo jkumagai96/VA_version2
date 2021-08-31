@@ -18,13 +18,32 @@ library(tidyverse)
 
 # Overview {.unnumbered}
 
+The aim was to prepare a spatio-temporal representation of valuation studies related to biodiversity and ecosystem services and ... . 
+
 # Creation of the Corpus
 
 # Georeferencing the Corpus
+[Explanation of why we chose to do this]
 
+The input data we used are the following:
+- Bib file downloaded from Web of Science 
+- ISO 3166-1 alpha-3 country codes (where -- need link!)
+- IPBES regional and subregional area dataset (https://doi.org/10.5281/zenodo.3923633)
+
+
+The python code used to georeference the corpus can be found [here](https://github.com/ellentatia/Pilot_case2). An overview of the process is provided in the follwoing schematic. 
 ```{r overview-fig, fig.align = 'center', out.width="75%", fig.cap = "Overview of the process of Georeferencing the corpus of valuation studies"}
 knitr::include_graphics("pilot2.svg")
 ```
+
+## Density of Studies  
+
+To understand the density of where studies were conducted, a regular expression was used identify country names within the title, abstract and keywords of each paper. SENSITIVITY ANALYSIS? 
+
+## Density of Institutes 
+
+Using a similar approach, a regular expression was used to identify country names within the affiliations, acknowledgements, or country names of each paper as a proxy for funding institutes. 
+
 
 # Indicator Analysis 
 
