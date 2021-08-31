@@ -23,6 +23,9 @@ knitr::opts_chunk$set(echo = TRUE)
 # Georeferencing the Corpus
 
 # Indicator Analysis 
+
+The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were used alongside a chosen set of other relevant indicators to understand geographic trends between the density of studies and density of institutes. 
+
 ## Selection of Indicators
 ### IPBES Core Indicators
 ### Other Indicators

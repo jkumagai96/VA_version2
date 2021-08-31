@@ -49,6 +49,6 @@ DOI: NA
 Aidin gave it to me 
 
 ### Core Indicators Data
-Date:
-Website:
-DOI: 
+Date: 2021.08.31
+Website: https://doi.org/10.5281/zenodo.4439411
+DOI: 10.5281/zenodo.4439411 
