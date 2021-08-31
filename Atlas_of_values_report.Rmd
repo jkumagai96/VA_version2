@@ -14,6 +14,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 # Overview {.unnumbered}
@@ -27,7 +28,99 @@ knitr::opts_chunk$set(echo = TRUE)
 The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were used alongside a chosen set of other relevant indicators to understand geographic trends between the density of studies and density of institutes. 
 
 ## Selection of Indicators
-### IPBES Core Indicators
+### IPBES Core Indicators 
+
+We used all the most recent year of the IPBES Core Indicators available within the dataset except for two indicators, Countries/Regions with Active NBSAP and Category 1 nations in CTIES, as these are binary in the dataset and would not be compatible with the following analysis. We selected a specific category from the indicators with multiple categories. For example, for the indicator "Area of forest production under FSC and PEFC certification" we chose the FSC certification area and not the PEFC certification area. 
+
+Here is the table of all of the IPBES Core Indicators used, the category selected, the year the data is from, and the number assigned to them. 
+
+```{r, echo = F}
+Name <- c("Area of forest production under FSC and PEFC certification",
+          "Biodiversity Habitat Index",
+          "Biodiversity Intactness Index",
+          "Biocapacity per capita",
+          "Ecological Footprint per capita",
+          "Forest area",
+          "Water Footprint",
+          "Inland Fishery Production",
+          "Region-based Marine Trophic Index",
+          "Nitrogen + Phosphate Fertilizers",
+          "Nitrogen Use Efficiency (%)",
+          "Percentage and total area covered by protected areas",
+          "Percentage of undernourished people",
+          "Proportion of local breeds, classified as being at risk, not-at-risk or unknown level of risk of extinction",
+          "PA of Key Biodiversity Areas Coverage (%)",
+          "Protected area management effectiveness",
+          "Protected Area Connectedness Index",
+          "Species Habitat Index",
+          "Species Protection Index (%)",
+          "Species Status Information Index",
+          "Total Wood Removals (roundwood, m3)",
+          "Trends in forest extent (tree cover)",
+          "Nitrogen Deposition Trends (kg N/ha/yr)",
+          "Trends in Pesticides Use")
+
+Category <- c("FSC_area", 
+              "Average",
+              "Value",
+              "Value - Total",
+              "Value - Total",
+              "Forest area (1000ha)",
+              "Water Footprint - Total (Mm3/y)",
+              "Capture",
+              "1950",
+              "N total nutrients - Consumption in nutrients",
+              "Nitrogen Use Efficiency (%)",
+              "Terrestrial - Protected Area (%)",
+              "Prevalence of undernourishment (%) (3-year average)",
+              "At Risk of Extinction",
+              "Estimate",
+              "PA Assessed on Management Effectiveness (%)",
+              "Protected Area Connectedness Index",
+              "Species Habitat Index",
+              "Species Protection Index (%)",
+              "Value",
+              "Total",
+              "Percentage of Tree Cover Loss",
+              "Nitrogen Deposition Trends (kg N/ha/yr)",
+              "Use of pesticides (3-year average)")
+
+Year <- c(2016, 
+          2014,
+          2005,
+          2012,
+          2012,
+          2015,
+          2013,
+          2015,
+          2014,
+          2014,
+          2009,
+          2017,
+          2015,
+          2016,
+          2016,
+          2015,
+          2012,
+          2014,
+          2014,
+          2014,
+          2014,
+          2015,
+          2030,
+          2013)
+
+Number <- c(1:11, 13, 15:26)
+
+indicator_table <- data.frame(Name, Category, Year, Number)
+
+indicator_table %>% 
+  knitr::kable(caption = "Table 1: Details of the IPBES Core Indicators Used") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
+```
+
+There were a few instances of duplicated values which were double check_ed with the original dataset and the erranous value removed. Examples include having two values for USA due to the separation of Hawaii in the original dataset. In these cases Hawaii was removed and the value referring to the rest of the states of the country was used instead. 
+
 ### Other Indicators
 
 ## Dataset Compilation

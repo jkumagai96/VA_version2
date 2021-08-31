@@ -1,5 +1,5 @@
 # Joy Kumagai (joy.kumagai@senckenberg.de)
-# Date: Nov. 23rd 2020
+# Date: AUgust 31st 2021
 # Compile Indicators
 # Values Assessment 
 
@@ -8,7 +8,7 @@ library(tidyverse)
 library(readxl)
 
 # Load Data 
-indicators <- read.csv("Data/20200707_Country.csv")
+indicators <- read.csv("Data/CountryLevelData_cleaned.csv")
 
 ##### Prepare Indicator Datasets #####
 indicator1 <- indicators %>% 
@@ -20,16 +20,15 @@ indicator1 <- indicators %>%
   drop_na() %>% 
   arrange(ISO_Alpha_3)
 
-indicator1[9,] # TWO VALUES APPEAR IN ORIGINAL DATASET FOR BOLIVIA 
-indicator1 <- indicator1[-10, ] # I removed the lower value 
-
 indicator2 <- indicators %>% 
   filter(Indicator == "Biodiversity Habitat Index") %>% 
   filter(Category == "Average") %>% 
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na()
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
+indicator2 <- indicator2[-c(34, 185),] # removed repeated USA value - went back to the original dataset to confirm which is correct (removed hawaii)
 
 indicator3 <- indicators %>% 
   filter(Indicator == "Biodiversity Intactness Index") %>% 
@@ -37,7 +36,8 @@ indicator3 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na()   
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator4 <- indicators %>% 
   filter(Indicator == "Biocapacity per capita") %>% 
@@ -45,7 +45,8 @@ indicator4 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na()  
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator5 <- indicators %>% 
   filter(Indicator == "Ecological Footprint per capita") %>% 
@@ -53,7 +54,8 @@ indicator5 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na()
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator6 <- indicators %>% 
   filter(Indicator == "Forest area") %>% 
@@ -61,7 +63,8 @@ indicator6 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na()
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator7 <- indicators %>% 
   filter(Indicator == "Water Footprint") %>% 
@@ -69,7 +72,9 @@ indicator7 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
+indicator7 <- indicator7[-33,] # removed repeated CIV value - went back to the original dataset to confirm which is correct 
 
 indicator8 <- indicators %>% 
   filter(Indicator == "Inland Fishery Production") %>% 
@@ -77,15 +82,21 @@ indicator8 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3) 
 
 indicator9 <- indicators %>% 
   filter(Indicator == "Region-based Marine Trophic Index") %>% 
   filter(Category == "1950") %>% # Relevant to 1950 
   filter(Year == max(Year)) %>% # latest year of data
-  select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
+  group_by(ISO_Alpha_3) %>% 
+  summarise(Value = mean(Value)) %>%                          # Took the mean of the regions!!!! 
+  mutate(Indicator = "Region-mean Marine Trophic Index",
+         Category = "1950",
+         Year = 2014) %>% select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator10 <- indicators %>% 
   filter(Indicator == "Nitrogen + Phosphate Fertilizers") %>% 
@@ -93,34 +104,29 @@ indicator10 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3) 
 
 indicator11 <- indicators %>% 
   filter(Indicator == "Nitrogen Use Efficiency (%)") %>% 
-  #filter(Category == "") %>%  
-  filter(Year == max(Year)) %>% # latest year of data
-  select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
-  mutate(Value = as.numeric(Value)) 
-
-indicator11$Category <- "Value"
-
-indicator12 <- indicators %>% 
-  filter(Indicator == "Countries/Regions with Active NBSAP") %>% 
-  #filter(Category == "1950") %>%  
+  filter(Category == "Nitrogen Use Efficiency (%)") %>%  
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  arrange(ISO_Alpha_3) 
+
+# Indicator 12 is binary! So it is not included 
 
 indicator13 <- indicators %>% 
-  filter(Indicator == "Percentage of areas covered by protected areas") %>% 
+  filter(Indicator == "Percentage and total area covered by protected areas") %>% 
   filter(Category == "Terrestrial - Protected Area (%)") %>%  # TERRESTRIAL, not marine 
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)  
 
-# indicator14 is categorical! 
+# indicator14 is binary! So it is not included
 
 indicator15 <- indicators %>% 
   filter(Indicator == "Percentage of undernourished people") %>% 
@@ -128,7 +134,8 @@ indicator15 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na()
+  drop_na() %>% 
+  arrange(ISO_Alpha_3) 
 
 indicator16 <- indicators %>% 
   filter(Indicator == "Proportion of local breeds, classified as being at risk, not-at-risk or unknown level of risk of extinction") %>% 
@@ -136,20 +143,17 @@ indicator16 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3) 
 
 indicator17 <- indicators %>% 
   filter(Indicator == "PA of Key Biodiversity Areas Coverage (%)") %>% 
-  filter(Category == "Key Biodiversity Area") %>%  
+  filter(Category == "Estimate") %>%  
   filter(Year == max(Year)) %>% # latest year of data\
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
   drop_na() %>% 
   arrange(ISO_Alpha_3) 
-indicator17$ID <- 1:3
-indicator17 <- indicator17 %>% 
-  filter(ID == 1) %>% 
-  select(Indicator, Category, ISO_Alpha_3,Year, Value)
 
 indicator18 <- indicators %>% 
   filter(Indicator == "Protected area management effectiveness") %>% 
@@ -157,7 +161,8 @@ indicator18 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator19 <- indicators %>% 
   filter(Indicator == "Protected Area Connectedness Index") %>% 
@@ -165,7 +170,9 @@ indicator19 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3) 
+indicator19 <- indicator19[-c(41,74,233),] # removed repeated values - went back to the original dataset to confirm which is correct (233 removes hawaii)
 
 indicator20 <- indicators %>% 
   filter(Indicator == "Species Habitat Index") %>% 
@@ -173,7 +180,9 @@ indicator20 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
+indicator20 <- indicator20[-176, ] ## removed repeated values by removing hawaii for USA)
 
 indicator21 <- indicators %>% 
   filter(Indicator == "Species Protection Index (%)") %>% 
@@ -181,7 +190,8 @@ indicator21 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator22 <- indicators %>% 
   filter(Indicator == "Species Status Information Index") %>% 
@@ -189,7 +199,8 @@ indicator22 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator23 <- indicators %>% 
   filter(Indicator == "Total Wood Removals (roundwood, m3)") %>% 
@@ -197,7 +208,8 @@ indicator23 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator24 <- indicators %>% 
   filter(Indicator == "Trends in forest extent (tree cover)") %>% 
@@ -205,7 +217,8 @@ indicator24 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na()
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator25 <- indicators %>% 
   filter(Indicator == "Nitrogen Deposition Trends (kg N/ha/yr)") %>% 
@@ -213,7 +226,8 @@ indicator25 <- indicators %>%
   filter(Year == max(Year)) %>% # latest year of data
   select(Indicator, Category, ISO_Alpha_3,Year, Value) %>% 
   mutate(Value = as.numeric(Value)) %>% 
-  drop_na() 
+  drop_na() %>% 
+  arrange(ISO_Alpha_3)
 
 indicator26 <- indicators %>% 
   filter(Indicator == "Trends in Pesticides Use") %>% 
@@ -223,6 +237,7 @@ indicator26 <- indicators %>%
   mutate(Value = as.numeric(Value)) %>% 
   drop_na() %>% 
   arrange(ISO_Alpha_3)
+
 indicator26 <- indicator26[-16,] # removed repeated china value - went back to the original dataset to confirm which is correct 
 
 ##### Join Indicator Datasets #####
@@ -237,7 +252,6 @@ indicator8$Indicator <- "I_8"
 indicator9$Indicator <- "I_9"
 indicator10$Indicator <- "I_10"
 indicator11$Indicator <- "I_11"
-indicator12$Indicator <- "I_12"
 indicator13$Indicator <- "I_13"
 indicator15$Indicator <- "I_15"
 indicator16$Indicator <- "I_16"
@@ -253,10 +267,12 @@ indicator25$Indicator <- "I_25"
 indicator26$Indicator <- "I_26"
 
 datasets <- rbind(indicator1, indicator2, indicator3, indicator4, indicator5, indicator6, indicator7, 
-                  indicator8, indicator9, indicator10, indicator11, indicator12, indicator13,
+                  indicator8, indicator9, indicator10, indicator11, indicator13,
                   indicator15, indicator16, indicator17, indicator18, indicator19, indicator20,
                   indicator21, indicator22, indicator23, indicator24, indicator25, indicator26) %>% 
   select(Indicator, ISO_Alpha_3, Value) %>% 
-  pivot_wider(names_from = Indicator, values_from = Value) 
+  pivot_wider(names_from = Indicator, values_from = Value)  %>% 
+  arrange(ISO_Alpha_3)
 
+dir.create("Outputs/")
 write.csv(datasets, "Outputs/Indicators_compiled.csv", row.names = F)
