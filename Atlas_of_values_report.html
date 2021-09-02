@@ -256,7 +256,7 @@ div.tocify {
 <h1 class="title toc-ignore">Atlas of Values</h1>
 <h3 class="subtitle">Associated with the IPBES assessment on the diverse values and valuation of nature and its contributiosn to people</h3>
 <h4 class="author">Aidin Niamir and Joy A. Kumagai</h4>
-<h4 class="date">8/30/2021</h4>
+<h4 class="date">9/02/2021</h4>
 
 </div>
 
@@ -662,11 +662,26 @@ Use of pesticides (3-year average)
 </div>
 <div id="other-indicators" class="section level3" number="3.1.2">
 <h3 number="3.1.2"><span class="header-section-number">3.1.2</span> Other Indicators</h3>
-<p>A set of other indicators were included in the analysis to expand the coverage of socioeconomic variables. We included the <a href="http://hdr.undp.org/en/indicators/137506#">human development index</a>, <a href="https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita">average harmonized learning outcomes score</a>,</p>
+<p>A set of other indicators were included in the analysis to expand the coverage of socioeconomic variables. We included the <a href="http://hdr.undp.org/en/indicators/137506#">human development index (HDI)</a>, <a href="https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita">average harmonized learning outcomes score</a>, <a href="http://www.fao.org/faostat/en/#data/MK">gross domestic product (GDP)</a>, <a href="https://www.transparency.org/en/cpi/2020/index/nzl">corruption perception index (CPI)</a>, and <a href="http://www.fao.org/faostat/en/#data/OA">population</a>.</p>
+<p>These datasets were downloaded, cleaned, and had ISO3 codes added to easily merge them into the analysis. The latest data available was used for each indicator.</p>
 </div>
 </div>
 <div id="dataset-compilation" class="section level2" number="3.2">
 <h2 number="3.2"><span class="header-section-number">3.2</span> Dataset Compilation</h2>
+<p>To understand how valuation is spread across geographies, we counted the number of times each country’s ISO code appeared in the corpus for both geography columns added in step 2. The result is the density of studies per country and the density of funding institutions per country for the entire corpus.</p>
+<p>The external indicators were also joined onto the dataset to analyze the relationships between these socioeconomic indicators and the density of studies and funding institutions.</p>
+<p>The uptake dataset was filtered based on a set of queries listed and explained below. We also calculated the number of times each country’s ISO code appeared with the filtered dataset and joined the external indicators.</p>
+<ul>
+<li>Q6</li>
+<li>Q8</li>
+<li>Q13</li>
+<li>Q6 OR Q8 OR Q13</li>
+<li>Q2 ES Valuation</li>
+<li>Q4</li>
+<li>Q8 AND Q13</li>
+<li>Q8 OR Q13</li>
+</ul>
+<p>This process was also repeated with an additional filter that excluded any studies published before 2010.</p>
 </div>
 <div id="trends-analysis-per-indicator" class="section level2 tabset tabset-pills" number="3.3">
 <h2 class="tabset tabset-pills" number="3.3"><span class="header-section-number">3.3</span> Trends Analysis Per Indicator</h2>

@@ -156,11 +156,12 @@ n2 <- uptakeQ6 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
 # Export 
+#dir.create("Outputs/Uptake_Q6")
 write.csv(df, "Outputs/Uptake_Q6/harmonized_data_Q6.csv", row.names = F)
 
 
@@ -182,11 +183,12 @@ n2 <- uptakeQ8 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
 # Export 
+#dir.create("Outputs/Uptake_Q8")
 write.csv(df, "Outputs/Uptake_Q8/harmonized_data_Q8.csv", row.names = F)
 
 
@@ -208,11 +210,12 @@ n2 <- uptakeQ13 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
 # Export 
+#dir.create("Outputs/Uptake_Q13")
 write.csv(df, "Outputs/Uptake_Q13/harmonized_data_13.csv", row.names = F)
 
 #### Uptake - Q6, 8, or 13 -> Yes ####
@@ -235,11 +238,12 @@ n2 <- uptake_6_8_13 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
 # Export 
+#dir.create("Outputs/Uptake_Q6_8_13")
 write.csv(df, "Outputs/Uptake_Q6_8_13/harmonized_data_Q6_8_13.csv", row.names = F)
 
 
@@ -261,11 +265,12 @@ n2 <- uptake_2 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
 # Export 
+#dir.create("Outputs/Uptake_Q2ESvaluation")
 write.csv(df, "Outputs/Uptake_Q2ESvaluation/harmonized_data_Q2.csv", row.names = F)
 
 #### Uptake - Q4 ####
@@ -287,11 +292,12 @@ n2 <- uptake_4 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
 # Export 
+#dir.create("Outputs/Uptake_Q4")
 write.csv(df, "Outputs/Uptake_Q4/harmonized_data_Q4.csv", row.names = F)
 
 #### Uptake - Q8 AND 13 -> Yes ####
@@ -313,11 +319,12 @@ n2 <- uptake_8_13 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
 # Export 
+#dir.create("Outputs/Uptake_Q8_13")
 write.csv(df, "Outputs/Uptake_Q8_13/harmonized_data_Q8_13.csv", row.names = F)
 
 
@@ -340,9 +347,10 @@ n2 <- uptake_8_13_OR %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
 # Export 
+#dir.create("Outputs/Uptake_Q8_13_OR")
 write.csv(df, "Outputs/Uptake_Q8_13_OR/harmonized_data_Q8_13_OR.csv", row.names = F)

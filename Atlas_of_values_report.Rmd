@@ -173,11 +173,29 @@ the mean of the regions was calculated per country, as countries such as
 Germany have multiple regions with distinct values.
 
 ### Other Indicators
-A set of other indicators were included in the analysis to expand the coverage of socioeconomic variables. We included the [human development index](http://hdr.undp.org/en/indicators/137506#), [average harmonized learning outcomes score](https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita),  
+A set of other indicators were included in the analysis to expand the coverage of socioeconomic variables. We included the [human development index (HDI)](http://hdr.undp.org/en/indicators/137506#), [average harmonized learning outcomes score](https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita), [gross domestic product (GDP)](http://www.fao.org/faostat/en/#data/MK), [corruption perception index (CPI)](https://www.transparency.org/en/cpi/2020/index/nzl), and [population](http://www.fao.org/faostat/en/#data/OA). 
 
+These datasets were downloaded, cleaned, and had ISO3 codes added to easily merge them into the analysis. The latest data available was used for each indicator. 
 
 ## Dataset Compilation
 
+To understand how valuation is spread across geographies, we counted the number of times each country's ISO code appeared in the corpus for both geography columns added in step 2. The result is the density of studies per country and the density of funding institutions per country for the entire corpus. 
+
+The external indicators were also joined onto the dataset to analyze the relationships between these socioeconomic indicators and the density of studies and funding institutions. 
+
+The uptake dataset was filtered based on a set of queries listed and explained below. We also calculated the number of times each country's ISO code appeared with the filtered dataset and joined the external indicators.  
+
+-   Q6
+-   Q8
+-   Q13
+-   Q6 OR Q8 OR Q13
+-   Q2 ES Valuation
+-   Q4 
+-   Q8 AND Q13
+-   Q8 OR Q13
+
+This process was also repeated with an additional filter that excluded any studies published before 2010.   
+  
 ## Trends Analysis Per Indicator {.tabset .tabset-pills}
 
 ### Area of forest production under FSC and PEFC certification {.unnumbered}
