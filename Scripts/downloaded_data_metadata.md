@@ -12,7 +12,7 @@ Website: http://www.fao.org/faostat/en/#data/OA
 DOI: NA
 
 ### GDP
-Date: 2021.03.24 
+Date: 2021.09.02 
 Website: http://www.fao.org/faostat/en/#data/MK
 DOI: NA
 
@@ -40,7 +40,7 @@ DOI: NA
 Notes: Taken from website from copy pasting the online table into an excel sheet. 
 
 ### Learning outcomes vs gdp per capita
-Date: 2021.03.24
+Date: 2020.11.19
 Website: https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita
 DOI: NA
 

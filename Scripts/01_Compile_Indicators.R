@@ -274,5 +274,5 @@ datasets <- rbind(indicator1, indicator2, indicator3, indicator4, indicator5, in
   pivot_wider(names_from = Indicator, values_from = Value)  %>% 
   arrange(ISO_Alpha_3)
 
-dir.create("Outputs/")
+# dir.create("Outputs/")
 write.csv(datasets, "Outputs/Indicators_compiled.csv", row.names = F)

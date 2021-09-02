@@ -2,7 +2,7 @@
 title: "Atlas of Values"
 subtitle: Associated with the IPBES assessment on the diverse values and valuation of nature and its contributiosn to people 
 author: "Aidin Niamir and Joy A. Kumagai"
-date: "8/30/2021"
+date: "9/02/2021"
 output: 
   html_document:
     number_sections: true
@@ -18,43 +18,65 @@ library(tidyverse)
 
 # Overview {.unnumbered}
 
-The aim was to prepare a spatio-temporal representation of valuation studies related to biodiversity and ecosystem services and ... . 
+The aim was to prepare a spatio-temporal representation of valuation
+studies related to biodiversity and ecosystem services and ... .
 
 # Creation of the Corpus
 
 # Georeferencing the Corpus
-[Explanation of why we chose to do this]
+To identify country names in the corpus of literature a two step approach was used. First, we wanted to understand where studies were conducted and searched the title, abstract, and keywords of each paper for country names. Second, to understand where the funding institutions were located we searched the affiliations, acknowledgments, and funding text for country names.
 
 The input data we used are the following:
-- Bib file downloaded from Web of Science 
-- ISO 3166-1 alpha-3 country codes (where -- need link!)
-- IPBES regional and subregional area dataset (https://doi.org/10.5281/zenodo.3923633)
 
+-   Bib file downloaded from Web of Science
 
-The python code used to georeference the corpus can be found [here](https://github.com/ellentatia/Pilot_case2). An overview of the process is provided in the follwoing schematic. 
+-   ISO 3166-1 alpha-3 country codes (https://www.iso.org/iso-3166-country-codes.html)
+
+-   IPBES regional and subregional area dataset
+    (<https://doi.org/10.5281/zenodo.3923633>)
+
+The python code used to georeference the corpus can be found
+[here](https://github.com/ellentatia/Pilot_case2). An overview of the
+pipeline is provided in the following schematic and described below.
+
 ```{r overview-fig, fig.align = 'center', out.width="75%", fig.cap = "Overview of the process of Georeferencing the corpus of valuation studies"}
 knitr::include_graphics("pilot2.svg")
 ```
 
-## Density of Studies  
+Step 1: Extract country names from text
+Country names were extracted from the title, abstract, and keywords of each paper with a regular expression and the associated ISO code was added into a a column in the dataset. The same regular expression was also used to search the affiliations, acknowledgments, and funding text of the same paper and placed into a second column. 
 
-To understand the density of where studies were conducted, a regular expression was used identify country names within the title, abstract and keywords of each paper. SENSITIVITY ANALYSIS? 
+Step 2 and 3: Bundle countries in regions 
+The IPBES Regions and Subregions datatset was then used to add additional region and subregion attributes to the dataset by matching the ISO3 code.  
 
-## Density of Institutes 
+Step 4: Find TS accordingly 
+Finally, we used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted. 
 
-Using a similar approach, a regular expression was used to identify country names within the affiliations, acknowledgements, or country names of each paper as a proxy for funding institutes. 
+Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. 
 
+# Indicator Analysis
 
-# Indicator Analysis 
-
-The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were used alongside a chosen set of other relevant indicators to understand geographic trends between the density of studies and density of institutes. 
+The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were
+used alongside a chosen set of other relevant indicators to understand
+geographic trends between the density of studies and density of
+institutes.
 
 ## Selection of Indicators
-### IPBES Core Indicators 
 
-We used all the most recent year of the IPBES Core Indicators available within the [country dataset](https://doi.org/10.5281/zenodo.4439411) except for two indicators, Countries/Regions with Active NBSAP and Category 1 nations in CTIES, as these are binary in the dataset and would not be compatible with the following analysis. We selected a specific category from the indicators with multiple categories. For example, for the indicator "Area of forest production under FSC and PEFC certification" we chose the FSC certification area and not the PEFC certification area. 
+### IPBES Core Indicators
 
-Here is the table of all of the IPBES Core Indicators used, the category selected, the year the data is from, and the number assigned to them. 
+We used all the most recent year of the IPBES Core Indicators available
+within the [country dataset](https://doi.org/10.5281/zenodo.4439411)
+except for two indicators, Countries/Regions with Active NBSAP and
+Category 1 nations in CTIES, as these are binary in the dataset and
+would not be compatible with the following analysis. We selected a
+specific category from the indicators with multiple categories. For
+example, for the indicator "Area of forest production under FSC and PEFC
+certification" we chose the FSC certification area and not the PEFC
+certification area.
+
+Here is the table of all of the IPBES Core Indicators used, the category
+selected, the year the data is from, and the number assigned to them.
 
 ```{r, echo = F}
 Name <- c("Area of forest production under FSC and PEFC certification",
@@ -141,36 +163,79 @@ indicator_table %>%
   kableExtra::kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
 ```
 
-There were a few instances of duplicated values which were double checked with the original dataset and the erranous value removed. Examples include having two values for USA due to the separation of Hawaii in the original dataset. In these cases Hawaii was removed and the value referring to the rest of the states of the country was used instead. Additionally, Indicator 9, Region-based Marine Trophic Index, the mean of the regions was calculated per country, as countries such as Germany have multiple regions with distinct values. 
+There were a few instances of duplicated values which were double
+checked with the original dataset and the erranous value removed.
+Examples include having two values for USA due to the separation of
+Hawaii in the original dataset. In these cases Hawaii was removed and
+the value referring to the rest of the states of the country was used
+instead. Additionally, Indicator 9, Region-based Marine Trophic Index,
+the mean of the regions was calculated per country, as countries such as
+Germany have multiple regions with distinct values.
 
 ### Other Indicators
+A set of other indicators were included in the analysis to expand the coverage of socioeconomic variables. We included the [human development index](http://hdr.undp.org/en/indicators/137506#), [average harmonized learning outcomes score](https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita),  
+
 
 ## Dataset Compilation
 
 ## Trends Analysis Per Indicator {.tabset .tabset-pills}
-### Area of forest production under FSC and PEFC certification {-}
-### Biodiversity Habitat Index {-}
-### Biodiversity Intactness Index {-}
-### Biocapacity per capita {-}
-### Ecological Footprint per capita {-}
-### Forest area {-}
-### Water Footprint {-}
-### Inland Fishery Production {-}
-### Region-based Marine Trophic Index {-}
-### Nitrogen + Phosphate Fertilizers {-}
-### Nitrogen Use Efficiency (%) {-}
-### Percentage and total area covered by protected areas {-}
-### Percentage of undernourished people {-}
-### Proportion of local breeds, classified as being at risk, not-at-risk or unknown level of risk of extinction {-}
-### PA of Key Biodiversity Areas Coverage (%) {-}
-### Protected area management effectiveness {-}
-### Protected Area Connectedness Index {-}
-### Species Habitat Index {-}
-### Species Protection Index (%) {-}
-### Species Status Information Index {-}
-### Total Wood Removals (roundwood, m3) {-}
-### Trends in forest extent (tree cover) {-}
-### Nitrogen Deposition Trends (kg N/ha/yr) {-}
-### Trends in Pesticides Use {-}
 
-## Pearson Correlations 
+### Area of forest production under FSC and PEFC certification {.unnumbered}
+
+### Biodiversity Habitat Index {.unnumbered}
+
+### Biodiversity Intactness Index {.unnumbered}
+
+### Biocapacity per capita {.unnumbered}
+
+### Ecological Footprint per capita {.unnumbered}
+
+### Forest area {.unnumbered}
+
+### Water Footprint {.unnumbered}
+
+### Inland Fishery Production {.unnumbered}
+
+### Region-based Marine Trophic Index {.unnumbered}
+
+### Nitrogen + Phosphate Fertilizers {.unnumbered}
+
+### Nitrogen Use Efficiency (%) {.unnumbered}
+
+### Percentage and total area covered by protected areas {.unnumbered}
+
+### Percentage of undernourished people {.unnumbered}
+
+### Proportion of local breeds, classified as being at risk, not-at-risk or unknown level of risk of extinction {.unnumbered}
+
+### PA of Key Biodiversity Areas Coverage (%) {.unnumbered}
+
+### Protected area management effectiveness {.unnumbered}
+
+### Protected Area Connectedness Index {.unnumbered}
+
+### Species Habitat Index {.unnumbered}
+
+### Species Protection Index (%) {.unnumbered}
+
+### Species Status Information Index {.unnumbered}
+
+### Total Wood Removals (roundwood, m3) {.unnumbered}
+
+### Trends in forest extent (tree cover) {.unnumbered}
+
+### Nitrogen Deposition Trends (kg N/ha/yr) {.unnumbered}
+
+### Trends in Pesticides Use {.unnumbered}
+
+### Human Development Index {.unnumbered}
+
+### Learning Outcomes {.unnumbered}
+
+### GDP {.unnumbered}
+
+### Corruption Perception Index {.unnumbered}
+
+### Population {.unnumbered}
+
+## Pearson Correlations
