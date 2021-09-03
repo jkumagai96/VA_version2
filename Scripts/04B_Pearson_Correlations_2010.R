@@ -1,10 +1,10 @@
 # Joy Kumagai (joy.kumagai@senckenberg.de)
-# Date: Dec 1st 2020
+# Date: September 3rd 2021
 # Join together the data and create final harmonized datasets to be analyzed 
 # Values Assessment 
 
 #### Joy Kumagai
-#### Date: 2020-11-18
+#### Date: September 3rd 2021
 #### Compilation of Indicators and Subset data  (Valuation of ES/NCP)
 #### Values Assessment - Atlas
 
@@ -16,7 +16,7 @@ library(Hmisc)
 library(cowplot)
 
 #### Load Data ####
-setwd("~/IPBES/R/VA_Atlas_organized")
+setwd("~/IPBES/R/VA_version2")
 
 corpus <- read.csv("Outputs/Corpus_2010/harmonized_data.csv") %>% 
   select(ISO_Alpha_3, Names1, Names2)
@@ -33,7 +33,6 @@ corpus_I <- left_join(x = corpus, y = indicators, by = "ISO_Alpha_3") %>%
 colnames(corpus_I) <- c("Density of Studies", 
                         "Density of Institutions", 
                         column_names$Short_Name)
-corpus_I <- corpus_I[,-14]
 
 #uptakeQ2
 uptakeQ2_I <- left_join(x = uptakeQ2, y = indicators, by = "ISO_Alpha_3") %>% 
@@ -42,7 +41,6 @@ uptakeQ2_I <- left_join(x = uptakeQ2, y = indicators, by = "ISO_Alpha_3") %>%
 colnames(uptakeQ2_I) <- c("Density of Studies", 
                         "Density of Institutions", 
                         column_names$Short_Name)
-uptakeQ2_I <- uptakeQ2_I[,-14]
 
 
 ####  Run Matrix of Pearson Correlations ####

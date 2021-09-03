@@ -251,9 +251,24 @@ This process was also repeated with an additional filter that excluded any studi
 ### Learning Outcomes {.unnumbered}
 
 ### GDP {.unnumbered}
-
+```{r, fig.align = 'center', out.width="75%", fig.cap = "GDP vs. Density of Studies and Institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_GDP.png")
+knitr::include_graphics("Outputs/Corpus/Names2_GDP.png")
+```
 ### Corruption Perception Index {.unnumbered}
+```{r, fig.align = 'center', out.width="75%", fig.cap = "Corruption Percepation Index vs. Density of Studies and Institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_CPI.png")
+knitr::include_graphics("Outputs/Corpus/Names2_CPI.png")
+```
 
 ### Population {.unnumbered}
 
 ## Pearson Correlations
+
+```{r pearson, fig.align = 'center', fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
+knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure.png")
+```
+
+```{r pearson-log, fig.align = 'center', fig.cap = "Pearson correlations of log geographic valuation studies and the indicators"}
+knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure_log.png")
+```

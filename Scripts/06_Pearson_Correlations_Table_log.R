@@ -1,5 +1,5 @@
 # Joy Kumagai (joy.kumagai@senckenberg.de)
-# Date: Dec 8th 2020
+# Date: September 3rd 2021
 # Create Table w/ Pearson's Correlation Coefficients, significance level, and number of observations 
 # for all indicators and variables 
 # Values Assessment 
@@ -43,7 +43,7 @@ area <- read.csv("Data/country_areas_UNEP_eckert.csv", sep = "\t") %>%
 
 variables <- read.csv("Outputs/variables_compiled.csv")
 variables <- left_join(x = variables, y = area, by = "ISO_Alpha_3")
-variables$GDP_per_cap <- variables$GDP_2018/variables$Pop_2018
+variables$GDP_per_cap <- variables$GDP_2019/variables$Pop_2018
 variables$Pop_per_km2 <- variables$Pop_2018/variables$Area_km2
 variables <- variables %>% select(-Pop_2018, -Area_km2)
 
@@ -51,7 +51,6 @@ variables <- variables %>% select(-Pop_2018, -Area_km2)
 indicators <- read.csv("Outputs/Indicators_compiled.csv")
 column_names <- read_excel("Data/names_of_columns.xlsx")
 colnames(indicators) <- c("ISO_Alpha_3", column_names$Short_Name)
-indicators <- indicators[,-13]
 
 #### Join Data together ####
 studies <- full_join(Q2, Q2_2010, by = "ISO_Alpha_3")
@@ -98,6 +97,7 @@ data_n <- data_n[-c(1:6), ]
 corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 
+#dir.create("Outputs/Pearson_correlation_table")
 write.csv(data_r, "Outputs/Pearson_correlation_table/correlation_coefficients_log.csv", row.names = T)
 write.csv(data_p, "Outputs/Pearson_correlation_table/significance_values_log.csv", row.names = T)
 write.csv(data_n, "Outputs/Pearson_correlation_table/number_of_observations_log.csv", row.names = T)
@@ -106,3 +106,4 @@ png("Outputs/Pearson_correlation_Table/correlation_figure_log.png", height = 8, 
 corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 dev.off()
+

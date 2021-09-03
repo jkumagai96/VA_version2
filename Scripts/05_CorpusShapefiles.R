@@ -3,6 +3,10 @@
 # Create four shapefiles with the CORPUS dataset, indicators, and variables for before 1990, 1990-1999, 2000 - 2009, 2010 to now
 # Values Assessment 
 
+###### NEEDS TO BE UPDATED IF USED (BUT DON'T THINK IT WILL BE???)
+
+# How would CPI or GDP values in 2020 or 2019 be statistically related to the corpus of literature before 1990? 
+
 #### Load Packages ####
 library(tidyverse)
 library(readxl)

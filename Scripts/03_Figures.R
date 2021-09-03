@@ -129,7 +129,7 @@ plot4_log
 plot5 <- data %>% 
   ggplot(aes(x = Names1, y = CPI_2020)) +
   geom_point() +
-  labs(x = "Density of Studies", y = "Corruption Perception Index (2018)") +
+  labs(x = "Density of Studies", y = "Corruption Perception Index (2020)") +
   geom_smooth(method = "lm") +
   theme_bw()
 plot5
@@ -137,7 +137,7 @@ plot5
 plot5_log <- data %>% 
   ggplot(aes(x = Names1_log, y = CPI_2020)) +
   geom_point() +
-  labs(x = "Density of Studies (log)", y = "Corruption Perception Index (2018)") +
+  labs(x = "Density of Studies (log)", y = "Corruption Perception Index (2020)") +
   geom_smooth(method = "lm") +
   theme_bw()
 plot5_log
@@ -206,7 +206,7 @@ plot8
 plot9 <- data %>% 
   ggplot(aes(x = Names2, y = CPI_2020)) +
   geom_point() +
-  labs(x = "Density of Institutions", y = "Corruption Perception Index (2018)") +
+  labs(x = "Density of Institutions", y = "Corruption Perception Index (2020)") +
   geom_smooth(method = "lm") +
   theme_bw()
 plot9
