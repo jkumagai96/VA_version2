@@ -182,7 +182,7 @@ n2 <- uptakeQ8 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 
@@ -237,7 +237,7 @@ n2 <- uptake_6_8_13 %>%
 df <- full_join(n1, n2, by = "ISO_Alpha_3")
 df <- full_join(df, HDI, by = "ISO_Alpha_3")
 df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
+df <- full_join(df, gdp_2019, by = "ISO_Alpha_3")
 df <- full_join(df, CPI, by = "ISO_Alpha_3")
 df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
 

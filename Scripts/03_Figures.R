@@ -1,5 +1,5 @@
 # Joy Kumagai (joy.kumagai@senckenberg.de)
-# Date: Dec. 1st 2020
+# Date: September 3rd 2021
 # Create Figures 
 # Values Assessment 
 
@@ -55,14 +55,15 @@ plotFunctionN2_log <- function(data, x, y, IT) {
 #### Load Packages ####
 library(tidyverse)
 library(cowplot)
+library(readxl)
 
 #### Load Data ####
-setwd("~/IPBES/R/VA_Atlas_organized")
+setwd("~/IPBES/R/VA_version2")
 column_names <- read_excel("Data/names_of_columns.xlsx")
 indicators <- read.csv("Outputs/Indicators_compiled.csv")
 
-setwd("C:/Users/jkumagai/Documents/IPBES/R/VA_Atlas_organized/Outputs/Uptake_Q4") # CHANGE THIS 
-data <- read.csv("harmonized_data_Q4.csv") 
+setwd("C:/Users/jkumagai/Documents/IPBES/R/VA_version2/Outputs/Uptake_Q13_2010") # CHANGE THIS 
+data <- read.csv("harmonized_data_13.csv") 
 
 #### Individual Figures for Names 1 ####
 # Figure Names 1 vs. Names 2
@@ -109,24 +110,24 @@ plot3_log
 
 # Figure Names 1 vs. GDP
 plot4 <- data %>% 
-  ggplot(aes(x = Names1, y = GDP_2018)) +
+  ggplot(aes(x = Names1, y = GDP_2019)) +
   geom_point() +
-  labs(x = "Density of Studies", y = "GDP (2018)") +
+  labs(x = "Density of Studies", y = "GDP (2019)") +
   geom_smooth(method = "lm") +
   theme_bw()
 plot4
 
 plot4_log <- data %>% 
-  ggplot(aes(x = Names1_log, y = GDP_2018)) +
+  ggplot(aes(x = Names1_log, y = GDP_2019)) +
   geom_point() +
-  labs(x = "Density of Studies (log)", y = "GDP (2018)") +
+  labs(x = "Density of Studies (log)", y = "GDP (2019)") +
   geom_smooth(method = "lm") +
   theme_bw()
 plot4_log
 
 # Figure Names 1 vs. CPI 
 plot5 <- data %>% 
-  ggplot(aes(x = Names1, y = CPI_2018)) +
+  ggplot(aes(x = Names1, y = CPI_2020)) +
   geom_point() +
   labs(x = "Density of Studies", y = "Corruption Perception Index (2018)") +
   geom_smooth(method = "lm") +
@@ -134,7 +135,7 @@ plot5 <- data %>%
 plot5
 
 plot5_log <- data %>% 
-  ggplot(aes(x = Names1_log, y = CPI_2018)) +
+  ggplot(aes(x = Names1_log, y = CPI_2020)) +
   geom_point() +
   labs(x = "Density of Studies (log)", y = "Corruption Perception Index (2018)") +
   geom_smooth(method = "lm") +
@@ -143,7 +144,7 @@ plot5_log
 
 
 plot11 <- data %>% 
-  mutate(gdp_per_pop = GDP_2018/Pop_2018) %>% 
+  mutate(gdp_per_pop = GDP_2019/Pop_2018) %>% 
   ggplot(aes(x = Names1, y = gdp_per_pop)) +
   geom_point() +
   labs(x = "Density of Studies", y = "GDP per captia (2018)") +
@@ -152,7 +153,7 @@ plot11 <- data %>%
 plot11
 
 plot11_log <- data %>% 
-  mutate(gdp_per_pop = GDP_2018/Pop_2018) %>% 
+  mutate(gdp_per_pop = GDP_2019/Pop_2018) %>% 
   ggplot(aes(x = Names1_log, y = gdp_per_pop)) +
   geom_point() +
   labs(x = "Density of Studies (log)", y = "GDP per captia (2018)") +
@@ -194,16 +195,16 @@ plot7
 
 # Figure Names 1 vs. GDP
 plot8 <- data %>% 
-  ggplot(aes(x = Names2, y = GDP_2018)) +
+  ggplot(aes(x = Names2, y = GDP_2019)) +
   geom_point() +
-  labs(x = "Density of Institutions", y = "GDP (2018)") +
+  labs(x = "Density of Institutions", y = "GDP (2019)") +
   geom_smooth(method = "lm") +
   theme_bw()
 plot8
 
 # Figure Names 1 vs. CPI 
 plot9 <- data %>% 
-  ggplot(aes(x = Names2, y = CPI_2018)) +
+  ggplot(aes(x = Names2, y = CPI_2020)) +
   geom_point() +
   labs(x = "Density of Institutions", y = "Corruption Perception Index (2018)") +
   geom_smooth(method = "lm") +
@@ -211,7 +212,7 @@ plot9 <- data %>%
 plot9
 
 plot10 <- data %>% 
-  mutate(gdp_per_pop = GDP_2018/Pop_2018) %>% 
+  mutate(gdp_per_pop = GDP_2019/Pop_2018) %>% 
   ggplot(aes(x = Names2, y = gdp_per_pop)) +
   geom_point() +
   labs(x = "Density of Institutions", y = "GDP per captia (2018)") +
@@ -232,7 +233,6 @@ all_data <- data %>%
   left_join(y = indicators, by = "ISO_Alpha_3")
 
 titles <- column_names[,2]
-titles <- titles[-12,]  
 
 # Names 1
 plot1 <- plotFunctionN1(data = all_data, x = all_data$Names1, y = all_data$I_1, titles[1,]) 
