@@ -216,10 +216,19 @@ knitr::include_graphics("Outputs/Corpus/Correlation25_Names2.png")
 ```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Log density of funding institutions"}
 knitr::include_graphics("Outputs/Corpus/Correlation25_Names2_log.png")
 ```
+  
 ### Human Development Index {.unnumbered}
-
+```{r, fig.align = 'center', out.width="75%", fig.cap = "HDI vs. Density of Studies and Institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_HDI.png")
+knitr::include_graphics("Outputs/Corpus/Names2_HDI.png")
+```
+  
 ### Learning Outcomes {.unnumbered}
-
+```{r, fig.align = 'center', out.width="75%", fig.cap = "Learning outcomes vs. Density of Studies and Institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_LearningOutcomes.png")
+knitr::include_graphics("Outputs/Corpus/Names2_LearningOutcomes.png")
+```
+  
 ### GDP {.unnumbered}
 ```{r, fig.align = 'center', out.width="75%", fig.cap = "GDP vs. Density of Studies and Institutions"}
 knitr::include_graphics("Outputs/Corpus/Names1_GDP.png")
@@ -230,11 +239,10 @@ knitr::include_graphics("Outputs/Corpus/Names2_GDP.png")
 knitr::include_graphics("Outputs/Corpus/Names1_CPI.png")
 knitr::include_graphics("Outputs/Corpus/Names2_CPI.png")
 ```
-
-### Population {.unnumbered}
-
+  
 ## Pearson Correlations
 
+To summarize this analysis more concisely, we ran a pearson correlation to understand the relationship between the number of studies filtered by _____ and each of the indicators. The results are shown below. 
 ```{r pearson, fig.align = 'center', fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
 knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure.png")
 ```
