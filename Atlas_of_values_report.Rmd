@@ -196,56 +196,26 @@ The uptake dataset was filtered based on a set of queries listed and explained b
 
 This process was also repeated with an additional filter that excluded any studies published before 2010.   
   
-## Trends Analysis Per Indicator {.tabset .tabset-pills}
+## Trends Analysis {.tabset .tabset-pills}
 
-### Area of forest production under FSC and PEFC certification {.unnumbered}
+The trend between each indicator and the density of studies and funding institutions are shown here for the entire corpus. 
 
-### Biodiversity Habitat Index {.unnumbered}
+### IPBES Core Indicators vs. Density of studies {.unnumbered}
+```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Density of studies "}
+knitr::include_graphics("Outputs/Corpus/Correlation25_Names1.png")
+```
 
-### Biodiversity Intactness Index {.unnumbered}
-
-### Biocapacity per capita {.unnumbered}
-
-### Ecological Footprint per capita {.unnumbered}
-
-### Forest area {.unnumbered}
-
-### Water Footprint {.unnumbered}
-
-### Inland Fishery Production {.unnumbered}
-
-### Region-based Marine Trophic Index {.unnumbered}
-
-### Nitrogen + Phosphate Fertilizers {.unnumbered}
-
-### Nitrogen Use Efficiency (%) {.unnumbered}
-
-### Percentage and total area covered by protected areas {.unnumbered}
-
-### Percentage of undernourished people {.unnumbered}
-
-### Proportion of local breeds, classified as being at risk, not-at-risk or unknown level of risk of extinction {.unnumbered}
-
-### PA of Key Biodiversity Areas Coverage (%) {.unnumbered}
-
-### Protected area management effectiveness {.unnumbered}
-
-### Protected Area Connectedness Index {.unnumbered}
-
-### Species Habitat Index {.unnumbered}
-
-### Species Protection Index (%) {.unnumbered}
-
-### Species Status Information Index {.unnumbered}
-
-### Total Wood Removals (roundwood, m3) {.unnumbered}
-
-### Trends in forest extent (tree cover) {.unnumbered}
-
-### Nitrogen Deposition Trends (kg N/ha/yr) {.unnumbered}
-
-### Trends in Pesticides Use {.unnumbered}
-
+```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Log density of studies "}
+knitr::include_graphics("Outputs/Corpus/Correlation25_Names1_log.png")
+```
+### IPBES Core Indicators vs. Density of funding institutions {.unnumbered}
+```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Density of funding institutions"}
+knitr::include_graphics("Outputs/Corpus/Correlation25_Names2.png")
+```
+  
+```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Log density of funding institutions"}
+knitr::include_graphics("Outputs/Corpus/Correlation25_Names2_log.png")
+```
 ### Human Development Index {.unnumbered}
 
 ### Learning Outcomes {.unnumbered}
