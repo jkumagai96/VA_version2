@@ -1,8 +1,8 @@
 ---
-title: "Atlas of Values"
+title: "Valuation Atlas"
 subtitle: Associated with the IPBES assessment on the diverse values and valuation of nature and its contributiosn to people 
 author: "Aidin Niamir and Joy A. Kumagai"
-date: "9/02/2021"
+date: "9/06/2021"
 output: 
   html_document:
     number_sections: true
@@ -53,6 +53,24 @@ Step 4: Find TS accordingly
 Finally, we used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted. 
 
 Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. 
+  
+# Valuation Maps 
+
+## Geographic Distribution
+### Density of studies
+### Density of institutions 
+### Summarized by region and subregion {.tabset .tabset-pills}
+#### Density of studies by region {-}
+#### Density of studies by subregion {-}
+#### Density of institutions by region {-}
+#### Density of institutions by subregion {-}
+
+## Relationships between density of studies and institutions
+```{r names1/names2, fig.align = 'center', fig.cap = "Density of studies vs density of institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_Names2.png")
+```
+  
+## Temporal Trends 
 
 # Indicator Analysis
 
@@ -183,40 +201,69 @@ To understand how valuation is spread across geographies, we counted the number 
 
 The external indicators were also joined onto the dataset to analyze the relationships between these socioeconomic indicators and the density of studies and funding institutions. 
 
-The uptake dataset was filtered based on a set of queries listed and explained below. We also calculated the number of times each country's ISO code appeared with the filtered dataset and joined the external indicators.  
-
--   Q6
--   Q8
--   Q13
--   Q6 OR Q8 OR Q13
--   Q2 ES Valuation
--   Q4 
--   Q8 AND Q13
--   Q8 OR Q13
-
 This process was also repeated with an additional filter that excluded any studies published before 2010.   
+## Pearson Correlation Analysis
   
-## Trends Analysis {.tabset .tabset-pills}
+To summarize this analysis more concisely, we ran a pearson correlation to understand the relationship between the number of studies filtered by _____ and each of the indicators. The results are shown below. 
+```{r pearson, fig.align = 'center', fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
+knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure.png")
+```
 
+```{r pearson-log, fig.align = 'center', fig.cap = "Pearson correlations of log geographic valuation studies and the indicators"}
+knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure_log.png")
+```
+  
+## Individual Trend Analysis {.tabset .tabset-pills}
 The trend between each indicator and the density of studies and funding institutions are shown here for the entire corpus. 
 
-### IPBES Core Indicators vs. Density of studies {.unnumbered}
-```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Density of studies "}
-knitr::include_graphics("Outputs/Corpus/Correlation25_Names1.png")
-```
+### Area of forest production under FSC and PEFC certification {.unnumbered}
 
-```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Log density of studies "}
-knitr::include_graphics("Outputs/Corpus/Correlation25_Names1_log.png")
-```
-### IPBES Core Indicators vs. Density of funding institutions {.unnumbered}
-```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Density of funding institutions"}
-knitr::include_graphics("Outputs/Corpus/Correlation25_Names2.png")
-```
-  
-```{r, fig.align = 'center', out.width="75%", fig.cap = "IPBES Core Indicators vs. Log density of funding institutions"}
-knitr::include_graphics("Outputs/Corpus/Correlation25_Names2_log.png")
-```
-  
+### Biodiversity Habitat Index {.unnumbered}
+
+### Biodiversity Intactness Index {.unnumbered}
+
+### Biocapacity per capita {.unnumbered}
+
+### Ecological Footprint per capita {.unnumbered}
+
+### Forest area {.unnumbered}
+
+### Water Footprint {.unnumbered}
+
+### Inland Fishery Production {.unnumbered}
+
+### Region-based Marine Trophic Index {.unnumbered}
+
+### Nitrogen + Phosphate Fertilizers {.unnumbered}
+
+### Nitrogen Use Efficiency (%) {.unnumbered}
+
+### Percentage and total area covered by protected areas {.unnumbered}
+
+### Percentage of undernourished people {.unnumbered}
+
+### Proportion of local breeds, classified as being at risk, not-at-risk or unknown level of risk of extinction {.unnumbered}
+
+### PA of Key Biodiversity Areas Coverage (%) {.unnumbered}
+
+### Protected area management effectiveness {.unnumbered}
+
+### Protected Area Connectedness Index {.unnumbered}
+
+### Species Habitat Index {.unnumbered}
+
+### Species Protection Index (%) {.unnumbered}
+
+### Species Status Information Index {.unnumbered}
+
+### Total Wood Removals (roundwood, m3) {.unnumbered}
+
+### Trends in forest extent (tree cover) {.unnumbered}
+
+### Nitrogen Deposition Trends (kg N/ha/yr) {.unnumbered}
+
+### Trends in Pesticides Use {.unnumbered}
+
 ### Human Development Index {.unnumbered}
 ```{r, fig.align = 'center', out.width="75%", fig.cap = "HDI vs. Density of Studies and Institutions"}
 knitr::include_graphics("Outputs/Corpus/Names1_HDI.png")
@@ -240,13 +287,3 @@ knitr::include_graphics("Outputs/Corpus/Names1_CPI.png")
 knitr::include_graphics("Outputs/Corpus/Names2_CPI.png")
 ```
   
-## Pearson Correlations
-
-To summarize this analysis more concisely, we ran a pearson correlation to understand the relationship between the number of studies filtered by _____ and each of the indicators. The results are shown below. 
-```{r pearson, fig.align = 'center', fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
-knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure.png")
-```
-
-```{r pearson-log, fig.align = 'center', fig.cap = "Pearson correlations of log geographic valuation studies and the indicators"}
-knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure_log.png")
-```
