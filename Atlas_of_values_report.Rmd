@@ -52,7 +52,7 @@ The IPBES Regions and Subregions datatset was then used to add additional region
 Step 4: Find TS accordingly 
 Finally, we used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted. 
 
-Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. 
+Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. The complete corpus can be found on Zenodo here: https://doi.org/[INSERT DOI]
   
 # Valuation Maps 
 
@@ -72,16 +72,18 @@ knitr::include_graphics("Outputs/Corpus/Names1_Names2.png")
   
 ## Temporal Trends 
 
+-   Before 1990
+-   1990 - 1999
+-   2000 - 2009
+-   2010 - 2020
+
 # Indicator Analysis
 
 The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were
 used alongside a chosen set of other relevant indicators to understand
-geographic trends between the density of studies and density of
-institutes.
+geographic trends between density of valuation studies and how they relate to biological and socioeconomic indicators.
 
 ## Selection of Indicators
-
-### IPBES Core Indicators
 
 We used all the most recent year of the IPBES Core Indicators available
 within the [country dataset](https://doi.org/10.5281/zenodo.4439411)
@@ -93,7 +95,11 @@ example, for the indicator "Area of forest production under FSC and PEFC
 certification" we chose the FSC certification area and not the PEFC
 certification area.
 
-Here is the table of all of the IPBES Core Indicators used, the category
+A set of other indicators were included in the analysis to expand the coverage of socioeconomic variables. We included the [human development index (HDI)](http://hdr.undp.org/en/indicators/137506#), [average harmonized learning outcomes score](https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita), [gross domestic product (GDP)](http://www.fao.org/faostat/en/#data/MK), [corruption perception index (CPI)](https://www.transparency.org/en/cpi/2020/index/nzl), and [population](http://www.fao.org/faostat/en/#data/OA). 
+
+These datasets were downloaded, cleaned, and had ISO3 codes added to easily merge them into the analysis. The latest data available was used for each indicator. 
+
+Here is the table of all of the indicators used, the category
 selected, the year the data is from, and the number assigned to them.
 
 ```{r, echo = F}
@@ -120,7 +126,12 @@ Name <- c("Area of forest production under FSC and PEFC certification",
           "Total Wood Removals (roundwood, m3)",
           "Trends in forest extent (tree cover)",
           "Nitrogen Deposition Trends (kg N/ha/yr)",
-          "Trends in Pesticides Use")
+          "Trends in Pesticides Use",
+          "Human Development Index (HDI)",
+          "Average harmonized learning outcomes score",
+          "Gross domestic product (GDP)",
+          "Corruption perception index (CPI)",
+          "Population")
 
 Category <- c("FSC_area", 
               "Average",
@@ -145,7 +156,12 @@ Category <- c("FSC_area",
               "Total",
               "Percentage of Tree Cover Loss",
               "Nitrogen Deposition Trends (kg N/ha/yr)",
-              "Use of pesticides (3-year average)")
+              "Use of pesticides (3-year average)",
+              "NA",
+              "NA",
+              "NA",
+              "NA",
+              "NA")
 
 Year <- c(2016, 
           2014,
@@ -170,14 +186,17 @@ Year <- c(2016,
           2014,
           2015,
           2030,
-          2013)
+          2013,
+          2018,
+          2015,
+          2019,
+          2020,
+          2018)
 
-Number <- c(1:11, 13, 15:26)
-
-indicator_table <- data.frame(Name, Category, Year, Number)
+indicator_table <- data.frame(Name, Category, Year)
 
 indicator_table %>% 
-  knitr::kable(caption = "Table 1: Details of the IPBES Core Indicators Used") %>% 
+  knitr::kable(caption = "Table 1: Details of the Indicators Used") %>% 
   kableExtra::kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
 ```
 
@@ -190,32 +209,78 @@ instead. Additionally, Indicator 9, Region-based Marine Trophic Index,
 the mean of the regions was calculated per country, as countries such as
 Germany have multiple regions with distinct values.
 
-### Other Indicators
-A set of other indicators were included in the analysis to expand the coverage of socioeconomic variables. We included the [human development index (HDI)](http://hdr.undp.org/en/indicators/137506#), [average harmonized learning outcomes score](https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita), [gross domestic product (GDP)](http://www.fao.org/faostat/en/#data/MK), [corruption perception index (CPI)](https://www.transparency.org/en/cpi/2020/index/nzl), and [population](http://www.fao.org/faostat/en/#data/OA). 
-
-These datasets were downloaded, cleaned, and had ISO3 codes added to easily merge them into the analysis. The latest data available was used for each indicator. 
-
 ## Dataset Compilation
 
 To understand how valuation is spread across geographies, we counted the number of times each country's ISO code appeared in the corpus for both geography columns added in step 2. The result is the density of studies per country and the density of funding institutions per country for the entire corpus. 
 
 The external indicators were also joined onto the dataset to analyze the relationships between these socioeconomic indicators and the density of studies and funding institutions. 
 
-This process was also repeated with an additional filter that excluded any studies published before 2010.   
+This process was also repeated with an additional filter that excluded any studies published before 2010.     
+  
 ## Pearson Correlation Analysis
   
-To summarize this analysis more concisely, we ran a pearson correlation to understand the relationship between the number of studies filtered by _____ and each of the indicators. The results are shown below. 
+To investigate the relationships between indicators and the number of valuation studies, we ran a pearson correlation analysis. The statistical analysis calculated the trends between the number of studies in each country (Names 1) and the number of studies funded in each country (Names 2) and each of the indicators. The results are shown below. 
+
+Insignificant relationships are blank, significant relationships (*P < 0.01*) are shown with circles. The strength of the correlation corresponds to the size of the circle and the color represents positve (blue) or negative (red) trends.    
+  
 ```{r pearson, fig.align = 'center', fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
 knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure.png")
 ```
+
+The same pearson correlation analysis with the indicators was conducted on the log of the number of studies in each country (Names 1) and the log of the number of studies funded in each country (Names2).
 
 ```{r pearson-log, fig.align = 'center', fig.cap = "Pearson correlations of log geographic valuation studies and the indicators"}
 knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure_log.png")
 ```
   
-## Individual Trend Analysis {.tabset .tabset-pills}
+## Individual Trend Analysis - Significant Relationships {.tabset .tabset-pills}
+The individual trends between each indicator and the number of studies and number of funding institutions are shown here for the entire corpus. 
+
+### Human Development Index {.unnumbered}
+```{r, fig.align = 'center', out.width="75%", fig.cap = "HDI vs. Density of Studies and Institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_HDI.png")
+knitr::include_graphics("Outputs/Corpus/Names2_HDI.png")
+```
+  
+### GDP {.unnumbered}
+```{r, fig.align = 'center', out.width="75%", fig.cap = "GDP vs. Density of Studies and Institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_GDP.png")
+knitr::include_graphics("Outputs/Corpus/Names2_GDP.png")
+```
+  
+### Corruption Perception Index {.unnumbered}
+```{r, fig.align = 'center', out.width="75%", fig.cap = "Corruption Percepation Index vs. Density of Studies and Institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_CPI.png")
+knitr::include_graphics("Outputs/Corpus/Names2_CPI.png")
+```
+  
+### Ecological Footprint per capita {.unnumbered}
+  
+### Water Footprint {.unnumbered}  
+ 
+### Inland Fishery Production {.unnumbered}
+  
+### Nitrogen Fertilizers {.unnumbered}    
+  
+### Percentage of undernourished people {.unnumbered}
+  
+### Protected area management effectiveness {.unnumbered}
+  
+### Total Wood Removals (roundwood, m3) {.unnumbered}
+    
+### Nitrogen Deposition Trends (kg N/ha/yr) {.unnumbered}
+
+## Individual Trend Analysis - Non-significant Relationships {.tabset .tabset-pills}
 The trend between each indicator and the density of studies and funding institutions are shown here for the entire corpus. 
 
+### Learning Outcomes {.unnumbered}
+```{r, fig.align = 'center', out.width="75%", fig.cap = "Learning outcomes vs. Density of Studies and Institutions"}
+knitr::include_graphics("Outputs/Corpus/Names1_LearningOutcomes.png")
+knitr::include_graphics("Outputs/Corpus/Names2_LearningOutcomes.png")
+```
+  
+### Popluation per km2 {.unnumbered}
+  
 ### Area of forest production under FSC and PEFC certification {.unnumbered}
 
 ### Biodiversity Habitat Index {.unnumbered}
@@ -224,29 +289,17 @@ The trend between each indicator and the density of studies and funding institut
 
 ### Biocapacity per capita {.unnumbered}
 
-### Ecological Footprint per capita {.unnumbered}
-
 ### Forest area {.unnumbered}
 
-### Water Footprint {.unnumbered}
-
-### Inland Fishery Production {.unnumbered}
-
 ### Region-based Marine Trophic Index {.unnumbered}
-
-### Nitrogen + Phosphate Fertilizers {.unnumbered}
 
 ### Nitrogen Use Efficiency (%) {.unnumbered}
 
 ### Percentage and total area covered by protected areas {.unnumbered}
 
-### Percentage of undernourished people {.unnumbered}
-
 ### Proportion of local breeds, classified as being at risk, not-at-risk or unknown level of risk of extinction {.unnumbered}
 
 ### PA of Key Biodiversity Areas Coverage (%) {.unnumbered}
-
-### Protected area management effectiveness {.unnumbered}
 
 ### Protected Area Connectedness Index {.unnumbered}
 
@@ -256,34 +309,6 @@ The trend between each indicator and the density of studies and funding institut
 
 ### Species Status Information Index {.unnumbered}
 
-### Total Wood Removals (roundwood, m3) {.unnumbered}
-
 ### Trends in forest extent (tree cover) {.unnumbered}
 
-### Nitrogen Deposition Trends (kg N/ha/yr) {.unnumbered}
-
 ### Trends in Pesticides Use {.unnumbered}
-
-### Human Development Index {.unnumbered}
-```{r, fig.align = 'center', out.width="75%", fig.cap = "HDI vs. Density of Studies and Institutions"}
-knitr::include_graphics("Outputs/Corpus/Names1_HDI.png")
-knitr::include_graphics("Outputs/Corpus/Names2_HDI.png")
-```
-  
-### Learning Outcomes {.unnumbered}
-```{r, fig.align = 'center', out.width="75%", fig.cap = "Learning outcomes vs. Density of Studies and Institutions"}
-knitr::include_graphics("Outputs/Corpus/Names1_LearningOutcomes.png")
-knitr::include_graphics("Outputs/Corpus/Names2_LearningOutcomes.png")
-```
-  
-### GDP {.unnumbered}
-```{r, fig.align = 'center', out.width="75%", fig.cap = "GDP vs. Density of Studies and Institutions"}
-knitr::include_graphics("Outputs/Corpus/Names1_GDP.png")
-knitr::include_graphics("Outputs/Corpus/Names2_GDP.png")
-```
-### Corruption Perception Index {.unnumbered}
-```{r, fig.align = 'center', out.width="75%", fig.cap = "Corruption Percepation Index vs. Density of Studies and Institutions"}
-knitr::include_graphics("Outputs/Corpus/Names1_CPI.png")
-knitr::include_graphics("Outputs/Corpus/Names2_CPI.png")
-```
-  
