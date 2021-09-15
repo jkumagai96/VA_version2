@@ -66,56 +66,36 @@ data %>%
     # 41  
 
 
-# How many records per region for names 1?
-
-data %>% 
-  mutate(x = strsplit(as.character(Region_TI_AB_DE_ID), ", ")) %>% 
-  unnest(x) %>% 
-  count(x, sort = TRUE)
 
 # How many records per region including 2010 or after for names 1?
-data %>% 
+object1 <- data %>% 
   filter(PY >= 2010) %>% 
   mutate(x = strsplit(as.character(Region_TI_AB_DE_ID), ", ")) %>% 
   unnest(x) %>% 
   count(x, sort = TRUE)
-
-# How may records per sub region for names 1?
-data %>% 
-  mutate(x = strsplit(as.character(Subregion_TI_AB_DE_ID), ", ")) %>% 
-  unnest(x) %>% 
-  count(x, sort = TRUE)
+write.csv(object1, "Outputs/Statistics/Names1_region_2010.csv", row.names = F)
 
 # How many records per sub region for names 1 >= 2010?
-data %>% 
+object2 <- data %>% 
   filter(PY >= 2010) %>% 
   mutate(x = strsplit(as.character(Subregion_TI_AB_DE_ID), ", ")) %>% 
   unnest(x) %>% 
   count(x, sort = TRUE)
+write.csv(object2, "Outputs/Statistics/Names1_subregion_2010.csv", row.names = F)
 
-# How many records per region for names 2?
-
-data %>% 
-  mutate(x = strsplit(as.character(Region_CI_FU_FX), ", ")) %>% 
-  unnest(x) %>% 
-  count(x, sort = TRUE)
 
 # How many records per region including 2010 or after for names 2?
-data %>% 
+object3 <- data %>% 
   filter(PY >= 2010) %>% 
   mutate(x = strsplit(as.character(Region_CI_FU_FX), ", ")) %>% 
   unnest(x) %>% 
   count(x, sort = TRUE)
-
-# How may records per sub region for names 2?
-data %>% 
-  mutate(x = strsplit(as.character(Subregion_CI_FU_FX), ", ")) %>% 
-  unnest(x) %>% 
-  count(x, sort = TRUE)
+write.csv(object3, "Outputs/Statistics/Names2_region_2010.csv", row.names = F)
 
 # How many records per sub region for names 2 >= 2010?
-data %>% 
+object4 <- data %>% 
   filter(PY >= 2010) %>% 
   mutate(x = strsplit(as.character(Subregion_CI_FU_FX), ", ")) %>% 
   unnest(x) %>% 
   count(x, sort = TRUE)
+write.csv(object4, "Outputs/Statistics/Names2_subregion_2010.csv", row.names = F)
