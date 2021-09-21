@@ -1,243 +1,194 @@
 # Joy Kumagai (joy.kumagai@senckenberg.de)
-# Date: Dec 2nd 2020
-# Create four shapefiles with the CORPUS dataset, indicators, and variables for before 1990, 1990-1999, 2000 - 2009, 2010 to now
+# Date: September 21st 2021
+# Create four maps with the CORPUS dataset, indicators, and variables for before 1990, 1990-1999, 2000 - 2009, 2010 to now
 # Values Assessment 
 
-###### NEEDS TO BE UPDATED IF USED (BUT DON'T THINK IT WILL BE???)
-
-# How would CPI or GDP values in 2020 or 2019 be statistically related to the corpus of literature before 1990? 
-
-#### Load Packages ####
+##### Load Packages #####
 library(tidyverse)
-library(readxl)
-library(FAOSTAT)
 library(sf)
+library(readxl)
+library(cowplot)
 
-#### Declare Functions ####
-countFunction <- function(data, x) {
-  data %>% 
-    mutate(x = strsplit(as.character(x), ", ")) %>% 
-    unnest(x) %>% 
-    count(x, sort = TRUE) %>% 
-    drop_na() %>% 
-    mutate(n_log = log(n))
-}
-
-#### Load Data ####
-corpus <- read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx", sheet = 1)
-HDI <- read.csv("Data/Human development index.csv", header = F)
-GDP <- read.csv("Data/GDP.csv")
-GLO <- read.csv("data/learning-outcomes-vs-gdp-per-capita.csv")
-POP <- read.csv("Data/population.csv")
-CPI <- read_excel("Data/2018_CPI_FullDataSet.xlsx", 
-                  skip = 2,
-                  sheet = "CPI Timeseries 2012 - 2018") %>% 
-  select(Country, ISO3, starts_with("CPI score"))  
-
-countrycodes <- read.csv("Data/iso_codes_2020_06_15.csv")
-indicators <- read.csv("Outputs/Indicators_compiled.csv")
+##### Load Data #####
+data <- read.csv("Outputs/Corpus/harmonized_data.csv")
+indicators <- read.csv("Outputs/indicators_compiled.csv")
 column_names <- read_excel("Data/names_of_columns.xlsx")
-country_poly <- read_sf("Data/UNEP_CountryShapefile/Country_Polygon.shp")
-#### Clean Data ####
-# GLO
-GLO <- GLO %>% 
-  select(Entity, Code, Year, Average.harmonised.learning.outcome.score..Altinok..Angrist..and.Patrinos..2018...) %>% 
-  rename("Learning_outcomes_2015" = Average.harmonised.learning.outcome.score..Altinok..Angrist..and.Patrinos..2018...) %>% 
-  filter(Code != "", 
-         Learning_outcomes_2015 != "",
-         Year == "2015") %>% # 2010 has more data 
-  select(Code, Learning_outcomes_2015) %>% 
-  rename("ISO_Alpha_3" = Code)
+countries <- read_sf("Data/gadm36_levels_shp/gadm36_0.shp") %>% 
+  rename(ISO_Alpha_3 = GID_0)
 
-# GDP
-gdp_2018 <- translateCountryCode(data = GDP, from = "FAOST_CODE", to = "ISO3_CODE", "Area.Code") # Add's the ISO Code to the data
-gdp_2018[207, 2]  <- "SSD"
-gdp_2018 <- gdp_2018 %>% 
-  select(ISO3_CODE, Value) %>% # Unit is US Dollars Millions 
-  drop_na()
-colnames(gdp_2018) <- c("ISO_Alpha_3", "GDP_2018")
+##### Combine and project data #####
+# add names onto indicators dataset
+colnames(indicators)[2:25] <- column_names$Short_Name
 
-# CPI
-CPI <- CPI %>% 
-  select(ISO3, `CPI score 2018`) %>% 
-  rename("ISO_Alpha_3" = ISO3, "CPI_2018" = `CPI score 2018`)
+df <- left_join(data, indicators, by = "ISO_Alpha_3")
+df <- left_join(countries, df, by = "ISO_Alpha_3") # Three records from data removed from this process, which only 1 had data (Netherlands Antilles)
 
-# HDI
-colnames(HDI) <- HDI[2,]
-HDI <- HDI[-c(1,2),]
-HDI <- HDI %>% 
-  select(Country, "2018") 
-HDI <- HDI[-(190:212),] # remove non-county specific data
+# Project data 
+robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
+poly <- st_transform(df, robin_crs)
 
-# Add ISO_3 names
-colnames(countrycodes) <- c("Country", "ISO_Alpha_3")
-HDI <- left_join(x = HDI, y = countrycodes, by = "Country") 
-nas <- HDI[rowSums(is.na(HDI)) > 0,] # separate country's that were not joined
-HDI <- HDI %>% drop_na()
-nas[1,3] <- "BHS"
-nas[2,3] <- "CAF"
-nas[3,3] <- "COM"
-nas[4,3] <- "COG" 
-nas[5,3] <- "COD"
-nas[6,3] <- "DOM"
-nas[7,3] <- "SWZ"
-nas[8,3] <- "GMB"
-nas[9,3] <- "HKG"
-nas[10,3] <- "KOR"
-nas[11,3] <- "LAO"
-nas[12,3] <- "MHL"
-nas[13,3] <- "MDA"
-nas[14,3] <- "NLD"
-nas[15,3] <- "NER"
-nas[16,3] <- "PHL"
-nas[17,3] <- "RUS"
-nas[18,3] <- "SDN"
-nas[19,3] <- "SYR"
-nas[20,3] <- "TZA"
-nas[21,3] <- "ARE"
-nas[22,3] <- "GBR"
-nas[23,3] <- "USA"
+##### Graph all ######
+grid <- st_graticule(lat = seq(-90, 90, by = 30), # the graticules 
+                     lon = seq(-180, 180, by = 60)) %>% 
+  st_transform("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m") %>% 
+  st_geometry 
 
-HDI <- rbind(HDI, nas) # join back the countries that were not originally joined
-HDI <- HDI[,c(2,3)] # removes country column 
-colnames(HDI) <- c("hdi_2018", "ISO_Alpha_3")
+plot1 <- ggplot(poly) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_colour_manual(values = NA) +              
+  guides(colour = guide_legend("No data", override.aes = list(colour = "grey", fill = "grey")))+
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(
+    low = "#267311",
+    high = "#ECF649",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies") 
 
-# POP
-pop_2018 <- translateCountryCode(data = POP, from = "FAOST_CODE", to = "ISO3_CODE", "Area.Code") %>% # Add's the ISO Code to the data
-  mutate(ISO3_CODE = replace(ISO3_CODE, Area=="South Sudan", "SSD")) %>% 
-  select(ISO3_CODE, Value) %>% # Unit is 1000 persons (2018) 
-  drop_na()
-
-colnames(pop_2018) <- c("ISO_Alpha_3", "Pop_2018") 
-
-#### Full Corpus ####
-corpusE <- corpus
-
-# Names1 
-n1 <- corpusE %>% 
-  countFunction(x = corpusE$CountryName_TI_AB_DE_ID) %>% 
-  rename("ISO_Alpha_3" = x, "Names1" = n, "Names1_log" = n_log)
-
-# Names2
-n2 <- corpusE %>% 
-  countFunction(x = corpusE$CountryName_CI_FU_FX) %>% 
-  rename("ISO_Alpha_3" = x, "Names2" = n, "Names2_log" = n_log)
-
-# Join datasets together
-df <- full_join(n1, n2, by = "ISO_Alpha_3")
-df <- full_join(df, HDI, by = "ISO_Alpha_3")
-df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
-df <- full_join(df, CPI, by = "ISO_Alpha_3")
-df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
-df <- full_join(df, indicators, by = "ISO_Alpha_3")
-# Export 
-write.csv(df, "Outputs/Corpus_YearsDivision/VA_Corpus__full.csv", row.names = F)
-
-
-#### Corpus before 1990 ####
-corpusA <- corpus %>% 
-  filter(PY < "1990")
-
-# Names1 
-n1 <- corpusA %>% 
-  countFunction(x = corpusA$CountryName_TI_AB_DE_ID) %>% 
-  rename("ISO_Alpha_3" = x, "Names1" = n, "Names1_log" = n_log)
-
-# Names2
-n2 <- corpusA %>% 
-  countFunction(x = corpusA$CountryName_CI_FU_FX) %>% 
-  rename("ISO_Alpha_3" = x, "Names2" = n, "Names2_log" = n_log)
-
-# Join datasets together
-df <- full_join(n1, n2, by = "ISO_Alpha_3")
-df <- full_join(df, HDI, by = "ISO_Alpha_3")
-df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
-df <- full_join(df, CPI, by = "ISO_Alpha_3")
-df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
-df <- full_join(df, indicators, by = "ISO_Alpha_3")
+# Names 1 Log
+plot1_log <- ggplot(poly) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#267311",
+    high = "#ECF649",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
 
 # Export 
-write.csv(df, "Outputs/Corpus_YearsDivision/VA_corpus__before1990.csv", row.names = F)
+png("Outputs/Maps/Names1_percountry.png", width = 8, height = 8, units = "in", res = 600)
+plot_grid(plot1, plot1_log, labels = "auto", ncol = 1)
+dev.off()
 
-#### Corpus 1990 - 1999 ####
-corpusB <- corpus %>% 
-  filter(PY >= "1990",
-         PY < "2000")
+# Names 2
+plot2 <- ggplot(poly) + # Names 2 all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#08519C",
+    high = "#DEEBF7",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
 
-# Names1 
-n1 <- corpusB %>% 
-  countFunction(x = corpusB$CountryName_TI_AB_DE_ID) %>% 
-  rename("ISO_Alpha_3" = x, "Names1" = n, "Names1_log" = n_log)
-
-# Names2
-n2 <- corpusB %>% 
-  countFunction(x = corpusB$CountryName_CI_FU_FX) %>% 
-  rename("ISO_Alpha_3" = x, "Names2" = n, "Names2_log" = n_log)
-
-# Join datasets together
-df <- full_join(n1, n2, by = "ISO_Alpha_3")
-df <- full_join(df, HDI, by = "ISO_Alpha_3")
-df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
-df <- full_join(df, CPI, by = "ISO_Alpha_3")
-df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
-df <- full_join(df, indicators, by = "ISO_Alpha_3")
-
-# Export 
-write.csv(df, "Outputs/Corpus_YearsDivision/VA_corpus__1990_1999.csv", row.names = F)
-
-
-#### Corpus 2000 - 2009 ####
-corpusC <- corpus %>% 
-  filter(PY >= "2000",
-         PY < "2010")
-
-# Names1 
-n1 <- corpusC %>% 
-  countFunction(x = corpusC$CountryName_TI_AB_DE_ID) %>% 
-  rename("ISO_Alpha_3" = x, "Names1" = n, "Names1_log" = n_log)
-
-# Names2
-n2 <- corpusC %>% 
-  countFunction(x = corpusC$CountryName_CI_FU_FX) %>% 
-  rename("ISO_Alpha_3" = x, "Names2" = n, "Names2_log" = n_log)
-
-# Join datasets together
-df <- full_join(n1, n2, by = "ISO_Alpha_3")
-df <- full_join(df, HDI, by = "ISO_Alpha_3")
-df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
-df <- full_join(df, CPI, by = "ISO_Alpha_3")
-df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
-df <- full_join(df, indicators, by = "ISO_Alpha_3")
-
-# Export 
-write.csv(df, "Outputs/Corpus_YearsDivision/VA_corpus__2000_2009.csv", row.names = F)
-
-#### Corpus 2010 - present ####
-corpusD <- corpus %>% 
-  filter(PY >= "2010")
-
-# Names1 
-n1 <- corpusD %>% 
-  countFunction(x = corpusD$CountryName_TI_AB_DE_ID) %>% 
-  rename("ISO_Alpha_3" = x, "Names1" = n, "Names1_log" = n_log)
-
-# Names2
-n2 <- corpusD %>% 
-  countFunction(x = corpusD$CountryName_CI_FU_FX) %>% 
-  rename("ISO_Alpha_3" = x, "Names2" = n, "Names2_log" = n_log)
-
-# Join datasets together
-df <- full_join(n1, n2, by = "ISO_Alpha_3")
-df <- full_join(df, HDI, by = "ISO_Alpha_3")
-df <- full_join(df, GLO, by = "ISO_Alpha_3")
-df <- full_join(df, gdp_2018, by = "ISO_Alpha_3")
-df <- full_join(df, CPI, by = "ISO_Alpha_3")
-df <- full_join(df, pop_2018, by = "ISO_Alpha_3")
-df <- full_join(df, indicators, by = "ISO_Alpha_3")
+# Names 2 Log
+plot2_log <- ggplot(poly) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#08519C",
+    high = "#DEEBF7",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
 
 # Export 
-write.csv(df, "Outputs/Corpus_YearsDivision/VA_corpus__2010_present.csv", row.names = F)
+png("Outputs/Maps/Names2_percountry.png", width = 8, height = 8, units = "in", res = 600)
+plot_grid(plot2, plot2_log, labels = "auto", ncol = 1)
+dev.off()
+
+##### Graph by region #####
+
+
+##### Graph by year #####
+
+# Before 1990 
+
+# 1990 - 1999
+
+# 2000 - 2009
+
+# 2010 - 2020
