@@ -2,7 +2,7 @@
 title: "Valuation Atlas"
 subtitle: Associated with the IPBES assessment on the diverse values and valuation of nature and its contributiosn to people 
 author: "Joy A. Kumagai and Aidin Niamir"
-date: "21/9/2021"
+date: "22/9/2021"
 output: 
   html_document:
     number_sections: true
@@ -71,12 +71,32 @@ knitr::include_graphics("Outputs/Maps/Names2_percountry.png")
 ### Summarized by region and subregion {.tabset .tabset-pills}
 
 #### Density of studies by region {.unnumbered}
-
-#### Density of studies by subregion {.unnumbered}
-
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1_perregion.png")
+```
+  
+*30,428 studies did not identify a country within their title, abstract, or keywords.
+  
 #### Density of institutions by region {.unnumbered}
-
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names2_perregion.png")
+```
+  
+*30,428 studies did not identify a country within their title, abstract, or keywords.
+    
+#### Density of studies by subregion {.unnumbered}
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1_persubregion.png")
+```
+  
+* 376 studies did not identify a country within their affiliations, acknowledgments, and funding text. 
+  
 #### Density of institutions by subregion {.unnumbered}
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names2_persubregion.png")
+```
+  
+* 376 studies did not identify a country within their affiliations, acknowledgments, and funding text. 
 
 ## Relationships between density of studies and institutions
 
