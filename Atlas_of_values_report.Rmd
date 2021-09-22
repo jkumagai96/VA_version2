@@ -105,14 +105,25 @@ knitr::include_graphics("Outputs/Corpus/Names1_Names2.png")
 ```
 
 ## Temporal Trends
-Additionally, we explored how the density of valuation studies and institutions has changed through time from 1980 to 2020. No data is displayed in grey.
+There has been an exponential increase in valuation studies from the 1980's to the present as pictured in the graph below. 
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Corpus/Timeline.svg")
+```
+
+* 569 studies did not have a year identified
+* Data from 2020 was removed due to incomplete sampling of 2020. 
   
-### Density of studies 
+### Geographic density of studies 
+Additionally, we explored how the density of valuation studies has changed through time from 1980 to 2020. No data is displayed in grey.
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_fourpanels.png")
 ```
   
-### Density of institutions
+### Geographic density of institutions
+Additionally, we explored how the density of valuation institutions has changed through time from 1980 to 2020. No data is displayed in grey.
+  
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_fourpanels.png")
 ```

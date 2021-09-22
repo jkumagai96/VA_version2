@@ -214,8 +214,25 @@ plot_grid(plot1, plot2, plot3, plot4, labels = "auto", ncol = 2)
 dev.off()
 
 
+############################################# Timeline graph
+names1_timeline <- corpus %>% 
+  mutate(n = 1) %>% 
+  group_by(PY) %>% 
+  summarise(year_count = sum(n)) %>% 
+  filter(PY != 2020)
 
-############################################# NAMES 1
+timeline_plot <- ggplot(names1_timeline, aes(x = PY, y = year_count)) +
+  geom_line(color = "blue") +
+  geom_point(size = 2) +
+  theme_bw() +
+  labs(x = "Year", y = "Count of valuation studies")
+
+svg("Outputs/Corpus/Timeline.svg")
+timeline_plot
+dev.off()
+
+
+############################################# NAMES 2
 ##### Group data temporally #####
 b1990 <- corpus %>% 
   filter(PY < 1990) %>% 
