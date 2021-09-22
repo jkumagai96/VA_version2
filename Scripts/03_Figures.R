@@ -62,8 +62,8 @@ setwd("~/IPBES/R/VA_version2")
 column_names <- read_excel("Data/names_of_columns.xlsx")
 indicators <- read.csv("Outputs/Indicators_compiled.csv")
 
-setwd("C:/Users/jkumagai/Documents/IPBES/R/VA_version2/Outputs/Uptake_Q13_2010") # CHANGE THIS 
-data <- read.csv("harmonized_data_13.csv") 
+setwd("C:/Users/jkumagai/Documents/IPBES/R/VA_version2/Outputs/Corpus") # CHANGE THIS 
+data <- read.csv("harmonized_data.csv") 
 
 #### Individual Figures for Names 1 ####
 # Figure Names 1 vs. Names 2
@@ -72,7 +72,13 @@ plot1 <- data %>%
   geom_point() +
   labs(x = "Density of Studies", y = "Density of Institutions") +
   geom_smooth(method = "lm") +
-  theme_bw()
+  ggpmisc::stat_fit_glance(method = 'lm',
+                           color = "red3",
+                           mapping = aes(label = sprintf('r^2~"="~%.3f~~italic(P)~"="~%.2g',
+                                                         after_stat(r.squared), after_stat(p.value))),
+                           parse = TRUE, 
+                           label.x = "right", label.y = "bottom") +
+  theme_bw() 
 plot1
 
 # Figure Names1 vs. HDI
