@@ -105,12 +105,18 @@ knitr::include_graphics("Outputs/Corpus/Names1_Names2.png")
 ```
 
 ## Temporal Trends
-
--   Before 1990
--   1990 - 1999
--   2000 - 2009
--   2010 - 2020
-
+Additionally, we explored how the density of valuation studies and institutions has changed through time from 1980 to 2020. No data is displayed in grey.
+  
+### Density of studies 
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1_fourpanels.png")
+```
+  
+### Density of institutions
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names2_fourpanels.png")
+```
+  
 # Indicator Analysis
 
 The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were used alongside a chosen set of other relevant indicators to understand geographic trends between density of valuation studies and how they relate to biological and socioeconomic indicators.
