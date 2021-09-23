@@ -17,6 +17,7 @@ library(tidyverse)
 ```
 
 # Overview {.unnumbered}
+DOI: 10.5281/zenodo.5524600 
 
 The aim was to prepare a spatio-temporal representation of valuation studies related to biodiversity and ecosystem services and ... .
 
@@ -75,14 +76,14 @@ knitr::include_graphics("Outputs/Maps/Names1_percountry.png")
 ```
   
 #### Before 2010 {.unnumbered}
-Showcases the number of valuation studies conducted within each country **between 1980 - 2009**. Please note that the scales are not consistent between maps. 
+Showcases the number of valuation studies conducted within each country in the dataset **before 2010**. Please note that the scales are not consistent between maps. 
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_percountry_before2010.png")
 ```
   
 #### After 2010 {.unnumbered}
-Showcases the number of valuation studies conducted within each country **between 2010 - 2020**. Please note that the scales are not consistent between maps.  
+Showcases the number of valuation studies conducted within each country in the **dataset from 2009**. Please note that the scales are not consistent between maps.  
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
@@ -99,20 +100,20 @@ knitr::include_graphics("Outputs/Maps/Names2_percountry.png")
 ```
     
 #### Before 2010 {.unnumbered}
-Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text **between 1980 and 2009** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps. 
+Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the studies in the dataset **before 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps. 
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry_before2010.png")
 ```
     
 #### After 2010 {.unnumbered}
-Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text **between 2010 and 2020** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps. 
+Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the studies in the dataset **from 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps. 
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry_2010.png")
 ```
   
-### Summarized by region and subregion {.tabset .tabset-pills}
+### Summarized by region {.tabset .tabset-pills}
 
 #### Density of studies by region {.unnumbered}
 ```{r, fig.align = 'center'}
@@ -127,6 +128,8 @@ knitr::include_graphics("Outputs/Maps/Names2_perregion.png")
 ```
   
 * 376 studies did not identify a country within their affiliations, acknowledgments, and funding text. 
+
+### Summarized by subregion {.tabset .tabset-pills} 
   
 #### Density of studies by subregion {.unnumbered}
 ```{r, fig.align = 'center'}
@@ -159,19 +162,60 @@ knitr::include_graphics("Outputs/Corpus/Timeline.svg")
 * 569 studies did not have a year identified
 * Data from 2020 was removed due to incomplete sampling of 2020. 
   
-### Geographic density of studies 
-Additionally, we explored how the density of valuation studies has changed through time from 1980 to 2020. No data is displayed in grey.
+### Geographic density of studies {.tabset  .tabset-pills}
+Additionally, we explored how the density of valuation studies has changed throughout the last four decades. No data is displayed in grey.
+
+#### Pre 1990 {-}
 
 ```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_fourpanels.png")
+knitr::include_graphics("Outputs/Maps/temporal/Names1_1980-1990.png")
 ```
   
-### Geographic density of institutions
-Additionally, we explored how the density of valuation institutions has changed through time from 1980 to 2020. No data is displayed in grey.
-  
+#### 1990 - 2000 {-}
+
 ```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names2_fourpanels.png")
+knitr::include_graphics("Outputs/Maps/temporal/Names1_1990-2000.png")
 ```
+   
+#### 2000 - 2010 {-}
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/temporal/Names1_2000-2010.png")
+```
+       
+#### Post 2010 {-}
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/temporal/Names1_2010-2020.png")
+```
+  
+### Geographic density of institutions {.tabset .tabset-pills}
+Additionally, we explored how the density of valuation institutions has changed through time throughout the last four decades. No data is displayed in grey.
+    
+#### Pre 1990 {-}
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/temporal/Names2_1980-1990.png")
+```
+  
+#### 1990 - 2000 {-}
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/temporal/Names2_1990-2000.png")
+```
+  
+#### 2000 - 2010 {-}
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/temporal/Names2_2000-2010.png")
+```
+      
+#### Post 2010 {-}
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/temporal/Names2_2010-2020.png")
+```
+
   
 # Indicator Analysis
 

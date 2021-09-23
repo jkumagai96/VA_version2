@@ -101,7 +101,7 @@ plot1 <- ggplot(poly_1990) + # Names 1 all studies
         axis.title = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5, face = "bold")) +
-  labs(fill = "Density of Studies", title = "1980 - 1990") 
+  labs(fill = "Density of Studies", title = "Pre 1990") 
 
 plot2 <- ggplot(poly_2000) + # Names 1 all studies 
   geom_sf(data = grid, 
@@ -207,12 +207,24 @@ plot4 <- ggplot(poly_2020) + # Names 1 all studies
         axis.title = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5, face = "bold")) +
-  labs(fill = "Density of Studies", title = "2010 - 2020")
+  labs(fill = "Density of Studies", title = "Post 2010")
 
-png("Outputs/Maps/Names1_fourpanels.png", width = 10, height = 8, units = "in", res = 600)
-plot_grid(plot1, plot2, plot3, plot4, labels = "auto", ncol = 2)
+
+png("Outputs/Maps/temporal/Names1_1980-1990.png", width = 5, height = 4, units = "in", res = 600)
+plot_grid(plot1)
 dev.off()
 
+png("Outputs/Maps/temporal/Names1_1990-2000.png", width = 5, height = 4, units = "in", res = 600)
+plot_grid(plot2)
+dev.off()
+
+png("Outputs/Maps/temporal/Names1_2000-2010.png", width = 5, height = 4, units = "in", res = 600)
+plot_grid(plot3)
+dev.off()
+
+png("Outputs/Maps/temporal/Names1_2010-2020.png", width = 5, height = 4, units = "in", res = 600)
+plot_grid(plot4)
+dev.off()
 
 ############################################# Timeline graph
 names1_timeline <- corpus %>% 
@@ -309,7 +321,7 @@ plot1 <- ggplot(poly_1990) + # Names 1 all studies
         axis.title = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5, face = "bold")) +
-  labs(fill = "Density of Institutions", title = "1980 - 1990") 
+  labs(fill = "Density of Institutions", title = "Pre 1990") 
 
 plot2 <- ggplot(poly_2000) + # Names 1 all studies 
   geom_sf(data = grid, 
@@ -415,8 +427,20 @@ plot4 <- ggplot(poly_2020) + # Names 1 all studies
         axis.title = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5, face = "bold")) +
-  labs(fill = "Density of Institutions", title = "2010 - 2020")
+  labs(fill = "Density of Institutions", title = "Post 2010")
 
-png("Outputs/Maps/Names2_fourpanels.png", width = 10, height = 8, units = "in", res = 600)
-plot_grid(plot1, plot2, plot3, plot4, labels = "auto", ncol = 2)
+png("Outputs/Maps/temporal/Names2_1980-1990.png", width = 5, height = 4, units = "in", res = 600)
+plot_grid(plot1)
+dev.off()
+
+png("Outputs/Maps/temporal/Names2_1990-2000.png", width = 5, height = 4, units = "in", res = 600)
+plot_grid(plot2)
+dev.off()
+
+png("Outputs/Maps/temporal/Names2_2000-2010.png", width = 5, height = 4, units = "in", res = 600)
+plot_grid(plot3)
+dev.off()
+
+png("Outputs/Maps/temporal/Names2_2010-2020.png", width = 5, height = 4, units = "in", res = 600)
+plot_grid(plot4)
 dev.off()
