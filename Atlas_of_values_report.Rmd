@@ -21,7 +21,10 @@ library(tidyverse)
 The aim was to prepare a spatio-temporal representation of valuation studies related to biodiversity and ecosystem services and ... .
 
 # Creation of the Corpus
-
+## Methodology 
+  
+## Description of the corpus 
+  
 # Georeferencing the Corpus
 
 To identify country names in the corpus of literature a two step approach was used. First, we wanted to understand where studies were conducted and searched the title, abstract, and keywords of each paper for country names. Second, to understand where the funding institutions were located we searched the affiliations, acknowledgments, and funding text for country names.
@@ -40,11 +43,14 @@ The python code used to georeference the corpus can be found [here](https://gith
 knitr::include_graphics("pilot2.svg")
 ```
 
-Step 1: Extract country names from text Country names were extracted from the title, abstract, and keywords of each paper with a regular expression and the associated ISO code was added into a a column in the dataset. The same regular expression was also used to search the affiliations, acknowledgments, and funding text of the same paper and placed into a second column.
+Step 1: *Extract country names from text* 
+Country names were extracted from the title, abstract, and keywords of each paper with a regular expression and the associated ISO code was added into a a column in the dataset. The same regular expression was also used to search the affiliations, acknowledgments, and funding text of the same paper and placed into a second column.
 
-Step 2 and 3: Bundle countries in regions The IPBES Regions and Subregions datatset was then used to add additional region and subregion attributes to the dataset by matching the ISO3 code.
+Step 2 and 3: *Bundle countries in regions and subregions*
+The IPBES Regions and Subregions datatset was then used to add additional region and subregion attributes to the dataset by matching the ISO3 code.
 
-Step 4: Find TS accordingly Finally, we used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted.
+Step 4: *Find TS accordingly* 
+We used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted.
 
 Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. The complete corpus can be found on Zenodo here: [https://doi.org/[INSERT](https://doi.org/%5BINSERT){.uri} DOI]
 
@@ -56,49 +62,51 @@ We counted the number of times a country was listed in the corpus from the colum
 Separately, we counted the number of times a country was listed in the corpus from the column of country names obtained from the affiliations acknowledgments, and funding text as a proxy for the density of institutions. In Part 4 - Indicator Analysis this is referred to as "Names 2"
 
 ## Geographic Distribution
-We will now present the results from the analysis through a series of maps showing both the raw country results and summarized by IPBES regions and subregions. 
+We will now present the results from the analysis through a series of maps showing both the raw country results and summarized by IPBES regions and subregions. No data is always displayed in grey. 
 
 ### Density of studies {.tabset .tabset-pills}
-
+30,428 studies did not identify a country within their title, abstract, or keywords.
+  
 #### All {.unnumbered}
-Showcases the number of valuation studies conducted within each country for the entire dataset.
+Showcases the number of valuation studies conducted within each country for **the entire dataset**. Please note that the scales are not consistent between maps. 
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_percountry.png")
 ```
   
 #### Before 2010 {.unnumbered}
-Showcases the number of valuation studies conducted within each country between 1980 - 2009.
+Showcases the number of valuation studies conducted within each country **between 1980 - 2009**. Please note that the scales are not consistent between maps. 
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_percountry_before2010.png")
 ```
   
 #### After 2010 {.unnumbered}
-Showcases the number of valuation studies conducted within each country between 2010 - 2020.  
+Showcases the number of valuation studies conducted within each country **between 2010 - 2020**. Please note that the scales are not consistent between maps.  
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
 ```
   
 ### Density of institutions  {.tabset .tabset-pills}
-
+376 studies did not identify a country within their affiliations, acknowledgments, and funding text. 
+  
 #### All {.unnumbered}
-Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the entire dataset as a proxy for institutions which are conducing the research.
+Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the **entire dataset** as a proxy for institutions which are conducing the research. Please note that the scales are not consistent between maps. 
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry.png")
 ```
     
 #### Before 2010 {.unnumbered}
-Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text between 1980 and 2009 as a proxy for institutions which are conducing the research in this time period.
+Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text **between 1980 and 2009** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps. 
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry_before2010.png")
 ```
     
 #### After 2010 {.unnumbered}
-Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text between 2010 and 2020 as a proxy for institutions which are conducing the research in this time period.
+Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text **between 2010 and 2020** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps. 
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry_2010.png")
@@ -118,8 +126,8 @@ knitr::include_graphics("Outputs/Maps/Names1_perregion.png")
 knitr::include_graphics("Outputs/Maps/Names2_perregion.png")
 ```
   
-*30,428 studies did not identify a country within their title, abstract, or keywords.
-    
+* 376 studies did not identify a country within their affiliations, acknowledgments, and funding text. 
+  
 #### Density of studies by subregion {.unnumbered}
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_persubregion.png")
@@ -132,9 +140,10 @@ knitr::include_graphics("Outputs/Maps/Names1_persubregion.png")
 knitr::include_graphics("Outputs/Maps/Names2_persubregion.png")
 ```
   
-* 376 studies did not identify a country within their affiliations, acknowledgments, and funding text. 
-
+*30,428 studies did not identify a country within their title, abstract, or keywords.
+  
 ## Relationships between density of studies and institutions
+While more instuttions are identified per study compared to where the study was conducted, it is clear that there is a significant positive linear realtionship between these. 
 
 ```{r names1/names2, fig.align = 'center', fig.cap = "Density of studies vs density of institutions"}
 knitr::include_graphics("Outputs/Corpus/Names1_Names2.png")
