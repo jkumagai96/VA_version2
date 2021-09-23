@@ -32,7 +32,11 @@ data$remove <- data %>% select(`Names1_log > 2010`:Names2_log) %>% rowSums(na.rm
 data <- data %>% 
   filter(data$remove != 0) %>% 
   select(-remove, -ISO_Alpha_3) %>% 
-  select(Names1_log, `Names1_log > 2010`, Names2_log, `Names2_log > 2010`, hdi_2018:`Trends in Pesticides Use`)
+  select(Names1_log, `Names1_log > 2010`, Names2_log, `Names2_log > 2010`, hdi_2018:`Trends in Pesticides Use`) %>% 
+  rename("Log Density of Studies" = "Names1_log",
+         "Log Density of Studies post 2010" = "Names1_log > 2010",
+         "Log Density of Institutions" = "Names2_log",
+         "Log Density of Institutions post 2010" = "Names2_log > 2010")
 
 #### Correlation Analysis ####
 # calculate correlations 
@@ -80,3 +84,17 @@ corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 dev.off()
 
+# Only significant relationships
+data_r <- data_r[-c(6,7,8,10,15,17,18,21,24), ]
+data_p <- data_p[-c(6,7,8,10,15,17,18,21,24), ]
+data_n <- data_n[-c(6,7,8,10,15,17,18,21,24), ]
+
+
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
+         p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
+
+png("Outputs/Pearson_correlation_Table/correlation_figure_log_only_sig.png", height = 8, width = 8, units = "in", res = 600)
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
+         p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
+
+dev.off()
