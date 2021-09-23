@@ -2,7 +2,7 @@
 title: "Valuation Atlas"
 subtitle: Associated with the IPBES assessment on the diverse values and valuation of nature and its contributiosn to people 
 author: "Joy A. Kumagai and Aidin Niamir"
-date: "22/9/2021"
+date: "23/9/2021"
 output: 
   html_document:
     number_sections: true
@@ -58,16 +58,52 @@ Separately, we counted the number of times a country was listed in the corpus fr
 ## Geographic Distribution
 We will now present the results from the analysis through a series of maps showing both the raw country results and summarized by IPBES regions and subregions. 
 
-### Density of studies
+### Density of studies {.tabset .tabset-pills}
+
+#### All {.unnumbered}
+Showcases the number of valuation studies conducted within each country for the entire dataset.
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_percountry.png")
 ```
+  
+#### Before 2010 {.unnumbered}
+Showcases the number of valuation studies conducted within each country between 1980 - 2009.
 
-### Density of institutions
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1_percountry_before2010.png")
+```
+  
+#### After 2010 {.unnumbered}
+Showcases the number of valuation studies conducted within each country between 2010 - 2020.  
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
+```
+  
+### Density of institutions  {.tabset .tabset-pills}
+
+#### All {.unnumbered}
+Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the entire dataset as a proxy for institutions which are conducing the research.
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry.png")
 ```
+    
+#### Before 2010 {.unnumbered}
+Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text between 1980 and 2009 as a proxy for institutions which are conducing the research in this time period.
 
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names2_percountry_before2010.png")
+```
+    
+#### After 2010 {.unnumbered}
+Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text between 2010 and 2020 as a proxy for institutions which are conducing the research in this time period.
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names2_percountry_2010.png")
+```
+  
 ### Summarized by region and subregion {.tabset .tabset-pills}
 
 #### Density of studies by region {.unnumbered}

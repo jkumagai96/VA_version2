@@ -1,6 +1,6 @@
 # Joy Kumagai (joy.kumagai@senckenberg.de)
 # Date: September 22nd 2021
-# Create four maps with the CORPUS dataset, indicators, and variables for before 1990, 1990-1999, 2000 - 2009, 2010 to now
+# Create maps for density of studies / institutions 
 # Values Assessment 
 
 ##### Load Packages #####
@@ -8,6 +8,16 @@ library(tidyverse)
 library(sf)
 library(readxl)
 library(cowplot)
+
+##### Declare Functions ######
+countFunction <- function(data, x) {
+  data %>% 
+    mutate(x = strsplit(as.character(x), ", ")) %>% 
+    unnest(x) %>% 
+    count(x, sort = TRUE) %>% 
+    drop_na() %>% 
+    mutate(n_log = log(n))
+}
 
 ##### Load Data #####
 data <- read.csv("Outputs/Corpus/harmonized_data.csv")
@@ -27,7 +37,7 @@ df <- left_join(countries, df, by = "ISO_Alpha_3") # Three records from data rem
 robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
 poly <- st_transform(df, robin_crs)
 
-##### Graph all ######
+##### Map full corpus ######
 grid <- st_graticule(lat = seq(-90, 90, by = 30), # the graticules 
                      lon = seq(-180, 180, by = 60)) %>% 
   st_transform("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m") %>% 
@@ -179,6 +189,337 @@ plot2_log <- ggplot(poly) + # Names 2 log all studies
 png("Outputs/Maps/Names2_percountry.png", width = 8, height = 8, units = "in", res = 600)
 plot_grid(plot2, plot2_log, labels = "auto", ncol = 1)
 dev.off()
+
+
+##### Map corpus => 2010 ######
+# Load and clean data
+data_2010 <- read.csv("Outputs/Corpus_2010/harmonized_data.csv")
+df_2010 <- left_join(countries, data_2010, by = "ISO_Alpha_3") # Three records from data removed from this process, which only 1 had data (Netherlands Antilles)
+
+# Project data 
+robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
+poly_2010 <- st_transform(df_2010, robin_crs)
+
+# Plotting Names 1 
+plotA <- ggplot(poly_2010) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_colour_manual(values = NA) +              
+  guides(colour = guide_legend("No data", override.aes = list(colour = "grey", fill = "grey")))+
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies") 
+
+# Plotting Names 1 log 
+plotA_log <- ggplot(poly_2010) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Export 
+png("Outputs/Maps/Names1_percountry_2010.png", width = 8, height = 8, units = "in", res = 600)
+plot_grid(plotA, plotA_log, labels = "auto", ncol = 1)
+dev.off()
+
+# Plotting Names 2 
+plotB <- ggplot(poly_2010) + # Names 2 all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Plotting Names 2 log
+plotB_log <- ggplot(poly_2010) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Export 
+png("Outputs/Maps/Names2_percountry_2010.png", width = 8, height = 8, units = "in", res = 600)
+plot_grid(plotB, plotB_log, labels = "auto", ncol = 1)
+dev.off()
+
+
+###### Mapping corpus < 2010 #####
+
+# Create dataset 
+corpus_b2010 <- read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx", sheet = 1) %>% 
+  filter(PY < 2010)
+
+n1 <- corpus_b2010 %>% 
+  countFunction(x = corpus_b2010$CountryName_TI_AB_DE_ID) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n, "Names1_log" = n_log)
+
+n2 <- corpus_b2010 %>% 
+  countFunction(x = corpus_b2010$CountryName_CI_FU_FX) %>% 
+  rename("ISO_Alpha_3" = x, "Names2" = n, "Names2_log" = n_log)
+
+df_b2010 <- full_join(n1, n2, by = "ISO_Alpha_3")
+
+# Process dataset
+t <- left_join(countries, df_b2010, by = "ISO_Alpha_3") # Three records from data removed from this process, which only 1 had data (Netherlands Antilles)
+
+# Project data 
+robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
+poly_b2010 <- st_transform(t, robin_crs)
+
+# Plotting Names 1 
+plotC <- ggplot(poly_b2010) + # Names 1 all studies before 2010
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_colour_manual(values = NA) +              
+  guides(colour = guide_legend("No data", override.aes = list(colour = "grey", fill = "grey")))+
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies") 
+
+# Plotting Names 1 log 
+plotC_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Export 
+png("Outputs/Maps/Names1_percountry_before2010.png", width = 8, height = 8, units = "in", res = 600)
+plot_grid(plotC, plotC_log, labels = "auto", ncol = 1)
+dev.off()
+
+# Plotting Names 2 
+plotD <- ggplot(poly_b2010) + # Names 2 all studies before 2010
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Plotting Names 2 log
+plotD_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Export 
+png("Outputs/Maps/Names2_percountry_before2010.png", width = 8, height = 8, units = "in", res = 600)
+plot_grid(plotD, plotD_log, labels = "auto", ncol = 1)
+dev.off()
+
 
 ##### Prepare data by region #####
 # Download data
@@ -408,25 +749,3 @@ plot6 <- ggplot(n2_region_poly) +
 png("Outputs/Maps/Names2_perregion.png", width = 8, height = 5, units = "in", res = 600)
 plot6
 dev.off()
-
-##### Graph by year #####
-
-# Before 1990 
-
-# 1990 - 1999
-
-# 2000 - 2009
-
-# 2010 - 2020
-
-# Green even spaces
-scale_fill_manual(values = c("#F7FCB9", "#ADDD8E", "#41AB5D", "#006837", "grey"))
-
-# Blue non even spaces
-scale_fill_manual(values = c("#DEEBF7", "#6BAED6", "#2171B5", "#08519C", "grey"))
-
-# Green non even spaces (names 1)
-scale_fill_manual(values = c("#F7FCB9", "#ADDD8E", "#238443", "#006837", "grey"))
-
-# Blue even spaces (names 2)
-scale_fill_manual(values = c("#DEEBF7", "#9ECAE1", "#4292C6", "#08519C", "grey"))
