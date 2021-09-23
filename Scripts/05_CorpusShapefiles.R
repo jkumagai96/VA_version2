@@ -33,6 +33,9 @@ colnames(indicators)[2:25] <- column_names$Short_Name
 df <- left_join(data, indicators, by = "ISO_Alpha_3")
 df <- left_join(countries, df, by = "ISO_Alpha_3") # Three records from data removed from this process, which only 1 had data (Netherlands Antilles)
 
+st_drop_geometry(df) %>% select(Names1) %>% sum(na.rm = T)
+st_drop_geometry(df) %>% select(Names2) %>% sum(na.rm = T)
+
 # Project data 
 robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
 poly <- st_transform(df, robin_crs)
@@ -195,6 +198,8 @@ dev.off()
 # Load and clean data
 data_2010 <- read.csv("Outputs/Corpus_2010/harmonized_data.csv")
 df_2010 <- left_join(countries, data_2010, by = "ISO_Alpha_3") # Three records from data removed from this process, which only 1 had data (Netherlands Antilles)
+
+st_drop_geometry(df_2010) %>% select(Names1) %>% sum(na.rm = T)
 
 # Project data 
 robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
@@ -371,6 +376,8 @@ t <- left_join(countries, df_b2010, by = "ISO_Alpha_3") # Three records from dat
 # Project data 
 robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
 poly_b2010 <- st_transform(t, robin_crs)
+
+st_drop_geometry(poly_b2010) %>% select(Names1) %>% sum(na.rm = T)
 
 # Plotting Names 1 
 plotC <- ggplot(poly_b2010) + # Names 1 all studies before 2010
