@@ -36,6 +36,12 @@ df <- left_join(countries, df, by = "ISO_Alpha_3") # Three records from data rem
 st_drop_geometry(df) %>% select(Names1) %>% sum(na.rm = T)
 st_drop_geometry(df) %>% select(Names2) %>% sum(na.rm = T)
 
+st_drop_geometry(df) %>% 
+  select(ISO_Alpha_3, Names1, Names2) %>% 
+  mutate(Names1_percent = (Names1/sum(df$Names1, na.rm = T))) %>% 
+  mutate(Names2_percent = (Names2/sum(df$Names2, na.rm = T))) %>% 
+  write.csv("Outputs/Maps/Counts_Names1_per_country_all.csv", row.names = F)
+
 # Project data 
 robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
 poly <- st_transform(df, robin_crs)
@@ -200,6 +206,13 @@ data_2010 <- read.csv("Outputs/Corpus_2010/harmonized_data.csv")
 df_2010 <- left_join(countries, data_2010, by = "ISO_Alpha_3") # Three records from data removed from this process, which only 1 had data (Netherlands Antilles)
 
 st_drop_geometry(df_2010) %>% select(Names1) %>% sum(na.rm = T)
+
+st_drop_geometry(df_2010) %>% 
+  select(ISO_Alpha_3, Names1, Names2) %>% 
+  mutate(Names1_percent = (Names1/sum(df_2010$Names1, na.rm = T))) %>% 
+  mutate(Names2_percent = (Names2/sum(df_2010$Names2, na.rm = T))) %>% 
+  write.csv("Outputs/Maps/Counts_Names1_per_country_post2010.csv", row.names = F)
+
 
 # Project data 
 robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
@@ -369,6 +382,13 @@ n2 <- corpus_b2010 %>%
   rename("ISO_Alpha_3" = x, "Names2" = n, "Names2_log" = n_log)
 
 df_b2010 <- full_join(n1, n2, by = "ISO_Alpha_3")
+
+
+df_b2010 %>% 
+  select(ISO_Alpha_3, Names1, Names2) %>% 
+  mutate(Names1_percent = (Names1/sum(df_b2010$Names1, na.rm = T))) %>% 
+  mutate(Names2_percent = (Names2/sum(df_b2010$Names2, na.rm = T))) %>% 
+  write.csv("Outputs/Maps/Counts_Names1_per_country_pre2010.csv", row.names = F)
 
 # Process dataset
 t <- left_join(countries, df_b2010, by = "ISO_Alpha_3") # Three records from data removed from this process, which only 1 had data (Netherlands Antilles)
