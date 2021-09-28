@@ -33,10 +33,28 @@ data <- data %>%
   filter(data$remove != 0) %>% 
   select(-remove, -ISO_Alpha_3) %>% 
   select(Names1, `Names1 > 2010`, Names2, `Names2 > 2010`, hdi_2018:`Trends in Pesticides Use`) %>% 
-  rename("Density of Studies" = "Names1",
-         "Density of Studies post 2010" = "Names1 > 2010",
-         "Density of Institutions" = "Names2",
-         "Density of Institutions post 2010" = "Names2 > 2010")
+  rename("Density of ES/NCP study location" = "Names1",
+         "Density of ES/NCP study location post 2010" = "Names1 > 2010",
+         "Density of research institution location" = "Names2",
+         "Density of research institution location post 2010" = "Names2 > 2010",
+         "Human Development Index" = "hdi_2018",
+         "Learning Outcomes" = "Learning_outcomes_2015",
+         "Gross Domestic Product" = "GDP_2019", 
+         "Corruption Perception Index" = "CPI_2020",
+         "Population" = "Pop_2018",
+         "Gross Domestic Prodct Per Capita" = "GDP_per_capita",
+         "Forest Area Under FSC Cetrification" = "Forest Area under FSC certification",
+         "Biocapacity Per Capita" = "Biocapacity per capita",
+         "Forest Area" = "Forest area",
+         "Region-based Marine Trophic Index" = "Marine Trophic Index (1950)",
+         "Percent Nitrogen Use Efficiency" = "Nitrogen Use Efficiency (%)",
+         "Percentage Protected" = "Percentage protected",
+         "Percentage of Undernourished People" = "Percentage of undernourished people",
+         "Local Breeds at Risk of Extinction" = "Local Breeds at risk of extinction",
+         "Percentage of Key Biodiversity Areas Protected" = "PA of Key Biodiversity Areas Coverage (%)",
+         "Protected Area Management Effectiveness" = "Protected area management effectiveness",
+         "Species Protection Index" = "Species Protection Index (%)",
+         "Trends in Forest Extent" = "Trends in forest extent")
 
 #### Correlation Analysis ####
 # calculate correlations 
@@ -70,7 +88,7 @@ data_n <- res1$n %>%
 data_n <- data_n[-c(1:4), ]
 
 # plot rectangular correlation plot
-corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",tl.srt = 45,
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 
 
@@ -79,8 +97,8 @@ write.csv(data_r, "Outputs/Pearson_correlation_table/correlation_coefficients.cs
 write.csv(data_p, "Outputs/Pearson_correlation_table/significance_values.csv", row.names = T)
 write.csv(data_n, "Outputs/Pearson_correlation_table/number_of_observations.csv", row.names = T)
 
-png("Outputs/Pearson_correlation_Table/correlation_figure.png", height = 8, width = 8, units = "in", res = 600)
-corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
+png("Outputs/Pearson_correlation_Table/correlation_figure.png", height = 8, width = 11, units = "in", res = 600)
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black", tl.srt = 45,
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 
 dev.off()
@@ -93,11 +111,11 @@ data_p <- data_p[-c(2,7,8,10,15,17,18,19,21,24,25,26,28,29), ]
 data_n <- data_n[-c(2,7,8,10,15,17,18,19,21,24,25,26,28,29), ]
 
 
-corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black", tl.srt = 45,
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 
-png("Outputs/Pearson_correlation_Table/correlation_figure_only_sig.png", height = 8, width = 8, units = "in", res = 600)
-corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",
+png("Outputs/Pearson_correlation_Table/correlation_figure_only_sig.png", height = 8, width = 10, units = "in", res = 600)
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black", tl.srt = 45,
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 
 dev.off()

@@ -1,31 +1,31 @@
-"","Log Density of Studies","Log Density of Studies post 2010","Log Density of Institutions","Log Density of Institutions post 2010"
-"hdi_2018",175,174,174,173
-"Learning_outcomes_2015",84,84,84,84
-"GDP_2019",191,190,190,189
-"CPI_2020",168,168,168,167
-"Pop_2018",204,203,202,200
-"GDP_per_capita",191,190,190,189
-"Forest Area under FSC certification",79,79,79,79
+"","Log density of ES/NCP study location","Log density of ES/NCP study location post 2010","Log density of research institution location","Log density of research institution location post 2010"
+"Human Development Index",175,174,174,173
+"Learning Outcomes",84,84,84,84
+"Gross Domestic Product",191,190,190,189
+"Corruption Perception Index",168,168,168,167
+"Population",204,203,202,200
+"Gross Domestic Prodct Per Capita",191,190,190,189
+"Forest Area Under FSC Cetrification",79,79,79,79
 "Biodiversity Habitat Index",173,171,170,168
 "Biodiversity Intactness Index",190,188,189,187
-"Biocapacity per capita",170,170,170,169
+"Biocapacity Per Capita",170,170,170,169
 "Ecological Footprint per capita",170,170,170,169
-"Forest area",203,201,201,198
+"Forest Area",203,201,201,198
 "Water Footprint",175,175,174,172
 "Inland Fishery Production",196,195,195,193
-"Marine Trophic Index (1950)",162,162,159,158
+"Region-based Marine Trophic Index",162,162,159,158
 "Nitrogen Fertilizers",178,178,178,177
-"Nitrogen Use Efficiency (%)",125,125,125,125
-"Percentage protected",207,205,204,201
-"Percentage of undernourished people",162,161,163,162
-"Local Breeds at risk of extinction",180,179,180,178
-"PA of Key Biodiversity Areas Coverage (%)",170,169,168,168
-"Protected area management effectiveness",147,147,147,145
+"Percent Nitrogen Use Efficiency",125,125,125,125
+"Percentage Protected",207,205,204,201
+"Percentage of Undernourished People",162,161,163,162
+"Local Breeds at Risk of Extinction",180,179,180,178
+"Percentage of Key Biodiversity Areas Protected",170,169,168,168
+"Protected Area Management Effectiveness",147,147,147,145
 "Protected Area Connectedness Index",209,207,206,203
 "Species Habitat Index",171,171,169,168
-"Species Protection Index (%)",205,203,204,201
+"Species Protection Index",205,203,204,201
 "Species Status Information Index",206,204,203,200
 "Total Wood Removals",187,186,186,184
-"Trends in forest extent",183,181,183,181
+"Trends in Forest Extent",183,181,183,181
 "Nitrogen Deposition Trends",167,167,165,164
 "Trends in Pesticides Use",79,79,79,79

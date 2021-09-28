@@ -1,8 +1,8 @@
 ---
 title: "Valuation Atlas"
 subtitle: Associated with the IPBES assessment on the diverse values and valuation of nature and its contributiosn to people 
-author: "Joy A. Kumagai and Aidin Niamir"
-date: "23/9/2021"
+author: 
+date: "28/9/2021"
 output: 
   html_document:
     number_sections: true
@@ -257,34 +257,34 @@ These datasets were downloaded, cleaned, and had ISO3 codes added to easily merg
 Here is the table of all of the indicators used, the category selected, the year the data is from, and the number assigned to them.
 
 ```{r, echo = F}
-Name <- c("Area of forest production under FSC and PEFC certification",
+Name <- c("Forest Area Under FSC and PEFC Certification",
           "Biodiversity Habitat Index",
           "Biodiversity Intactness Index",
-          "Biocapacity per capita",
-          "Ecological Footprint per capita",
-          "Forest area",
+          "Biocapacity Per Capita",
+          "Ecological Footprint Per Capita",
+          "Forest Area",
           "Water Footprint",
           "Inland Fishery Production",
           "Region-based Marine Trophic Index",
           "Nitrogen + Phosphate Fertilizers",
-          "Nitrogen Use Efficiency (%)",
-          "Percentage and total area covered by protected areas",
-          "Percentage of undernourished people",
-          "Proportion of local breeds, classified as being at risk, not-at-risk or unknown level of risk of extinction",
-          "PA of Key Biodiversity Areas Coverage (%)",
-          "Protected area management effectiveness",
+          "Percent Nitrogen Use Efficiency",
+          "Percentage and Total Area Covered by Protected Areas",
+          "Percentage of Undernourished People",
+          "Proportion of Local Breeds Classified as Being At Risk, Not-at-risk or Unknown Level of Risk of Extinction",
+          "Percentage of Key Biodiverisy Areas Protected",
+          "Protected Area Management Effectiveness",
           "Protected Area Connectedness Index",
           "Species Habitat Index",
           "Species Protection Index (%)",
           "Species Status Information Index",
           "Total Wood Removals (roundwood, m3)",
-          "Trends in forest extent (tree cover)",
+          "Trends in Forest Extent (Tree Cover)",
           "Nitrogen Deposition Trends (kg N/ha/yr)",
           "Trends in Pesticides Use",
-          "Human Development Index (HDI)",
-          "Average harmonized learning outcomes score",
-          "Gross domestic product (GDP)",
-          "Corruption perception index (CPI)",
+          "Human Development Index",
+          "Average Harmonized Learning Outcomes Score",
+          "Gross Domestic Product (GDP)",
+          "Corruption Perception Index",
           "Population")
 
 Category <- c("FSC_area", 
@@ -354,11 +354,11 @@ indicator_table %>%
   kableExtra::kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
 ```
 
-There were a few instances of duplicated values which were double checked with the original dataset and the erranous value removed. Examples include having two values for USA due to the separation of Hawaii in the original dataset. In these cases Hawaii was removed and the value referring to the rest of the states of the country was used instead. Additionally, Indicator 9, Region-based Marine Trophic Index, the mean of the regions was calculated per country, as countries such as Germany have multiple regions with distinct values.
+There were a few instances of duplicated values which were double checked with the original dataset and the erroneous value removed. Examples include having two values for USA due to the separation of Hawaii in the original dataset. In these cases Hawaii was removed and the value referring to the rest of the states of the country was used instead. Additionally, Indicator 9, Region-based Marine Trophic Index, the mean of the regions was calculated per country, as countries such as Germany have multiple regions with distinct values.
 
 ## Dataset Compilation
 
-To understand how valuation is spread across geographies, we counted the number of times each country's or terriroies' ISO code appeared in the corpus for both geography columns added in step 2. The result is the density of studies per country or terriroty and the density of funding institutions per country or territory for the entire corpus.
+To understand how valuation is spread across geographies, we counted the number of times each country's or territories' ISO code appeared in the corpus for both geography columns added in step 2. The result is the density of studies per country or territory and the density of funding institutions per country or territory for the entire corpus.
 
 The external indicators were also joined onto the dataset to analyze the relationships between these socioeconomic indicators and the density of studies and funding institutions.
 
@@ -409,273 +409,273 @@ The dots represent countries within the dataset that have values for both the in
 
 For each figure the panels are arranged accordingly:
 
--   Names 1 (top-left) is the number of valuation studies for each country or territory in the corpus
+-   Density of studies (top-left) is the number of valuation studies for each country or territory in the corpus
 
--   Names 1 from 2010 (top-right) is the number of valuation studies for each country or territory in the corpus from 2010 to 2020
+-   Density of studies from 2010 (top-right) is the number of valuation studies for each country or territory in the corpus from 2010 to 2020
 
--   Names 2 (bottom-left) is the number of valuation studies funded from each country or territory in the corpus
+-   Density of institutions (bottom-left) is the number of valuation studies funded from each country or territory in the corpus
 
--   Names 2 from 2010 (bottom-right) is the number of valuation studies funded from each country or territory in the corpus from 2010 to 2020
+-   Density of institutions from 2010 (bottom-right) is the number of valuation studies funded from each country or territory in the corpus from 2010 to 2020
 
 ### Human Development Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the human development index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the human development index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/HDI.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the human development index"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the human development index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/HDI_log.svg")
 ```
 
-### Learning Outcomes {.unnumbered}
+### Average Harmonized Learning Outcomes Score {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and learning outcomes"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and learning outcomes"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/LearningOutcomes.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and learning outcomes"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and learning outcomes"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/LearningOutcomes_log.svg")
 ```
 
 ### GDP {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and GDP"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and GDP"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/GDP.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and GDP"}
+```{r, fig.align = 'center', fig.cap = "LLog relationships between density of valuation studies and associated insitutions, and GDP"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/GDP_log.svg")
 ```
 
 ### Corruption Perception Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the corruption perception index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the corruption perception index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/CPI.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the corruption perception index"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the corruption perception index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/CPI_log.svg")
 ```
 
 ### Population {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and population"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and population"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/POP.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and population"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and population"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/POP_log.svg")
 ```
 
 ### GDP per capita {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and GDP per capita"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and GDP per capita"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/GDP_per_capita.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and GDP per capita"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and GDP per capita"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/GDP_per_capita_log.svg")
 ```
 
-### Forest area under FSC certification {.unnumbered}
+### Forest Area Under FSC Certification {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and forest area under FSC certification"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and forest area under FSC certification"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/FSC.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and forest area under FSC certification"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and forest area under FSC certification"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/FSC_log.svg")
 ```
 
 ### Biodiversity Habitat Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the biodiversity habitat index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the biodiversity habitat index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Biodiversity_habitat_index.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the biodiversity habitat index"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biodiversity habitat index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Biodiversity_habitat_index_log.svg")
 ```
 
 ### Biodiversity Intactness Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the biodiversity intactness index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the biodiversity intactness index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Biodiversity_intactness_index.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the biodiversity intactness index"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biodiversity intactness index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Biodiversity_intactness_index_log.svg")
 ```
 
-### Biocapacity per capita {.unnumbered}
+### Biocapacity Per Capita {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the biocapacity per capita"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the biocapacity per capita"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Biocapacity_per_capita.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the biocapacity per capita"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biocapacity per capita"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Biocapacity_per_capita_log.svg")
 ```
 
-### Ecological Footprint per capita {.unnumbered}
+### Ecological Footprint Per Capita {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the ecological footprint per capita"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the ecological footprint per capita"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Ecological_footprint.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the ecological footprint per capita"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the ecological footprint per capita"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Ecological_footprint_log.svg")
 ```
 
-### Forest area {.unnumbered}
+### Forest Area {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and forest area"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and forest area"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Forest_area.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and forest area"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and forest area"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Forest_area_log.svg")
 ```
 
 ### Water Footprint {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the water footprint"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the water footprint"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Water_footprint.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the water footprint"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the water footprint"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Water_footprint_log.svg")
 ```
 
 ### Inland Fishery Production {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and inland fishery production"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and inland fishery production"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Inland_fishery_production.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and inland fishery production"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and inland fishery production"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Inland_fishery_production_log.svg")
 ```
 
 ### Region-based Marine Trophic Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the region-based marine trophic index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the region-based marine trophic index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Marine_tropic_index.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the region-based marine trophic index"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the region-based marine trophic index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Marine_tropic_index_log.svg")
 ```
 
 ### Nitrogen Fertilizers {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and nitrogen fertization"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen fertization"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_fertilizers.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and nitrogen fertization"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and nitrogen fertization"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_fertilizers_log.svg")
 ```
 
-### Nitrogen Use Efficiency (%) {.unnumbered}
+### Percent Nitrogen Use Efficiency {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and nitrogen use efficiency"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen use efficiency"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_use_efficiency.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and nitrogen use efficiency"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and nitrogen use efficiency"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_use_efficiency_log.svg")
 ```
 
-### Percentage of area covered by protected areas {.unnumbered}
+### Percentage of Area Covered by Protected Areas {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and percentage of area covered by protected areas"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and percentage of area covered by protected areas"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Percentage_protected.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and percentage of area covered by protected areas"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and percentage of area covered by protected areas"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Percentage_protected_log.svg")
 ```
 
-### Percentage of undernourished people {.unnumbered}
+### Percentage of Undernourished People {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and percentage of undernourished people"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and percentage of undernourished people"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Percentage_of_undernourished_people.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and percentage of undernourished people"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and percentage of undernourished people"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Percentage_of_undernourished_people_log.svg")
 ```
 
-### Local Breeds at risk of extinction {.unnumbered}
+### Local Breeds at Risk of Extinction {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and local breeds at risk of extinction"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and local breeds at risk of extinction"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Local_breeds.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and local breeds at risk of extinction"}
+```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and local breeds at risk of extinction"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Local_breeds_log.svg")
 ```
 
-### PA of Key Biodiversity Areas Coverage (%) {.unnumbered}
+### Percentage of Key Biodiversity Areas Protected {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and PA of key biodiverisy area coverage"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and PA of key biodiverisy area coverage"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_of_key_biodiversity_area_coverage.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and PA of key biodiverisy area coverage"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_of_key_biodiversity_area_coverage_log.svg")
 ```
 
-### Protected area management effectiveness {.unnumbered}
+### Protected Area Management Effectiveness {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and protected area management effectiveness"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and protected area management effectiveness"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_management_effectiveness.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and protected area management effectiveness"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_management_effectiveness_log.svg")
@@ -683,11 +683,11 @@ knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_management_effecti
 
 ### Protected Area Connectedness Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the protected area connectedness index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the protected area connectedness index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_connectedness.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the protected area connectedness index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_connectedness_log.svg")
@@ -695,11 +695,11 @@ knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_connectedness_log.
 
 ### Species Habitat Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the species habitat index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the species habitat index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_habitat_index.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the species habitat index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_habitat_index_log.svg")
@@ -707,11 +707,11 @@ knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_habitat_index
 
 ### Species Protection Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the species protection index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the species protection index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/species_protection_index.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the species protection index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/species_protection_index_log.svg")
@@ -719,35 +719,35 @@ knitr::include_graphics("Outputs/Figures_Corpus_individual/species_protection_in
 
 ### Species Status Information Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and the species status information index"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the species status information index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_status.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the species status information index"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_status_log.svg")
 ```
 
-### Total Wood Removals (roundwood, m3) {.unnumbered}
+### Total Wood Removals {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and total wood removals"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and total wood removals"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Total_wood_removals.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and total wood removals"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Total_wood_removals_log.svg")
 ```
 
-### Trends in forest extent (tree cover) {.unnumbered}
+### Trends in Forest Extent {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and trends in forest extent"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in forest extent"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_forest_extent.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and trends in forest extent"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_forest_extent_log.svg")
@@ -755,36 +755,62 @@ knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_forest_exte
 
 ### Nitrogen Deposition Trends {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and nitrogen deposition trends"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen deposition trends"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_deposition_trends.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and nitrogen deposition trends"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_deposition_trends_log.svg")
 ```
-
-### Nitrogen Deposition Trends (kg N/ha/yr) {.unnumbered}
-
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and nitrogen deposition trends"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_deposition_trends.svg")
-```
-
-Log relationship graphs:
-
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and nitrogen deposition trends"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_deposition_trends_log.svg")
-```
-
+  
 ### Trends in Pesticides Use {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between valuation atlas and trends in pesticides use"}
+```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in pesticides use"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_pesticides_use.svg")
 ```
 
-Log relationship graphs:
+**Log relationship graphs:**
 
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and trends in pesticides use"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_pesticides_use_log.svg")
 ```
+
+# References
+
+**Datasets**
+
+Altinok, N., N. Angrist and H.A. Patrinos. 2018. “Global data set on education quality (1965-2015).” World Bank Policy Research Working Paper No. 8314. Washington, DC. https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita 
+
+Corruption Perception Index (2020) by Transparency International is licensed under CC-BY-ND 4.0 https://www.transparency.org/en/cpi/2020/index/ 
+
+FAO. FAOSTAT. Annual Population. Latest update: 16/12/2019. (Accessed 24/03/2021). http://www.fao.org/faostat/en/#data/OA
+
+FAO. FAOSTAT. Macro Indicators: Gross Domestic Product - Values US$. Latest update: 27/04/2021. (Accessed 02/09/2021). http://www.fao.org/faostat/en/#data/MK
+
+Global Administrative Areas (version 3.6). University of California, Berkeley. Available online: https://gadm.org/
+
+IPBES task force on knowledge and data (2020) IPBES Core Indicators - Harmonized Dataset, technical support unit on knowledge and data, Frankfurt, Germany. DOI: 10.5281/zenodo.4439411
+
+IPBES Technical Support Unit on Knowledge and Data. (2020). IPBES regions and sub-regions (1.1) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.3928281 
+
+ISO 3166-1:2020, Codes for the representation of names of countries and their subdivisions — Part 1: Country codes
+
+United Nations Development Programme. Human Development Reports. Human Development Index (HDI). (Accessed 24/03/2021). http://hdr.undp.org/en/indicators/137506#   
+  
+**R packages**
+
+Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package version 1.0.0. https://CRAN.R-project.org/package=cowplot
+
+Frank E Harrell, et al. (2020). Hmisc: Harrell Miscellaneous. R package version 4.4-1. https://CRAN.R-project.org/package=Hmisc
+
+Hadley Wickham and Jennifer Bryan (2019). readxl: Read Excel Files. R package version 1.3.1. https://CRAN.R-project.org/package=readxl
+
+Michael C. J. Kao, Markus Gesmann and Filippo Gheri (2020). FAOSTAT: Download Data from the FAOSTAT Database. R package version 2.2.1. https://CRAN.R-project.org/package=FAOSTAT
+
+Pebesma, E., 2018. Simple Features for R: Standardized Support for Spatial Vector Data. The R Journal 10 (1), 439-446, https://doi.org/10.32614/RJ-2018-009
+
+Wei T, Simko V (2021). R package 'corrplot': Visualization of a Correlation Matrix. (Version 0.90), https://github.com/taiyun/corrplot.
+
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686

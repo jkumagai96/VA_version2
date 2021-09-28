@@ -40,7 +40,7 @@ Plot_function <- function(plot_data, yvar, yname) {
   plot1 <- plot_data %>% 
     ggplot(aes(x = Names1, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1", y = yname) +
+    labs(x = "Density of Studies", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -51,7 +51,7 @@ Plot_function <- function(plot_data, yvar, yname) {
   plot2 <- plot_data %>% 
     ggplot(aes(x = `Names1 > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1 from 2010", y = yname) +
+    labs(x = "Density of Studies from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -62,7 +62,7 @@ Plot_function <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2", y = yname) +
+    labs(x = "Density of Institutions", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -74,7 +74,7 @@ Plot_function <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2 > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2 from 2010", y = yname) +
+    labs(x = "Density of Institutions from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -94,7 +94,7 @@ Plot_function_topright <- function(plot_data, yvar, yname) {
   plot1 <- plot_data %>% 
     ggplot(aes(x = Names1, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1", y = yname) +
+    labs(x = "Density of Studies", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -105,7 +105,7 @@ Plot_function_topright <- function(plot_data, yvar, yname) {
   plot2 <- plot_data %>% 
     ggplot(aes(x = `Names1 > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1 from 2010", y = yname) +
+    labs(x = "Density of Studies from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -116,7 +116,7 @@ Plot_function_topright <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2", y = yname) +
+    labs(x = "Density of Institutions", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -128,7 +128,7 @@ Plot_function_topright <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2 > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2 from 2010", y = yname) +
+    labs(x = "Density of Institutions from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -148,7 +148,7 @@ Plot_function_log <- function(plot_data, yvar, yname) {
   plot1 <- plot_data %>% 
     ggplot(aes(x = Names1_log, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1 (log)", y = yname) +
+    labs(x = "Log Density of Studies", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -159,7 +159,7 @@ Plot_function_log <- function(plot_data, yvar, yname) {
   plot2 <- plot_data %>% 
     ggplot(aes(x = `Names1_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1 from 2010 (log)", y = yname) +
+    labs(x = "Log Density of Studies from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -170,7 +170,7 @@ Plot_function_log <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2_log, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2 (log)", y = yname) +
+    labs(x = "Log Density of Institutions", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -182,7 +182,7 @@ Plot_function_log <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2 from 2010 (log)", y = yname) +
+    labs(x = "Log Density of Institutions from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -202,7 +202,7 @@ Plot_function_log_topright <- function(plot_data, yvar, yname) {
   plot1 <- plot_data %>% 
     ggplot(aes(x = Names1_log, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1 (log)", y = yname) +
+    labs(x = "Log Density of Studies", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -213,7 +213,7 @@ Plot_function_log_topright <- function(plot_data, yvar, yname) {
   plot2 <- plot_data %>% 
     ggplot(aes(x = `Names1_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1 from 2010 (log)", y = yname) +
+    labs(x = "Log Density of Studies from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -224,7 +224,7 @@ Plot_function_log_topright <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2_log, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2 (log)", y = yname) +
+    labs(x = "Log Density of Institutions", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -236,7 +236,7 @@ Plot_function_log_topright <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2 from 2010 (log)", y = yname) +
+    labs(x = "Log Density of Institutions from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -256,7 +256,7 @@ Plot_function_log_bottomright <- function(plot_data, yvar, yname) {
   plot1 <- plot_data %>% 
     ggplot(aes(x = Names1_log, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1 (log)", y = yname) +
+    labs(x = "Log Density of Studies", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -267,7 +267,7 @@ Plot_function_log_bottomright <- function(plot_data, yvar, yname) {
   plot2 <- plot_data %>% 
     ggplot(aes(x = `Names1_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 1 from 2010 (log)", y = yname) +
+    labs(x = "Log Density of Studies from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -278,7 +278,7 @@ Plot_function_log_bottomright <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2_log, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2 (log)", y = yname) +
+    labs(x = "Log Density of Institutions", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -290,7 +290,7 @@ Plot_function_log_bottomright <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Names 2 from 2010 (log)", y = yname) +
+    labs(x = "Log Density of Institutions from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
