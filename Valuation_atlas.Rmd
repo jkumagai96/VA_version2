@@ -66,12 +66,24 @@ Separately, we counted the number of times a country or territory was listed in 
 We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent higher density of studies, while the darker blue values represent higher density of institutions.  
 
 ### Density of studies {.tabset .tabset-pills}
-30,428 studies did not identify a country or territory within their title, abstract, or keywords.
+```{r echo = FALSE, eval = TRUE, warning=FALSE}
+data <- readxl::read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx", sheet = 1)
+
+t <- data %>% 
+  mutate(x = strsplit(as.character(CountryName_TI_AB_DE_ID), ", ")) %>%
+  unnest(x) %>% 
+  count(x, sort = TRUE)
+
+studies_na <- t %>% 
+  filter(is.na(x)) 
+```
+
+`r studies_na$n` studies did not identify a country or territory within their title, abstract, or keywords.
   
 #### All {.unnumbered}
 Showcases the number of valuation studies conducted within each country or territory for **the entire dataset**. Please note that the scales are not consistent between maps. 
 
-There were 64,683 identifications of a country or territory from the title, abstract, or keywords, consisting of 216 countries or territories identified. 
+There were `r sum(t$n) - studies_na$n` identifications of a country or territory from the title, abstract, or keywords, consisting of `r nrow(t) - nrow(studies_na)` countries or territories identified. 
 
 The United States has disproportionately higher valuation studies than other countries. In descending order, United States (10.96%), China (6.66%), Australia (5.36%), Brazil (4.66%) and India (3.74%) have the highest valuation studies in total and for studies post 2010.  
 
@@ -100,12 +112,22 @@ knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
 ```
   
 ### Density of institutions  {.tabset .tabset-pills}
-376 studies did not identify a country within their affiliations, acknowledgments, and funding text. 
+```{r echo = FALSE, eval = TRUE, warning=FALSE}
+t_names2 <- data %>% 
+  mutate(x = strsplit(as.character(CountryName_CI_FU_FX), ", ")) %>%
+  unnest(x) %>% 
+  count(x, sort = TRUE)
+
+names2_na <- t_names2 %>% 
+  filter(is.na(x)) 
+```
+
+`r names2_na$n` studies did not identify a country within their affiliations, acknowledgments, and funding text. 
   
 #### All {.unnumbered}
 Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the **entire dataset** as a proxy for institutions which are conducing the research. Please note that the scales are not consistent between maps. 
 
-There were 140,184 identifications of a country or territory from the affiliations, acknowledgments, or funding text, consisting of 209 countries or territories. 
+There were `r sum(t_names2$n) - names2_na$n` identifications of a country or territory from the affiliations, acknowledgments, or funding text, consisting of `r nrow(t_names2) - nrow(names2_na)` countries or territories. 
 
 The United States and the United Kingdom (UK) has disproportionately higher density of institutions than other countries. In descending order, the United States (17.89%), UK (7.36%), Germany (5.19%), Australia (4.90%), and China (4.64%) have the highest density of institutions. 
 
@@ -140,7 +162,18 @@ Besides Antarctica, Africa has the lowest density of studies and institutions.
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_perregion.png")
 ```
-* 30,428 studies did not have a region identified for the density of studies    
+
+```{r echo = FALSE, eval = TRUE, warning=FALSE}
+region1_counts <- data %>% 
+  mutate(x = strsplit(as.character(Region_TI_AB_DE_ID), ", ")) %>%
+  unnest(x) %>% 
+  count(x, sort = TRUE)
+
+region1_na <- region1_counts %>% 
+  filter(is.na(x)) 
+```
+
+* `r region1_na$n` studies did not have a region identified for the density of studies    
    
 #### Density of institutions {.unnumbered}
 ```{r, fig.align = 'center'}
@@ -155,7 +188,18 @@ Europe and North America disproportionately have the highest density of studies 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_persubregion.png")
 ```
-* 30,428 studies did not have a subregion identified for the density of studies 
+
+```{r echo = FALSE, eval = TRUE, warning=FALSE}
+subregion1_counts <- data %>% 
+  mutate(x = strsplit(as.character(Subregion_TI_AB_DE_ID), ", ")) %>%
+  unnest(x) %>% 
+  count(x, sort = TRUE)
+
+subregion1_na <- subregion1_counts %>% 
+  filter(is.na(x)) 
+```
+  
+* `r subregion1_na$n` studies did not have a subregion identified for the density of studies 
    
 #### Density of institutions {.unnumbered}
 ```{r, fig.align = 'center'}
