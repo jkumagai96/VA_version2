@@ -66,7 +66,7 @@ Separately, we counted the number of times a country or territory was listed in 
 We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent higher density of studies, while the darker blue values represent higher density of institutions.  
 
 ### Density of studies {.tabset .tabset-pills}
-```{r echo = FALSE, eval = TRUE, warning=FALSE}
+```{r eval = TRUE, warning=FALSE}
 data <- readxl::read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx", sheet = 1)
 
 t <- data %>% 
@@ -112,7 +112,7 @@ knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
 ```
   
 ### Density of institutions  {.tabset .tabset-pills}
-```{r echo = FALSE, eval = TRUE, warning=FALSE}
+```{r eval = TRUE, warning=FALSE}
 t_names2 <- data %>% 
   mutate(x = strsplit(as.character(CountryName_CI_FU_FX), ", ")) %>%
   unnest(x) %>% 
@@ -163,7 +163,7 @@ Besides Antarctica, Africa has the lowest density of studies and institutions.
 knitr::include_graphics("Outputs/Maps/Names1_perregion.png")
 ```
 
-```{r echo = FALSE, eval = TRUE, warning=FALSE}
+```{r eval = TRUE, warning=FALSE}
 region1_counts <- data %>% 
   mutate(x = strsplit(as.character(Region_TI_AB_DE_ID), ", ")) %>%
   unnest(x) %>% 
@@ -189,7 +189,7 @@ Europe and North America disproportionately have the highest density of studies 
 knitr::include_graphics("Outputs/Maps/Names1_persubregion.png")
 ```
 
-```{r echo = FALSE, eval = TRUE, warning=FALSE}
+```{r eval = TRUE, warning=FALSE}
 subregion1_counts <- data %>% 
   mutate(x = strsplit(as.character(Subregion_TI_AB_DE_ID), ", ")) %>%
   unnest(x) %>% 
