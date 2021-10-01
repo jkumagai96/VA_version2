@@ -1,7 +1,12 @@
 ---
 title: "Valuation Atlas"
-subtitle: Associated with the IPBES assessment on the diverse values and valuation of nature and its contributiosn to people 
-author: 
+subtitle: IPBES Values Assessment; Methodological assessment regarding the diverse conceptualization of multiple values of nature and its benefits, including biodiversity and ecosystem functions and services 
+author:  |
+  | Associated with Chapter 3. Assessment of Valuation Methods and Chapter 4. Valuation for decisions
+  | \n
+  | Aidin Niamir and Joy Kumagai
+  | 
+  | DOI: 10.5281/zenodo.5524600
 date: "28/9/2021"
 output: 
   html_document:
@@ -15,16 +20,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
+DOI: 10.5281/zenodo.5524600
 
-# Overview {.unnumbered}
-DOI: 10.5281/zenodo.5524600 
-
-The aim was to prepare a spatio-temporal representation of valuation studies related to biodiversity and ecosystem services and ... .
-
-# Creation of the Corpus
-## Methodology 
-  
-## Description of the corpus 
+# The Corpus
+The maps and analyses in this section are based on a corpus of over 79,040 studies in the published scientific literature. The corpus is shared between chapter 3 and 4 of the values assessment. For more information about the corpus see IPBES VA Chapter 3. Systematic review on Method Families (https://doi.org/10.5281/zenodo.4404436) and IPBES VA Chapter 4. Systematic review on valuation uptake (https://doi.org/10.5281/zenodo.4391335).
   
 # Georeferencing the Corpus
 
@@ -51,7 +50,7 @@ Step 2 and 3: *Bundle countries in regions and subregions*
 The IPBES Regions and Subregions datatset was then used to add additional region and subregion attributes to the dataset by matching the ISO3 code.
 
 Step 4: *Find TS accordingly* 
-We used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted.
+We used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted. For more details on topic identification please see chapter 4 systematic review on valuation uptake (https://doi.org/10.5281/zenodo.4391335).
 
 Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. The complete corpus can be found on Zenodo here: [https://doi.org/[INSERT](https://doi.org/%5BINSERT){.uri} DOI]
 
@@ -64,11 +63,12 @@ Separately, we counted the number of times a country or territory was listed in 
 
 ## Geographic Distribution
 We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent higher density of studies, while the darker blue values represent higher density of institutions.  
-
-### Density of studies {.tabset .tabset-pills}
-```{r eval = TRUE, warning=FALSE}
+```{r eval = TRUE, warning=FALSE, cache.extra = file.mtime('Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx')}
 data <- readxl::read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx", sheet = 1)
-
+```
+  
+### Density of studies {.tabset .tabset-pills}
+```{r results='asis'}
 t <- data %>% 
   mutate(x = strsplit(as.character(CountryName_TI_AB_DE_ID), ", ")) %>%
   unnest(x) %>% 
@@ -76,9 +76,9 @@ t <- data %>%
 
 studies_na <- t %>% 
   filter(is.na(x)) 
-```
 
-`r studies_na$n` studies did not identify a country or territory within their title, abstract, or keywords.
+cat(studies_na$n, "studies did not identify a country or territory within their title, abstract, or keywords.")
+```
   
 #### All {.unnumbered}
 Showcases the number of valuation studies conducted within each country or territory for **the entire dataset**. Please note that the scales are not consistent between maps. 
@@ -112,7 +112,7 @@ knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
 ```
   
 ### Density of institutions  {.tabset .tabset-pills}
-```{r eval = TRUE, warning=FALSE}
+```{r results='asis'}
 t_names2 <- data %>% 
   mutate(x = strsplit(as.character(CountryName_CI_FU_FX), ", ")) %>%
   unnest(x) %>% 
@@ -120,10 +120,10 @@ t_names2 <- data %>%
 
 names2_na <- t_names2 %>% 
   filter(is.na(x)) 
-```
 
-`r names2_na$n` studies did not identify a country within their affiliations, acknowledgments, and funding text. 
-  
+cat(names2_na$n, "studies did not identify a country within their affiliations, acknowledgments, and funding text.")
+```
+   
 #### All {.unnumbered}
 Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the **entire dataset** as a proxy for institutions which are conducing the research. Please note that the scales are not consistent between maps. 
 
@@ -163,7 +163,7 @@ Besides Antarctica, Africa has the lowest density of studies and institutions.
 knitr::include_graphics("Outputs/Maps/Names1_perregion.png")
 ```
 
-```{r eval = TRUE, warning=FALSE}
+```{r, results='asis'}
 region1_counts <- data %>% 
   mutate(x = strsplit(as.character(Region_TI_AB_DE_ID), ", ")) %>%
   unnest(x) %>% 
@@ -171,10 +171,10 @@ region1_counts <- data %>%
 
 region1_na <- region1_counts %>% 
   filter(is.na(x)) 
-```
 
-* `r region1_na$n` studies did not have a region identified for the density of studies    
-   
+cat("* ",region1_na$n, "studies did not have a region identified for the density of studies.")
+```
+  
 #### Density of institutions {.unnumbered}
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_perregion.png")
@@ -189,7 +189,7 @@ Europe and North America disproportionately have the highest density of studies 
 knitr::include_graphics("Outputs/Maps/Names1_persubregion.png")
 ```
 
-```{r eval = TRUE, warning=FALSE}
+```{r results='asis'}
 subregion1_counts <- data %>% 
   mutate(x = strsplit(as.character(Subregion_TI_AB_DE_ID), ", ")) %>%
   unnest(x) %>% 
@@ -197,10 +197,10 @@ subregion1_counts <- data %>%
 
 subregion1_na <- subregion1_counts %>% 
   filter(is.na(x)) 
+
+cat("* ",subregion1_na$n, "studies did not have a subregion identified for the density of studies.")
 ```
   
-* `r subregion1_na$n` studies did not have a subregion identified for the density of studies 
-   
 #### Density of institutions {.unnumbered}
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_persubregion.png")
