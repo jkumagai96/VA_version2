@@ -199,6 +199,47 @@ png("Outputs/Maps/Names2_percountry.png", width = 8, height = 8, units = "in", r
 plot_grid(plot2, plot2_log, labels = "auto", ncol = 1)
 dev.off()
 
+##### Map Names 1 / Names 2 #####
+test <- poly %>% 
+  mutate(ratio = Names1/Names2)
+
+
+plot_1and2_ratio <- ggplot(poly) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1/Names2, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#FB8C00",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Ratio of Studies and Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+png("Outputs/Maps/Names1Names2_map.png", width = 8, height = 5, units = "in", res = 600)
+plot_1and2_ratio
+dev.off()
 
 ##### Map corpus => 2010 ######
 # Load and clean data

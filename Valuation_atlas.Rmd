@@ -5,9 +5,9 @@ author:  |
   | Associated with Chapter 3. Assessment of Valuation Methods and Chapter 4. Valuation for decisions
   | \n
   | Aidin Niamir and Joy Kumagai
-  | 
+  | \n
   | DOI: 10.5281/zenodo.5524600
-date: "28/9/2021"
+  | \n
 output: 
   html_document:
     number_sections: true
@@ -20,11 +20,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
-DOI: 10.5281/zenodo.5524600
 
 # The Corpus
-The maps and analyses in this section are based on a corpus of over 79,040 studies in the published scientific literature. The corpus is shared between chapter 3 and 4 of the values assessment. For more information about the corpus see IPBES VA Chapter 3. Systematic review on Method Families (https://doi.org/10.5281/zenodo.4404436) and IPBES VA Chapter 4. Systematic review on valuation uptake (https://doi.org/10.5281/zenodo.4391335).
-  
+
+The maps and analyses in this section are based on a corpus of 79,040 studies in the published scientific literature. The corpus is shared between chapter 3 and 4 of the values assessment. For more information about the corpus see IPBES VA Chapter 3. Systematic review on Method Families (<https://doi.org/10.5281/zenodo.4404436>) and IPBES VA Chapter 4. Systematic review on valuation uptake (<https://doi.org/10.5281/zenodo.4391335>).
+
 # Georeferencing the Corpus
 
 To identify country names in the corpus of literature a two step approach was used. First, we wanted to understand where studies were conducted and searched the title, abstract, and keywords of each paper for country names. Second, to understand where the funding institutions were located we searched the affiliations, acknowledgments, and funding text for country names.
@@ -43,32 +43,26 @@ The python code used to georeference the corpus can be found [here](https://gith
 knitr::include_graphics("pilot2.svg")
 ```
 
-Step 1: *Extract country names from text* 
-Country names were extracted from the title, abstract, and keywords of each paper with a regular expression and the associated ISO code was added into a a column in the dataset. The same regular expression was also used to search the affiliations, acknowledgments, and funding text of the same paper and placed into a second column.
+Step 1: *Extract country names from text* Country names were extracted from the title, abstract, and keywords of each paper with a regular expression and the associated ISO code was added into a a column in the dataset. The same regular expression was also used to search the affiliations, acknowledgments, and funding text of the same paper and placed into a second column.
 
-Step 2 and 3: *Bundle countries in regions and subregions*
-The IPBES Regions and Subregions datatset was then used to add additional region and subregion attributes to the dataset by matching the ISO3 code.
+Step 2 and 3: *Bundle countries in regions and subregions* The IPBES Regions and Subregions datatset was then used to add additional region and subregion attributes to the dataset by matching the ISO3 code.
 
-Step 4: *Find TS accordingly* 
-We used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted. For more details on topic identification please see chapter 4 systematic review on valuation uptake (https://doi.org/10.5281/zenodo.4391335).
+Step 4: *Find TS accordingly* We used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted. For more details on topic identification please see chapter 4 systematic review on valuation uptake (<https://doi.org/10.5281/zenodo.4391335>).
 
-Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. The complete corpus can be found on Zenodo here: [https://doi.org/[INSERT](https://doi.org/%5BINSERT){.uri} DOI]
+Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. The complete corpus can be found on Zenodo here: [[https://doi.org/[INSERT](https://doi.org/%5BINSERT](https://doi.org/%5BINSERT%5D(https://doi.org/%5BINSERT){.uri}){.uri} DOI]
 
 # Valuation Maps
-The complete georeferenced valuation corpus was used to understand the location of valuation studies throughout the world and the location of the institutions conducting those studies. 
+
+The complete georeferenced valuation corpus was used to understand the location of valuation studies throughout the world and the location of the institutions conducting those studies.
 
 We counted the number of times a country or territory was listed in the corpus from the column of country or territory names obtained from the title, abstract, and keywords search as a proxy for the density of valuation studies.
 
-Separately, we counted the number of times a country or territory was listed in the corpus from the column of country or territory names obtained from the affiliations acknowledgments, and funding text as a proxy for the density of institutions. 
+Separately, we counted the number of times a country or territory was listed in the corpus from the column of country or territory names obtained from the affiliations acknowledgments, and funding text as a proxy for the density of institutions.
 
-## Geographic Distribution
-We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent higher density of studies, while the darker blue values represent higher density of institutions.  
-```{r eval = TRUE, warning=FALSE, cache.extra = file.mtime('Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx')}
+```{r results='asis', warning=FALSE}
 data <- readxl::read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx", sheet = 1)
-```
-  
-### Density of studies {.tabset .tabset-pills}
-```{r results='asis'}
+n <- nrow(data)
+
 t <- data %>% 
   mutate(x = strsplit(as.character(CountryName_TI_AB_DE_ID), ", ")) %>%
   unnest(x) %>% 
@@ -77,42 +71,6 @@ t <- data %>%
 studies_na <- t %>% 
   filter(is.na(x)) 
 
-cat(studies_na$n, "studies did not identify a country or territory within their title, abstract, or keywords.")
-```
-  
-#### All {.unnumbered}
-Showcases the number of valuation studies conducted within each country or territory for **the entire dataset**. Please note that the scales are not consistent between maps. 
-
-There were `r sum(t$n) - studies_na$n` identifications of a country or territory from the title, abstract, or keywords, consisting of `r nrow(t) - nrow(studies_na)` countries or territories identified. 
-
-The United States has disproportionately higher valuation studies than other countries. In descending order, United States (10.96%), China (6.66%), Australia (5.36%), Brazil (4.66%) and India (3.74%) have the highest valuation studies in total and for studies post 2010.  
-
-There was a large relative increase of valuation studies conducted in China before 2010 and after 2010. Before 2010, China comprised of 2.80% of the valuation studies, but after 2010 China comprised 8.04% of the valuation studies. 
-
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_percountry.png")
-```
-  
-#### Before 2010 {.unnumbered}
-Showcases the number of valuation studies conducted within each country or territory in the dataset **before 2010**. Please note that the scales are not consistent between maps. 
-
-Before 2010, the countries with the highest valuation studies conducted were USA (12.21%), Australia (6.37%), UK (5.17%), India (3.61%), and Canada (3.32%).
-
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_percountry_before2010.png")
-```
-  
-#### After 2010 {.unnumbered}
-Showcases the number of valuation studies conducted within each country or territory in the **dataset from 2010**. Please note that the scales are not consistent between maps.  
-
-In descending order, United States (10.49%), China (8.04%), Australia (5.18%), Brazil (5.01%) and India (3.80%) have the highest valuation studies in total and for studies post 2010. 
-  
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
-```
-  
-### Density of institutions  {.tabset .tabset-pills}
-```{r results='asis'}
 t_names2 <- data %>% 
   mutate(x = strsplit(as.character(CountryName_CI_FU_FX), ", ")) %>%
   unnest(x) %>% 
@@ -121,44 +79,91 @@ t_names2 <- data %>%
 names2_na <- t_names2 %>% 
   filter(is.na(x)) 
 
-cat(names2_na$n, "studies did not identify a country within their affiliations, acknowledgments, and funding text.")
+cat("Out of", n,"total studies,", studies_na$n, "studies did not identify a country or territory within their title, abstract, or keywords. ", "While", names2_na$n, "studies did not identify a country within their affiliations, acknowledgments, and funding text.")
 ```
-   
+
+## Geographic Distribution
+
+We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent higher density of studies, while the darker blue values represent higher density of institutions.
+
+### Density of studies {.tabset .tabset-pills}
+
 #### All {.unnumbered}
-Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the **entire dataset** as a proxy for institutions which are conducing the research. Please note that the scales are not consistent between maps. 
 
-There were `r sum(t_names2$n) - names2_na$n` identifications of a country or territory from the affiliations, acknowledgments, or funding text, consisting of `r nrow(t_names2) - nrow(names2_na)` countries or territories. 
+Showcases the number of valuation studies conducted within each country or territory for **the entire dataset**. Please note that the scales are not consistent between maps.
 
-The United States and the United Kingdom (UK) has disproportionately higher density of institutions than other countries. In descending order, the United States (17.89%), UK (7.36%), Germany (5.19%), Australia (4.90%), and China (4.64%) have the highest density of institutions. 
+There were `r sum(t$n) - studies_na$n` identifications of a country or territory from the title, abstract, or keywords, consisting of `r nrow(t) - nrow(studies_na)` countries or territories identified.
+
+The United States has disproportionately higher valuation studies than other countries. In descending order, United States (10.96%), China (6.66%), Australia (5.36%), Brazil (4.66%) and India (3.74%) have the highest valuation studies in total and for studies post 2010.
+
+There was a large relative increase of valuation studies conducted in China before 2010 and after 2010. Before 2010, China comprised of 2.80% of the valuation studies, but after 2010 China comprised 8.04% of the valuation studies.
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1_percountry.png")
+```
+
+#### Before 2010 {.unnumbered}
+
+Showcases the number of valuation studies conducted within each country or territory in the dataset **before 2010**. Please note that the scales are not consistent between maps.
+
+Before 2010, the countries with the highest valuation studies conducted were USA (12.21%), Australia (6.37%), UK (5.17%), India (3.61%), and Canada (3.32%).
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1_percountry_before2010.png")
+```
+
+#### After 2010 {.unnumbered}
+
+Showcases the number of valuation studies conducted within each country or territory in the **dataset from 2010**. Please note that the scales are not consistent between maps.
+
+In descending order, United States (10.49%), China (8.04%), Australia (5.18%), Brazil (5.01%) and India (3.80%) have the highest valuation studies in total and for studies post 2010.
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
+```
+
+### Density of institutions {.tabset .tabset-pills}
+
+#### All {.unnumbered}
+
+Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the **entire dataset** as a proxy for institutions which are conducing the research. Please note that the scales are not consistent between maps.
+
+There were `r sum(t_names2$n) - names2_na$n` identifications of a country or territory from the affiliations, acknowledgments, or funding text, consisting of `r nrow(t_names2) - nrow(names2_na)` countries or territories.
+
+The United States and the United Kingdom (UK) has disproportionately higher density of institutions than other countries. In descending order, the United States (17.89%), UK (7.36%), Germany (5.19%), Australia (4.90%), and China (4.64%) have the highest density of institutions.
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry.png")
 ```
-    
+
 #### Before 2010 {.unnumbered}
-Showcases the number of studies which reference the particular country within the affiliations,  acknowledgments, or funding text for the studies in the dataset **before 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps. 
+
+Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the studies in the dataset **before 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps.
 
 Before 2010, in descending order, the United States (25.28%), UK (9.52%), Canada (5.23%), Australia (5.03%) and Germany (4.83%) have the highest density of institutions.
-  
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry_before2010.png")
 ```
-    
+
 #### After 2010 {.unnumbered}
-Showcases the number of studies which reference the particular country or territory within the affiliations,  acknowledgments, or funding text for the studies in the dataset **from 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps. 
+
+Showcases the number of studies which reference the particular country or territory within the affiliations, acknowledgments, or funding text for the studies in the dataset **from 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps.
 
 After 2010, in descending order, the United States (15.81%), UK (6.75%), China (5.39%), Germany (5.29%) and Australia (4.87%) have the highest density of institutions.
-  
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_percountry_2010.png")
 ```
-  
+
 ### Summarized by region {.tabset .tabset-pills}
-Europe and Central Asia region has the highest density of institutions, but comes in third for the highest density of studies. In contrast, the Americas region comes in first for the highest density of studies and second for institutions. 
+
+Europe and Central Asia region has the highest density of institutions, but comes in third for the highest density of studies. In contrast, the Americas region comes in first for the highest density of studies and second for institutions.
 
 Besides Antarctica, Africa has the lowest density of studies and institutions.
 
 #### Density of studies {.unnumbered}
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_perregion.png")
 ```
@@ -174,17 +179,21 @@ region1_na <- region1_counts %>%
 
 cat("* ",region1_na$n, "studies did not have a region identified for the density of studies.")
 ```
-  
+
 #### Density of institutions {.unnumbered}
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_perregion.png")
 ```
-* 376 studies did not have a region identified for the density of institutions
-  
-### Summarized by subregion {.tabset .tabset-pills} 
-Europe and North America disproportionately have the highest density of studies and institutions between subregions, while Central Asia have the lowest density for both categories. 
-   
+
+-   376 studies did not have a region identified for the density of institutions
+
+### Summarized by subregion {.tabset .tabset-pills}
+
+Europe and North America disproportionately have the highest density of studies and institutions between subregions, while Central Asia have the lowest density for both categories.
+
 #### Density of studies {.unnumbered}
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names1_persubregion.png")
 ```
@@ -200,92 +209,114 @@ subregion1_na <- subregion1_counts %>%
 
 cat("* ",subregion1_na$n, "studies did not have a subregion identified for the density of studies.")
 ```
-  
+
 #### Density of institutions {.unnumbered}
+
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Maps/Names2_persubregion.png")
 ```
-* 376 studies did not have a subregion identified for the density of institutions  
-  
+
+-   376 studies did not have a subregion identified for the density of institutions
+
 ## Relationships between density of studies and institutions
-It is clear that there is a significant positive linear relationship between the density of studies and institutions. It is important to note that there were many more identified countries for institutions than location of studies. 
+
+OECD member countries and middle-income countries broadly had relatively more studies in their countries relative to research and funding affiliations; also Greenland, the Antarctic, some Latin American and Asian, most African countries had relatively more research and funding affiliations compared to the number of studies in their countries. Countries mostly in the southern hemisphere had a disproportionate number of researchers engaged in ecosystem services/NCP assessment studies, relative to the number of studies carried out in their country, in comparison to Northern hemisphere countries. Because these are ratios, it is better to consider them in the light of country/population size. From a Southern-country perspective, this could indicate: (i) high frequency of collaboration outside their own countries of researchers from countries in the South, and (ii) underfunding of domestic valuation studies in countries of the South relative to the number of domestic researchers and funding agencies. From the perspective of countries in the North this could indicate (i) relatively limited research collaboration outside their country for researchers from the North, and (ii) well-funded ecosystem services/NCP research relative to number of researchers and funding affiliations. From both these perspectives the narrative is of a relative export of ecosystem services/NCP research capacity from Southern countries to other countries. The data may also simply show a relative deficit of ecosystem services/NCP study applications in the South relative to the North. No data was found on cross-border flows of funding or researchers to make any further interpretation. This is a potential knowledge gap. More analysis is needed on whether there are patterns in relation to ecosystem assessment method families, and whether the patterns have changed over time. There are many exceptions to the broad global pattern which merit country-specific studies of the institutional context of ecosystem assessment to identify barriers and successful leverage points.
+
+```{r, fig.align = 'center'}
+knitr::include_graphics("Outputs/Maps/Names1Names2_map.png")
+```
+
+It is clear that there is a significant positive linear relationship between the density of studies and institutions. It is important to note that there were many more identified countries for institutions than location of studies.
 
 ```{r names1/names2, fig.align = 'center', fig.cap = "Density of studies vs density of institutions"}
 knitr::include_graphics("Outputs/Corpus/Names1_Names2.png")
 ```
 
 ## Temporal Trends
-There has been an exponential increase in valuation studies from the 1980's to the present as pictured in the graph below. 
+
+The timeline for the study application in the georeferenced countries shows a relatively uniform distribution of scientific literature in English across IPBES regions in the decade of the 1990s. The decade of the Millennium Ecosystem Assessment (2005-2015) saw a relative concentration of ecosystem services/NCP studies in a few countries (US, Brazil, India, UK). The decade including studies produced by The Economics of Ecosystems and Biodiversity - TEEB study (2008-2018) saw further concentration on those countries, and some diversification to EU countries, African countries and China. A hypothesis arising from this descriptive data is 'first starter advantage' in generating valuation capacity with the Millennium Ecosystem Assessment, with notable exceptions such as China and South Africa.
+
+Finally, there has been an exponential increase in valuation studies from the 1980's to the present as pictured in the graph below.
 
 ```{r, fig.align = 'center'}
 knitr::include_graphics("Outputs/Corpus/Timeline.svg")
 ```
 
-* 569 studies did not have a year identified
-* Data from 2020 was removed due to incomplete sampling of 2020. 
-  
-### Geographic density of studies {.tabset  .tabset-pills}
+-   569 studies did not have a year identified
+-   Data from 2020 was removed due to incomplete sampling of 2020.
+
+### Geographic density of studies {.tabset .tabset-pills}
+
 Additionally, we explored how the density of valuation studies has changed throughout the last four decades. No data is displayed in grey.
 
-#### Pre 1990 {-}
-Pre 1990 within the corpus, there are four countries represented (USA, Brazil, Norway, and Sweden) with a total of 5 identifications of a country or territory. All countries had only one identification, except for the USA with 2. 
-  
+#### Pre 1990 {.unnumbered}
+
+Pre 1990 within the corpus, there are four countries represented (USA, Brazil, Norway, and Sweden) with a total of 5 identifications of a country or territory. All countries had only one identification, except for the USA with 2.
+
 ```{r, fig.align = 'center', out.width="75%"}
 knitr::include_graphics("Outputs/Maps/temporal/Names1_1980-1990.png")
 ```
-   
-#### 1990 - 2000 {-}
-Between 1990 and 2000 within the corpus, there are 153 countries or territories represented with a total of 2,704 identifications, three orders of magnitude larger than the number of identifications before 1990. 
-  
+
+#### 1990 - 2000 {.unnumbered}
+
+Between 1990 and 2000 within the corpus, there are 153 countries or territories represented with a total of 2,704 identifications, three orders of magnitude larger than the number of identifications before 1990.
+
 ```{r, fig.align = 'center', out.width="75%"}
 knitr::include_graphics("Outputs/Maps/temporal/Names1_1990-2000.png")
 ```
-   
-#### 2000 - 2010 {-}
-Between 2000 and 2010 within the corpus, there are 200 countries or territories represented with a total of 14,644 identifications, again an order of magnitude increase from before 2000. 
-  
+
+#### 2000 - 2010 {.unnumbered}
+
+Between 2000 and 2010 within the corpus, there are 200 countries or territories represented with a total of 14,644 identifications, again an order of magnitude increase from before 2000.
+
 ```{r, fig.align = 'center', out.width="75%"}
 knitr::include_graphics("Outputs/Maps/temporal/Names1_2000-2010.png")
 ```
-       
-#### Post 2010 {-}
-2010 and later within the corpus, there are 214 countries or territories represented with a total of 46,918 identifications. 
-  
+
+#### Post 2010 {.unnumbered}
+
+2010 and later within the corpus, there are 214 countries or territories represented with a total of 46,918 identifications.
+
 ```{r, fig.align = 'center', out.width="75%"}
 knitr::include_graphics("Outputs/Maps/temporal/Names1_2010-2020.png")
 ```
-  
+
 ### Geographic density of institutions {.tabset .tabset-pills}
+
 Additionally, we explored how the density of valuation institutions has changed through time throughout the last four decades. No data is displayed in gray.
-    
-#### Pre 1990 {-}
-Pre 1990 within the corpus, there are eight countries or territories represented with a total of 24 identifications of a country or territory. USA had 14 identifications, Canada 3 identifications, Norway 2 identifications, while the rest of the represented countries had 1. 
+
+#### Pre 1990 {.unnumbered}
+
+Pre 1990 within the corpus, there are eight countries or territories represented with a total of 24 identifications of a country or territory. USA had 14 identifications, Canada 3 identifications, Norway 2 identifications, while the rest of the represented countries had 1.
 
 ```{r, fig.align = 'center', out.width="75%"}
 knitr::include_graphics("Outputs/Maps/temporal/Names2_1980-1990.png")
 ```
-  
-#### 1990 - 2000 {-}
-Between 1990 and 2000 within the corpus, there are 110 countries or territories represented with a total of 4,461 identifications of a country or territory, two orders of magnitude larger than pre 1990. 
+
+#### 1990 - 2000 {.unnumbered}
+
+Between 1990 and 2000 within the corpus, there are 110 countries or territories represented with a total of 4,461 identifications of a country or territory, two orders of magnitude larger than pre 1990.
 
 ```{r, fig.align = 'center', out.width="75%"}
 knitr::include_graphics("Outputs/Maps/temporal/Names2_1990-2000.png")
 ```
-  
-#### 2000 - 2010 {-}
-Between 2000 and 2010 within the corpus, there are 179 countries or territories represented with a total of 26,476 identifications of a country or territory, an order of magnitude larger than pre 2000. 
+
+#### 2000 - 2010 {.unnumbered}
+
+Between 2000 and 2010 within the corpus, there are 179 countries or territories represented with a total of 26,476 identifications of a country or territory, an order of magnitude larger than pre 2000.
 
 ```{r, fig.align = 'center', out.width="75%"}
 knitr::include_graphics("Outputs/Maps/temporal/Names2_2000-2010.png")
 ```
-      
-#### Post 2010 {-}
-2010 and later within the corpus, there are  207 countries or territories represented with a total of 108,101 identifications of a country or territory. 
+
+#### Post 2010 {.unnumbered}
+
+2010 and later within the corpus, there are 207 countries or territories represented with a total of 108,101 identifications of a country or territory.
 
 ```{r, fig.align = 'center', out.width="75%"}
 knitr::include_graphics("Outputs/Maps/temporal/Names2_2010-2020.png")
 ```
-  
+
 # Indicator Analysis
 
 The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were used alongside a chosen set of other relevant indicators to understand geographic trends between density of valuation studies and how they relate to biological and socioeconomic indicators.
@@ -415,14 +446,14 @@ To investigate the relationships between indicators and the number of valuation 
 Insignificant relationships are blank, significant relationships (*P \< 0.01*) are shown with circles. The strength of the correlation corresponds to the size of the circle and the color represents positive (blue) or negative (red) trends.
 
 *Description of results*
-  
-There is a very strong positive relationship between GDP and the density of both studies and institutions. GDP per capita does not exhibit the same strong correlation. 
 
-Density of studies is also strongly positively correlated to total wood removals, trends in pesticide use, population, nitrogen fertilizers, and water footprint index. 
+There is a very strong positive relationship between GDP and the density of both studies and institutions. GDP per capita does not exhibit the same strong correlation.
 
-Density of institutions is also strongly positively correlated with total wood removals, and nitrogen fertilizers. 
+Density of studies is also strongly positively correlated to total wood removals, trends in pesticide use, population, nitrogen fertilizers, and water footprint index.
 
-While most significant relationships are positive, there are two negative relationships present. Biodiversity inexactness index is negatively correlated with both the density of studies and institutions, and protected area management effectiveness is slightly negative correlated with the density of institutions. 
+Density of institutions is also strongly positively correlated with total wood removals, and nitrogen fertilizers.
+
+While most significant relationships are positive, there are two negative relationships present. Biodiversity inexactness index is negatively correlated with both the density of studies and institutions, and protected area management effectiveness is slightly negative correlated with the density of institutions.
 
 ```{r pearson, fig.align = 'center', fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
 knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure.png")
@@ -431,15 +462,14 @@ knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure.pn
 The same pearson correlation analysis with the indicators was conducted on the log of the number of studies in each country or territory and the log of the number of studies funded from each country.
 
 *Description of results*
-  
-Generally, the log density of studies and institutions show stronger and more correlations with the indicators. Within the log relationship, the protected area management effectiveness becomes significantly negatively correlated with both the density of studies and institutions. The biodiversity inexactness index also follows the same pattern. 
+
+Generally, the log density of studies and institutions show stronger and more correlations with the indicators. Within the log relationship, the protected area management effectiveness becomes significantly negatively correlated with both the density of studies and institutions. The biodiversity inexactness index also follows the same pattern.
 
 For the log density of studies compared to the non-transformed density of studies, GDP becomes less strongly correlated, local breeds at risk of extinction becomes positively correlated, protected area connectedness index becomes strongly positively correlated, species protection index becomes positively correlated, as well as trends in forest extent, and nitrogen deposition trends.
 
-For the log density of institutions compared to the non-transformed density of institutions, the human development index, average harmonized learning outcomes, corruption perception index, population, and local breeds at risk of extinction all become more strongly positively correlated, while the GDP becomes slightly less positively correlated. 
-Additionally, the percentage of undernourished people becomes negatively correlated with the log density of studies, the species protection index and the species status information index become positively correlated, and finally the relationship to trends in pesticide use is no longer significant.  
+For the log density of institutions compared to the non-transformed density of institutions, the human development index, average harmonized learning outcomes, corruption perception index, population, and local breeds at risk of extinction all become more strongly positively correlated, while the GDP becomes slightly less positively correlated. Additionally, the percentage of undernourished people becomes negatively correlated with the log density of studies, the species protection index and the species status information index become positively correlated, and finally the relationship to trends in pesticide use is no longer significant.
 
-For both the log density of studies and institutions, the protected area connected index becomes strongly positively corrrelated. 
+For both the log density of studies and institutions, the protected area connected index becomes strongly positively corrrelated.
 
 ```{r pearson-log, fig.align = 'center', fig.cap = "Pearson correlations of log geographic valuation studies and the indicators"}
 knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure_log.png")
@@ -450,6 +480,16 @@ knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure_lo
 The individual trends between each indicator and the number of studies and number of funding institutions are shown here for the entire corpus. For each indicator, there are two four panel figures with the top figure showing the trends with the raw values, and the bottom figure displaying the trends with log transformed x-axis values.
 
 The dots represent countries within the dataset that have values for both the indicator and valuation atlas. The associated p value of the linear trend model is shown in the corner of the image in red. The trend line is shown in blue and the associated standard error in grey. Please note that the y axis is not necessarily consistent between the four boxes and may include values that aren't actually found in the data to showcase the full extent of the standard error of the trend line.
+
+There are some broad narratives emerge from this analysis:
+
+-   Fewer studies are being carried out in countries with extreme poverty.
+
+-   More ecosystem service/NCP assessment studies are being carried out where biodiversity and environmental degradation is higher and protection lower.
+
+-   More studies are being carried out where natural capital is the highest and the conservation discourse is more advanced.
+
+Some contradictions between these single variable narratives exist, such as more ecosystem services/NCP assessments carried out in countries with a lower protected area effectiveness index, and in countries with a higher species protection index, while these are significantly negatively correlated across countries. There is a knowledge gap and no robust understanding can be concluded on this.
 
 For each figure the panels are arranged accordingly:
 
@@ -808,7 +848,7 @@ knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_deposition_t
 ```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and nitrogen deposition trends"}
 knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_deposition_trends_log.svg")
 ```
-  
+
 ### Trends in Pesticides Use {.unnumbered}
 
 ```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in pesticides use"}
@@ -825,36 +865,36 @@ knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_pesticides_
 
 **Datasets**
 
-Altinok, N., N. Angrist and H.A. Patrinos. 2018. “Global data set on education quality (1965-2015).” World Bank Policy Research Working Paper No. 8314. Washington, DC. https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita 
+Altinok, N., N. Angrist and H.A. Patrinos. 2018. "Global data set on education quality (1965-2015)." World Bank Policy Research Working Paper No. 8314. Washington, DC. <https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita>
 
-Corruption Perception Index (2020) by Transparency International is licensed under CC-BY-ND 4.0 https://www.transparency.org/en/cpi/2020/index/ 
+Corruption Perception Index (2020) by Transparency International is licensed under CC-BY-ND 4.0 <https://www.transparency.org/en/cpi/2020/index/>
 
-FAO. FAOSTAT. Annual Population. Latest update: 16/12/2019. (Accessed 24/03/2021). http://www.fao.org/faostat/en/#data/OA
+FAO. FAOSTAT. Annual Population. Latest update: 16/12/2019. (Accessed 24/03/2021). <http://www.fao.org/faostat/en/#data/OA>
 
-FAO. FAOSTAT. Macro Indicators: Gross Domestic Product - Values US$. Latest update: 27/04/2021. (Accessed 02/09/2021). http://www.fao.org/faostat/en/#data/MK
+FAO. FAOSTAT. Macro Indicators: Gross Domestic Product - Values US\$. Latest update: 27/04/2021. (Accessed 02/09/2021). <http://www.fao.org/faostat/en/#data/MK>
 
-Global Administrative Areas (version 3.6). University of California, Berkeley. Available online: https://gadm.org/
+Global Administrative Areas (version 3.6). University of California, Berkeley. Available online: <https://gadm.org/>
 
 IPBES task force on knowledge and data (2020) IPBES Core Indicators - Harmonized Dataset, technical support unit on knowledge and data, Frankfurt, Germany. DOI: 10.5281/zenodo.4439411
 
-IPBES Technical Support Unit on Knowledge and Data. (2020). IPBES regions and sub-regions (1.1) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.3928281 
+IPBES Technical Support Unit on Knowledge and Data. (2020). IPBES regions and sub-regions (1.1) [Data set]. Zenodo. <https://doi.org/10.5281/zenodo.3928281>
 
-ISO 3166-1:2020, Codes for the representation of names of countries and their subdivisions — Part 1: Country codes
+ISO 3166-1:2020, Codes for the representation of names of countries and their subdivisions --- Part 1: Country codes
 
-United Nations Development Programme. Human Development Reports. Human Development Index (HDI). (Accessed 24/03/2021). http://hdr.undp.org/en/indicators/137506#   
-  
+United Nations Development Programme. Human Development Reports. Human Development Index (HDI). (Accessed 24/03/2021). <http://hdr.undp.org/en/indicators/137506#>
+
 **R packages**
 
-Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package version 1.0.0. https://CRAN.R-project.org/package=cowplot
+Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package version 1.0.0. <https://CRAN.R-project.org/package=cowplot>
 
-Frank E Harrell, et al. (2020). Hmisc: Harrell Miscellaneous. R package version 4.4-1. https://CRAN.R-project.org/package=Hmisc
+Frank E Harrell, et al. (2020). Hmisc: Harrell Miscellaneous. R package version 4.4-1. <https://CRAN.R-project.org/package=Hmisc>
 
-Hadley Wickham and Jennifer Bryan (2019). readxl: Read Excel Files. R package version 1.3.1. https://CRAN.R-project.org/package=readxl
+Hadley Wickham and Jennifer Bryan (2019). readxl: Read Excel Files. R package version 1.3.1. <https://CRAN.R-project.org/package=readxl>
 
-Michael C. J. Kao, Markus Gesmann and Filippo Gheri (2020). FAOSTAT: Download Data from the FAOSTAT Database. R package version 2.2.1. https://CRAN.R-project.org/package=FAOSTAT
+Michael C. J. Kao, Markus Gesmann and Filippo Gheri (2020). FAOSTAT: Download Data from the FAOSTAT Database. R package version 2.2.1. <https://CRAN.R-project.org/package=FAOSTAT>
 
-Pebesma, E., 2018. Simple Features for R: Standardized Support for Spatial Vector Data. The R Journal 10 (1), 439-446, https://doi.org/10.32614/RJ-2018-009
+Pebesma, E., 2018. Simple Features for R: Standardized Support for Spatial Vector Data. The R Journal 10 (1), 439-446, <https://doi.org/10.32614/RJ-2018-009>
 
-Wei T, Simko V (2021). R package 'corrplot': Visualization of a Correlation Matrix. (Version 0.90), https://github.com/taiyun/corrplot.
+Wei T, Simko V (2021). R package 'corrplot': Visualization of a Correlation Matrix. (Version 0.90), <https://github.com/taiyun/corrplot>.
 
-Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, <https://doi.org/10.21105/joss.01686>
