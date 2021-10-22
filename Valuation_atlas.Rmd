@@ -1,6 +1,6 @@
 ---
 title: "Valuation Atlas"
-subtitle: IPBES Values Assessment; Methodological assessment regarding the diverse conceptualization of multiple values of nature and its benefits, including biodiversity and ecosystem functions and services 
+subtitle: IPBES Values Assessment; Methodological assessment regarding the diverse conceptualization of multiple values of nature and its contributions, including biodiversity and ecosystem functions and services 
 author:  |
   | Associated with Chapter 3. Assessment of Valuation Methods and Chapter 4. Valuation for decisions
   | \n
@@ -19,6 +19,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(cowplot)
+library(sf)
 ```
 
 # The Corpus
@@ -27,7 +29,7 @@ The maps and analyses in this section are based on a corpus of 79,040 studies in
 
 # Georeferencing the Corpus
 
-To identify country names in the corpus of literature a two step approach was used. First, we wanted to understand where studies were conducted and searched the title, abstract, and keywords of each paper for country names. Second, to understand where the funding institutions were located we searched the affiliations, acknowledgments, and funding text for country names.
+To identify country names in the corpus of literature a two step approach was used. First, we wanted to understand where studies were conducted and searched the title, abstract, and keywords of each paper for country names. Second, to understand where the funding organizations were located we searched the affiliations, acknowledgments, and funding text for country names.
 
 The input data we used are the following:
 
@@ -86,40 +88,382 @@ cat("Out of", n,"total studies,", studies_na$n, "studies did not identify a coun
 
 We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent higher density of studies, while the darker blue values represent higher density of institutions.
 
+```{r results = 'asis'}
+# Declare Functions
+countFunction <- function(data, x) {
+  data %>% 
+    mutate(x = strsplit(as.character(x), ", ")) %>% 
+    unnest(x) %>% 
+    count(x, sort = TRUE) %>% 
+    drop_na() %>% 
+    mutate(n_log = log(n))
+}
+
+# Necessary datasets for the upcoming maps 
+harmonized_data <- read.csv("Outputs/Corpus/harmonized_data.csv")
+indicators <- read.csv("Outputs/indicators_compiled.csv")
+column_names <- readxl::read_excel("Data/names_of_columns.xlsx")
+countries <- read_sf("Data/gadm36_levels_shp/gadm36_0.shp") %>% 
+  rename(ISO_Alpha_3 = GID_0)
+
+# Combine and project data
+colnames(indicators)[2:25] <- column_names$Short_Name
+
+df <- left_join(harmonized_data, indicators, by = "ISO_Alpha_3")
+df <- left_join(countries, df, by = "ISO_Alpha_3") 
+
+# Project data 
+robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
+poly <- st_transform(df, robin_crs)
+```
+
 ### Density of studies {.tabset .tabset-pills}
 
 #### All {.unnumbered}
 
+```{r}
+# Preparing Data 
+
+# all
+percentage_VS_all <- st_drop_geometry(df) %>% 
+  select(NAME_0, ISO_Alpha_3, Names1, Names2) %>% 
+  mutate(Names1_percent = (Names1/sum(df$Names1, na.rm = T))) %>% 
+  mutate(Names2_percent = (Names2/sum(df$Names2, na.rm = T))) %>% 
+  arrange(desc(Names1_percent))
+
+# Before 2010
+## Create dataset 
+corpus_b2010 <- data %>% 
+  filter(PY < 2010)
+
+n1 <- corpus_b2010 %>% 
+  countFunction(x = corpus_b2010$CountryName_TI_AB_DE_ID) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n, "Names1_log" = n_log)
+
+n2 <- corpus_b2010 %>% 
+  countFunction(x = corpus_b2010$CountryName_CI_FU_FX) %>% 
+  rename("ISO_Alpha_3" = x, "Names2" = n, "Names2_log" = n_log)
+
+df_b2010 <- full_join(n1, n2, by = "ISO_Alpha_3")
+
+df_b2010_t <- left_join(countries, df_b2010, by = "ISO_Alpha_3") 
+
+## Project data 
+robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
+poly_b2010 <- st_transform(df_b2010_t, robin_crs)
+
+percentage_VS_b2010 <- st_drop_geometry(df_b2010_t) %>% 
+  select(NAME_0, ISO_Alpha_3, Names1, Names2) %>% 
+  mutate(Names1_percent = (Names1/sum(df_b2010_t$Names1, na.rm = T))) %>% 
+  mutate(Names2_percent = (Names2/sum(df_b2010_t$Names2, na.rm = T))) %>% 
+  arrange(desc(Names1_percent))
+
+# After 2010
+
+data_2010 <- read.csv("Outputs/Corpus_2010/harmonized_data.csv")
+df_2010 <- left_join(countries, data_2010, by = "ISO_Alpha_3") 
+
+robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
+poly_2010 <- st_transform(df_2010, robin_crs)
+
+percentage_VS_a2010 <- st_drop_geometry(df_2010) %>% 
+  select(NAME_0, ISO_Alpha_3, Names1, Names2) %>% 
+  mutate(Names1_percent = (Names1/sum(df_2010$Names1, na.rm = T))) %>% 
+  mutate(Names2_percent = (Names2/sum(df_2010$Names2, na.rm = T))) %>% 
+  arrange(desc(Names1_percent))
+
+# For plots
+grid <- st_graticule(lat = seq(-90, 90, by = 30), # the graticules 
+                     lon = seq(-180, 180, by = 60)) %>% 
+  st_transform("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m") %>% 
+  st_geometry 
+```
+
 Showcases the number of valuation studies conducted within each country or territory for **the entire dataset**. Please note that the scales are not consistent between maps.
 
-There were `r sum(t$n) - studies_na$n` identifications of a country or territory from the title, abstract, or keywords, consisting of `r nrow(t) - nrow(studies_na)` countries or territories identified.
+```{r results='asis'}
+cat("There were", 
+    sum(t$n) - studies_na$n,
+    "identifications of a country or territory from the title, abstract, or keywords, consisting of",
+    nrow(t) - nrow(studies_na),
+    "countries or territories identified.\n\n",
+    "\nThe United States has disproportionately higher valuation studies than other countries.", " In descending order,", 
+    paste(percentage_VS_all$NAME_0[1]), 
+    paste("(",round(percentage_VS_all$Names1_percent[1]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_all$NAME_0[2]), 
+    paste("(",round(percentage_VS_all$Names1_percent[2]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_all$NAME_0[3]), 
+    paste("(",round(percentage_VS_all$Names1_percent[3]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_all$NAME_0[4]), 
+    paste("(",round(percentage_VS_all$Names1_percent[4]*100, 2), "%) and", sep = ""), 
+    paste(percentage_VS_all$NAME_0[5]), 
+    paste("(",round(percentage_VS_all$Names1_percent[5]*100, 2), "%)", sep = ""),
+    "have the highest valuation studies in total and for studies post 2010."
+    )
 
-The United States has disproportionately higher valuation studies than other countries. In descending order, United States (10.96%), China (6.66%), Australia (5.36%), Brazil (4.66%) and India (3.74%) have the highest valuation studies in total and for studies post 2010.
+```
 
 There was a large relative increase of valuation studies conducted in China before 2010 and after 2010. Before 2010, China comprised of 2.80% of the valuation studies, but after 2010 China comprised 8.04% of the valuation studies.
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_percountry.png")
+```{r, fig.align='center', fig.height = 10, fig.width = 10, dpi=300, cache=TRUE}
+plot1 <- ggplot(poly) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_colour_manual(values = NA) +              
+  guides(colour = guide_legend("No data", override.aes = list(colour = "grey", fill = "grey")))+
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies") 
+
+# Names 1 Log
+plot1_log <- ggplot(poly) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+plot_grid(plot1, plot1_log, labels = "auto", ncol = 1)
 ```
 
 #### Before 2010 {.unnumbered}
 
 Showcases the number of valuation studies conducted within each country or territory in the dataset **before 2010**. Please note that the scales are not consistent between maps.
 
-Before 2010, the countries with the highest valuation studies conducted were USA (12.21%), Australia (6.37%), UK (5.17%), India (3.61%), and Canada (3.32%).
+```{r results='asis'}
+cat("Before 2010, the countries with the highest valuation studies conducted were the", 
+    paste(percentage_VS_b2010$NAME_0[1]), 
+    paste("(",round(percentage_VS_b2010$Names1_percent[1]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_b2010$NAME_0[2]), 
+    paste("(",round(percentage_VS_b2010$Names1_percent[2]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_b2010$NAME_0[3]), 
+    paste("(",round(percentage_VS_b2010$Names1_percent[3]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_b2010$NAME_0[4]), 
+    paste("(",round(percentage_VS_b2010$Names1_percent[4]*100, 2), "%) and", sep = ""), 
+    paste(percentage_VS_b2010$NAME_0[5]), 
+    paste("(",round(percentage_VS_b2010$Names1_percent[5]*100, 2), "%).", sep = "")
+    )
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_percountry_before2010.png")
+```
+
+```{r, fig.align='center', fig.height = 10, fig.width = 10, dpi=300, cache=TRUE}
+# Plotting Names 1 
+plotC <- ggplot(poly_b2010) + # Names 1 all studies before 2010
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_colour_manual(values = NA) +              
+  guides(colour = guide_legend("No data", override.aes = list(colour = "grey", fill = "grey")))+
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies") 
+
+# Plotting Names 1 log 
+plotC_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+plot_grid(plotC, plotC_log, labels = "auto", ncol = 1)
 ```
 
 #### After 2010 {.unnumbered}
 
 Showcases the number of valuation studies conducted within each country or territory in the **dataset from 2010**. Please note that the scales are not consistent between maps.
 
-In descending order, United States (10.49%), China (8.04%), Australia (5.18%), Brazil (5.01%) and India (3.80%) have the highest valuation studies in total and for studies post 2010.
+```{r results='asis'}
+cat("In descending order, the", 
+    paste(percentage_VS_a2010$NAME_0[1]), 
+    paste("(",round(percentage_VS_a2010$Names1_percent[1]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_a2010$NAME_0[2]), 
+    paste("(",round(percentage_VS_a2010$Names1_percent[2]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_a2010$NAME_0[3]), 
+    paste("(",round(percentage_VS_a2010$Names1_percent[3]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_a2010$NAME_0[4]), 
+    paste("(",round(percentage_VS_a2010$Names1_percent[4]*100, 2), "%) and", sep = ""), 
+    paste(percentage_VS_a2010$NAME_0[5]), 
+    paste("(",round(percentage_VS_a2010$Names1_percent[5]*100, 2), "%)", sep = ""),
+    "have the highest valuation studies in total and for studies post 2010."
+    )
+```
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
+```{r, fig.align='center', fig.height = 10, fig.width = 10, dpi=300, cache=TRUE}
+# Plotting Names 1 
+plotA <- ggplot(poly_2010) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_colour_manual(values = NA) +              
+  guides(colour = guide_legend("No data", override.aes = list(colour = "grey", fill = "grey")))+
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies") 
+
+# Plotting Names 1 log 
+plotA_log <- ggplot(poly_2010) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+plot_grid(plotA, plotA_log, labels = "auto", ncol = 1)
 ```
 
 ### Density of institutions {.tabset .tabset-pills}
@@ -128,32 +472,288 @@ knitr::include_graphics("Outputs/Maps/Names1_percountry_2010.png")
 
 Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the **entire dataset** as a proxy for institutions which are conducing the research. Please note that the scales are not consistent between maps.
 
-There were `r sum(t_names2$n) - names2_na$n` identifications of a country or territory from the affiliations, acknowledgments, or funding text, consisting of `r nrow(t_names2) - nrow(names2_na)` countries or territories.
+```{r results='asis'}
+percentage_VS_all <- percentage_VS_all %>% 
+  arrange(desc(Names2_percent))
 
-The United States and the United Kingdom (UK) has disproportionately higher density of institutions than other countries. In descending order, the United States (17.89%), UK (7.36%), Germany (5.19%), Australia (4.90%), and China (4.64%) have the highest density of institutions.
+cat("There were", 
+    sum(t_names2$n) - names2_na$n,
+    "identifications of a country or territory from the affiliations, acknowledgments, or funding text, consisting of",
+    nrow(t_names2) - nrow(names2_na),
+    "countries or territories.\n\n",
+    "\nThe United States and the United Kingdom (UK) have disproportionately higher density of institutions than other countries. In descending order, the",
+    paste(percentage_VS_all$NAME_0[1]), 
+    paste("(",round(percentage_VS_all$Names2_percent[1]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_all$NAME_0[2]), 
+    paste("(",round(percentage_VS_all$Names2_percent[2]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_all$NAME_0[3]), 
+    paste("(",round(percentage_VS_all$Names2_percent[3]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_all$NAME_0[4]), 
+    paste("(",round(percentage_VS_all$Names2_percent[4]*100, 2), "%) and", sep = ""), 
+    paste(percentage_VS_all$NAME_0[5]), 
+    paste("(",round(percentage_VS_all$Names2_percent[5]*100, 2), "%)", sep = ""),
+    "have the highest density of institutions."
+    )
+```
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names2_percountry.png")
+```{r, fig.align='center', fig.height = 10, fig.width = 10, dpi=300, cache=TRUE}
+plot2 <- ggplot(poly) + # Names 2 all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Names 2 Log
+plot2_log <- ggplot(poly) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+plot_grid(plot2, plot2_log, labels = "auto", ncol = 1)
 ```
 
 #### Before 2010 {.unnumbered}
 
 Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the studies in the dataset **before 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps.
 
-Before 2010, in descending order, the United States (25.28%), UK (9.52%), Canada (5.23%), Australia (5.03%) and Germany (4.83%) have the highest density of institutions.
+```{r results='asis'}
+percentage_VS_b2010 <- percentage_VS_b2010 %>% 
+  arrange(desc(Names2_percent))
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names2_percountry_before2010.png")
+cat("Before 2010, in descending order, the",
+    paste(percentage_VS_b2010$NAME_0[1]), 
+    paste("(",round(percentage_VS_b2010$Names2_percent[1]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_b2010$NAME_0[2]), 
+    paste("(",round(percentage_VS_b2010$Names2_percent[2]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_b2010$NAME_0[3]), 
+    paste("(",round(percentage_VS_b2010$Names2_percent[3]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_b2010$NAME_0[4]), 
+    paste("(",round(percentage_VS_b2010$Names2_percent[4]*100, 2), "%) and", sep = ""), 
+    paste(percentage_VS_b2010$NAME_0[5]), 
+    paste("(",round(percentage_VS_b2010$Names2_percent[5]*100, 2), "%)", sep = ""),
+    "have the highest density of institutions."
+    )
+```
+
+```{r, fig.align='center', fig.height = 10, fig.width = 10, dpi=300, cache=TRUE}
+# Plotting Names 2 
+plotD <- ggplot(poly_b2010) + # Names 2 all studies before 2010
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Plotting Names 2 log
+plotD_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+plot_grid(plotD, plotD_log, labels = "auto", ncol = 1)
 ```
 
 #### After 2010 {.unnumbered}
 
 Showcases the number of studies which reference the particular country or territory within the affiliations, acknowledgments, or funding text for the studies in the dataset **from 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps.
 
-After 2010, in descending order, the United States (15.81%), UK (6.75%), China (5.39%), Germany (5.29%) and Australia (4.87%) have the highest density of institutions.
+```{r results='asis'}
+percentage_VS_a2010 <- percentage_VS_a2010 %>% 
+  arrange(desc(Names2_percent))
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names2_percountry_2010.png")
+cat("After 2010, in descending order, the",
+    paste(percentage_VS_a2010$NAME_0[1]), 
+    paste("(",round(percentage_VS_a2010$Names2_percent[1]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_a2010$NAME_0[2]), 
+    paste("(",round(percentage_VS_a2010$Names2_percent[2]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_a2010$NAME_0[3]), 
+    paste("(",round(percentage_VS_a2010$Names2_percent[3]*100, 2), "%),", sep = ""), 
+    paste(percentage_VS_a2010$NAME_0[4]), 
+    paste("(",round(percentage_VS_a2010$Names2_percent[4]*100, 2), "%) and", sep = ""), 
+    paste(percentage_VS_a2010$NAME_0[5]), 
+    paste("(",round(percentage_VS_a2010$Names2_percent[5]*100, 2), "%)", sep = ""),
+    "have the highest density of institutions."
+    )
+```  
+  
+```{r, fig.align='center', fig.height = 10, fig.width = 10, dpi=300, cache=TRUE}
+plotB <- ggplot(poly_2010) + # Names 2 all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+# Plotting Names 2 log
+plotB_log <- ggplot(poly_2010) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names2_log, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 5, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions (log)") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+plot_grid(plotB, plotB_log, labels = "auto", ncol = 1)
 ```
 
 ### Summarized by region {.tabset .tabset-pills}
@@ -222,8 +822,42 @@ knitr::include_graphics("Outputs/Maps/Names2_persubregion.png")
 
 OECD member countries and middle-income countries broadly had relatively more studies in their countries relative to research and funding affiliations; also Greenland, the Antarctic, some Latin American and Asian, most African countries had relatively more research and funding affiliations compared to the number of studies in their countries. Countries mostly in the southern hemisphere had a disproportionate number of researchers engaged in ecosystem services/NCP assessment studies, relative to the number of studies carried out in their country, in comparison to Northern hemisphere countries. Because these are ratios, it is better to consider them in the light of country/population size. From a Southern-country perspective, this could indicate: (i) high frequency of collaboration outside their own countries of researchers from countries in the South, and (ii) underfunding of domestic valuation studies in countries of the South relative to the number of domestic researchers and funding agencies. From the perspective of countries in the North this could indicate (i) relatively limited research collaboration outside their country for researchers from the North, and (ii) well-funded ecosystem services/NCP research relative to number of researchers and funding affiliations. From both these perspectives the narrative is of a relative export of ecosystem services/NCP research capacity from Southern countries to other countries. The data may also simply show a relative deficit of ecosystem services/NCP study applications in the South relative to the North. No data was found on cross-border flows of funding or researchers to make any further interpretation. This is a potential knowledge gap. More analysis is needed on whether there are patterns in relation to ecosystem assessment method families, and whether the patterns have changed over time. There are many exceptions to the broad global pattern which merit country-specific studies of the institutional context of ecosystem assessment to identify barriers and successful leverage points.
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1Names2_map.png")
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+plot_1and2_ratio <- ggplot(poly) + # Names 2 log all studies
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1/Names2, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#FB8C00",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 6, 
+    breaks = c(1,3,5,7,9,11),
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Ratio of Studies and Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
+plot_1and2_ratio
 ```
 
 It is clear that there is a significant positive linear relationship between the density of studies and institutions. It is important to note that there were many more identified countries for institutions than location of studies.

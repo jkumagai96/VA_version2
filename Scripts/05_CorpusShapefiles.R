@@ -777,7 +777,7 @@ plot5 <- ggplot(n1_region_poly) +
   annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
   annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
   annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
-  scale_fill_manual(values = c("#F7FCB9", "#ADDD8E", "#238443", "#006837", "grey")) +
+  scale_fill_manual(values = c("#F7FCB9", "#ADDD8E", "#41AB5D", "#006837", "grey")) +
   labs(fill = "Density of Studies") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
