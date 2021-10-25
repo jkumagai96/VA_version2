@@ -182,6 +182,9 @@ grid <- st_graticule(lat = seq(-90, 90, by = 30), # the graticules
 Showcases the number of valuation studies conducted within each country or territory for **the entire dataset**. Please note that the scales are not consistent between maps.
 
 ```{r results='asis'}
+china_b2010 <- percentage_VS_b2010 %>% filter(NAME_0 == "China")
+china_a2010 <- percentage_VS_a2010 %>% filter(NAME_0 == "China")
+
 cat("There were", 
     sum(t$n) - studies_na$n,
     "identifications of a country or territory from the title, abstract, or keywords, consisting of",
@@ -198,13 +201,16 @@ cat("There were",
     paste("(",round(percentage_VS_all$Names1_percent[4]*100, 2), "%) and", sep = ""), 
     paste(percentage_VS_all$NAME_0[5]), 
     paste("(",round(percentage_VS_all$Names1_percent[5]*100, 2), "%)", sep = ""),
-    "have the highest valuation studies in total and for studies post 2010."
+    "have the highest valuation studies in total and for studies post 2010.\n\n",
+    "\nThere was a large relative increase of valuation studies conducted in China before 2010 and after 2010. Before 2010, China comprised of",
+    paste0(round(china_b2010[,5]*100, 2),"%"), 
+    "of the valuation studies, but after 2010 China comprised",
+    paste0(round(china_a2010[,5]*100, 2),"%"), 
+    "of the valuation studies."
     )
 
 ```
-
-There was a large relative increase of valuation studies conducted in China before 2010 and after 2010. Before 2010, China comprised of 2.80% of the valuation studies, but after 2010 China comprised 8.04% of the valuation studies.
-
+  
 ```{r, fig.align='center', fig.height = 10, fig.width = 10, dpi=300, cache=TRUE}
 plot1 <- ggplot(poly) + # Names 1 all studies 
   geom_sf(data = grid, 
@@ -764,10 +770,55 @@ Besides Antarctica, Africa has the lowest density of studies and institutions.
 
 #### Density of studies {.unnumbered}
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_perregion.png")
-```
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+# Load needed data 
+#regions <- st_read("Data/ipbes_regions_subregions/IPBES_regions_Subregions2.shp") %>% 
+#  st_wrap_dateline() %>% 
+#  st_transform(robin_crs)
 
+# Dissolve data by ipbes region
+#data_region <- regions %>% # this dissolves the data by region
+#  mutate(n = 1) %>% 
+#  dplyr::group_by(Region) %>% 
+#  dplyr::summarise(count_n = sum(n)) %>% 
+#  sf::st_cast() 
+#st_write(data_region, "Data/ipbes_regions_subregions/region.shp", append = FALSE)
+
+data_region <- st_read("Data/ipbes_regions_subregions/region.shp", quiet = T) 
+
+# Count number of times per region (NAMES 1)
+names1_region_counts <- data %>% 
+  mutate(x = strsplit(as.character(Region_TI_AB_DE_ID), ", ")) %>% 
+  unnest(x) %>% 
+  count(x, sort = TRUE) %>% 
+  rename("Region" = "x")
+
+n1_region_poly <- left_join(data_region, names1_region_counts, by = "Region") 
+n1_region_poly$n <- as.factor(n1_region_poly$n)
+
+ggplot(n1_region_poly) + 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = n, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_manual(values = c("#F7FCB9", "#ADDD8E", "#41AB5D", "#006837", "grey")) +
+  labs(fill = "Density of Studies") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+```
+  
 ```{r, results='asis'}
 region1_counts <- data %>% 
   mutate(x = strsplit(as.character(Region_TI_AB_DE_ID), ", ")) %>%
@@ -782,10 +833,39 @@ cat("* ",region1_na$n, "studies did not have a region identified for the density
 
 #### Density of institutions {.unnumbered}
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names2_perregion.png")
-```
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+names2_region_counts <- data %>%
+  mutate(x = strsplit(as.character(Region_CI_FU_FX), ", ")) %>% 
+  unnest(x) %>% 
+  count(x, sort = TRUE) %>% 
+  rename("Region" = "x")
 
+n2_region_poly <- left_join(data_region, names2_region_counts, by = "Region") 
+n2_region_poly$n <- as.factor(n2_region_poly$n)
+
+ggplot(n2_region_poly) + 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = n, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_manual(values = c("#DEEBF7", "#9ECAE1", "#4292C6", "#08519C", "grey")) +
+  labs(fill = "Density of Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+```
+  
 -   376 studies did not have a region identified for the density of institutions
 
 ### Summarized by subregion {.tabset .tabset-pills}
@@ -794,8 +874,67 @@ Europe and North America disproportionately have the highest density of studies 
 
 #### Density of studies {.unnumbered}
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names1_persubregion.png")
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+##### Prepare data by subregion #####  
+# Dissolve data by ipbes subregion
+#data_subregion <- regions %>% # this dissolves the data by subregion
+#  mutate(n = 1) %>% 
+#  dplyr::group_by(Sub_Region) %>% 
+#  dplyr::summarise(count_n = sum(n)) %>% 
+#  sf::st_cast()
+#st_write(data_subregion, "Data/ipbes_regions_subregions/subregion.shp", append = FALSE)
+data_subregion <- st_read("Data/ipbes_regions_subregions/subregion.shp", quiet = T)
+
+# Count number of times per sub region (NAMES 1)
+names1_subregion_counts <- data %>% 
+  mutate(x = strsplit(as.character(Subregion_TI_AB_DE_ID), ", ")) %>% 
+  unnest(x) %>% 
+  count(x, sort = TRUE) %>% 
+  rename("Sub_Region" = "x")
+
+fix <- names1_subregion_counts %>% # Within the data western and central europe are separated, I added them together to match the regions within the polygon data
+  filter(Sub_Region == "Western Europe" | Sub_Region == "Central Europe") 
+fix <- sum(fix$n)
+
+names1_subregion_counts <- names1_subregion_counts %>% 
+  add_row(tibble_row(Sub_Region = "Central and Western Europe", n = fix))
+
+# final join
+n1_subregion_poly <- left_join(data_subregion, names1_subregion_counts, by = "Sub_Region") 
+
+ggplot(n1_subregion_poly) + 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = n, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 4, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Studies") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
+
 ```
 
 ```{r results='asis'}
@@ -812,8 +951,57 @@ cat("* ",subregion1_na$n, "studies did not have a subregion identified for the d
 
 #### Density of institutions {.unnumbered}
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Maps/Names2_persubregion.png")
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+# Count number of times per subregion (NAMES 2)
+names2_subregion_counts <- data %>%
+  mutate(x = strsplit(as.character(Subregion_CI_FU_FX), ", ")) %>% 
+  unnest(x) %>% 
+  count(x, sort = TRUE) %>% 
+  rename("Sub_Region" = "x")
+
+# Within the data western and central europe are separated, I added them together to match the regions within the polygon data
+fix <- names2_subregion_counts %>% 
+  filter(Sub_Region == "Western Europe" | Sub_Region == "Central Europe")
+fix <- sum(fix$n)
+
+names2_subregion_counts <- names2_subregion_counts %>% 
+  add_row(tibble_row(Sub_Region = "Central and Western Europe", n = fix))
+
+# final join
+n2_subregion_poly <- left_join(data_subregion, names2_subregion_counts, by = "Sub_Region") 
+
+ggplot(n2_subregion_poly) + 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = n, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    n.breaks = 4, 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  labs(fill = "Density of Institutions") +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom")
 ```
 
 -   376 studies did not have a subregion identified for the density of institutions

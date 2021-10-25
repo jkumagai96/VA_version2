@@ -596,7 +596,10 @@ inborutils::download_zenodo("10.5281/zenodo.3928281", path = "Data/ipbes_regions
 unzip("Data/ipbes_regions_subregions/ipbes_regions_subregions_shape_1.1.zip", exdir = "Data/ipbes_regions_subregions")
 
 # Load needed data 
-regions <- st_read("Data/ipbes_regions_subregions/IPBES_regions_Subregions2.shp")
+regions <- st_read("Data/ipbes_regions_subregions/IPBES_regions_Subregions2.shp") %>% 
+  st_wrap_dateline() %>% 
+  st_transform(robin_crs)
+
 corpus <- read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx", sheet = 1)
 
 # Dissolve data by ipbes region
@@ -605,8 +608,9 @@ corpus <- read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.x
 #  dplyr::group_by(Region) %>% 
 #  dplyr::summarise(count_n = sum(n)) %>% 
 #  sf::st_cast() 
-#st_write(data_region, "Data/ipbes_regions_subregions/region.shp")
-data_region <- st_read("Data/ipbes_regions_subregions/region.shp")
+#st_write(data_region, "Data/ipbes_regions_subregions/region.shp", append = FALSE)
+
+data_region <- st_read("Data/ipbes_regions_subregions/region.shp") 
 
 # Count number of times per region (NAMES 1)
 names1_region_counts <- corpus %>% 
@@ -615,9 +619,8 @@ names1_region_counts <- corpus %>%
   count(x, sort = TRUE) %>% 
   rename("Region" = "x")
 
-n1_region_poly <- left_join(data_region, names1_region_counts) %>% 
-  st_wrap_dateline() %>% 
-  st_transform(robin_crs)
+n1_region_poly <- left_join(data_region, names1_region_counts, by = "Region") 
+
 
 # Count number of times per region (NAMES 2)
 names2_region_counts <- corpus %>%
@@ -626,9 +629,7 @@ names2_region_counts <- corpus %>%
   count(x, sort = TRUE) %>% 
   rename("Region" = "x")
 
-n2_region_poly <- left_join(data_region, names2_region_counts, by = "Region") %>% 
-  st_wrap_dateline() %>% 
-  st_transform(robin_crs)
+n2_region_poly <- left_join(data_region, names2_region_counts, by = "Region") 
   
 ##### Prepare data by subregion #####  
 # Dissolve data by ipbes subregion
@@ -637,7 +638,7 @@ n2_region_poly <- left_join(data_region, names2_region_counts, by = "Region") %>
 #  dplyr::group_by(Sub_Region) %>% 
 #  dplyr::summarise(count_n = sum(n)) %>% 
 #  sf::st_cast()
-#st_write(data_subregion, "Data/ipbes_regions_subregions/subregion.shp")
+#st_write(data_subregion, "Data/ipbes_regions_subregions/subregion.shp", append = FALSE)
 data_subregion <- st_read("Data/ipbes_regions_subregions/subregion.shp")
 
 # Count number of times per sub region (NAMES 1)
@@ -655,9 +656,7 @@ names1_subregion_counts <- names1_subregion_counts %>%
   add_row(tibble_row(Sub_Region = "Central and Western Europe", n = fix))
 
 # final join
-n1_subregion_poly <- left_join(data_subregion, names1_subregion_counts, by = "Sub_Region") %>%
-  st_wrap_dateline() %>% 
-  st_transform(robin_crs)
+n1_subregion_poly <- left_join(data_subregion, names1_subregion_counts, by = "Sub_Region") 
 
 # Count number of times per subregion (NAMES 2)
 names2_subregion_counts <- corpus %>%
@@ -675,9 +674,7 @@ names2_subregion_counts <- names2_subregion_counts %>%
   add_row(tibble_row(Sub_Region = "Central and Western Europe", n = fix))
 
 # final join
-n2_subregion_poly <- left_join(data_subregion, names2_subregion_counts, by = "Sub_Region") %>% 
-  st_wrap_dateline() %>% 
-  st_transform(robin_crs)
+n2_subregion_poly <- left_join(data_subregion, names2_subregion_counts, by = "Sub_Region") 
 
 ##### Graph data by region and sub-region ######
 
