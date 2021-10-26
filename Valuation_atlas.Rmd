@@ -820,15 +820,15 @@ ggplot(n1_region_poly) +
 ```
   
 ```{r, results='asis'}
-region1_counts <- data %>% 
+region1_counts_s <- data %>% 
   mutate(x = strsplit(as.character(Region_TI_AB_DE_ID), ", ")) %>%
   unnest(x) %>% 
   count(x, sort = TRUE)
 
-region1_na <- region1_counts %>% 
+region1_na_s <- region1_counts_s %>% 
   filter(is.na(x)) 
 
-cat("* ",region1_na$n, "studies did not have a region identified for the density of studies.")
+cat("* ",region1_na_s$n, "studies did not have a region identified for the density of studies.")
 ```
 
 #### Density of institutions {.unnumbered}
@@ -865,8 +865,18 @@ ggplot(n2_region_poly) +
         axis.title = element_blank(),
         legend.position = "bottom")
 ```
-  
--   376 studies did not have a region identified for the density of institutions
+
+```{r, results='asis'}
+region1_counts_i <- data %>% 
+  mutate(x = strsplit(as.character(Region_CI_FU_FX), ", ")) %>%
+  unnest(x) %>% 
+  count(x, sort = TRUE)
+
+region1_na_i <- region1_counts_i %>% 
+  filter(is.na(x)) 
+
+cat("* ",region1_na_i$n, "studies did not have a region identified for the density of studies.")
+```  
 
 ### Summarized by subregion {.tabset .tabset-pills}
 
@@ -938,15 +948,15 @@ ggplot(n1_subregion_poly) +
 ```
 
 ```{r results='asis'}
-subregion1_counts <- data %>% 
+subregion1_counts_s <- data %>% 
   mutate(x = strsplit(as.character(Subregion_TI_AB_DE_ID), ", ")) %>%
   unnest(x) %>% 
   count(x, sort = TRUE)
 
-subregion1_na <- subregion1_counts %>% 
+subregion1_na_s <- subregion1_counts_s %>% 
   filter(is.na(x)) 
 
-cat("* ",subregion1_na$n, "studies did not have a subregion identified for the density of studies.")
+cat("* ",subregion1_na_s$n, "studies did not have a subregion identified for the density of studies.")
 ```
 
 #### Density of institutions {.unnumbered}
@@ -1004,7 +1014,17 @@ ggplot(n2_subregion_poly) +
         legend.position = "bottom")
 ```
 
--   376 studies did not have a subregion identified for the density of institutions
+```{r, results='asis'}
+subregion1_counts_i <- data %>% 
+  mutate(x = strsplit(as.character(Subregion_CI_FU_FX), ", ")) %>%
+  unnest(x) %>% 
+  count(x, sort = TRUE)
+
+subregion1_na_i <- subregion1_counts_i %>% 
+  filter(is.na(x)) 
+
+cat("* ",subregion1_na_i$n, "studies did not have a region identified for the density of studies.")
+``` 
 
 ## Relationships between density of studies and institutions
 
@@ -1050,8 +1070,19 @@ plot_1and2_ratio
 
 It is clear that there is a significant positive linear relationship between the density of studies and institutions. It is important to note that there were many more identified countries for institutions than location of studies.
 
-```{r names1/names2, fig.align = 'center', fig.cap = "Density of studies vs density of institutions"}
-knitr::include_graphics("Outputs/Corpus/Names1_Names2.png")
+```{r names1/names2, fig.height = 6, fig.width = 8, fig.align = 'center', fig.cap = "Density of studies vs density of institutions", message = F, warning = F}
+harmonized_data %>% 
+  ggplot(aes(x = Names1, y = Names2)) +
+  geom_point() +
+  labs(x = "Density of Studies", y = "Density of Institutions") +
+  geom_smooth(method = "lm") +
+  ggpmisc::stat_fit_glance(method = 'lm',
+                           color = "red3",
+                           mapping = aes(label = sprintf('r^2~"="~%.3f~~italic(P)~"="~%.2g',
+                                                         after_stat(r.squared), after_stat(p.value))),
+                           parse = TRUE, 
+                           label.x = "right", label.y = "bottom") +
+  theme_bw() 
 ```
 
 ## Temporal Trends
