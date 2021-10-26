@@ -1532,364 +1532,661 @@ For each figure the panels are arranged accordingly:
 
 -   Density of institutions from 2010 (bottom-right) is the number of valuation studies funded from each country or territory in the corpus from 2010 to 2020
 
+```{r plot functions}
+# Prepare data 
+# Corpus 
+harmonized_data <- read.csv("Outputs/Corpus/harmonized_data.csv")    # full corpus
+harmonized_data_2010 <- read.csv("Outputs/Corpus_2010/harmonized_data.csv") %>%  # corpus from 2010
+  select(ISO_Alpha_3, Names1, Names1_log, Names2, Names2_log) 
+
+# indicators 
+column_names <- read_excel("Data/names_of_columns.xlsx")
+indicators <- read.csv("Outputs/Indicators_compiled.csv")
+
+# Fix column names 
+colnames(indicators) <- c("ISO_Alpha_3", column_names$Short_Name) # add names to columns 
+colnames(harmonized_data_2010)[2:5] <- paste(colnames(harmonized_data_2010)[2:5], "> 2010")
+
+#### Combine Data ####
+all_data <- full_join(harmonized_data, harmonized_data_2010, by = "ISO_Alpha_3") %>% 
+  select(ISO_Alpha_3:Names2_log, `Names1 > 2010`:`Names2_log > 2010`, hdi_2018:Pop_2018)
+
+all_data <- full_join(all_data, indicators, by = "ISO_Alpha_3")
+  
+
+# Plot Functions
+#### Plot Function ####
+Plot_function <- function(plot_data, yvar, yname) {
+  plot1 <- plot_data %>% 
+    ggplot(aes(x = Names1, y = yvar)) +
+    geom_point() +
+    labs(x = "Density of Studies", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "bottom") +
+    theme_bw()
+  
+  plot2 <- plot_data %>% 
+    ggplot(aes(x = `Names1 > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Density of Studies from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "bottom") +
+    theme_bw()
+  
+  plot3 <- plot_data %>% 
+    ggplot(aes(x = Names2, y = yvar)) +
+    geom_point() +
+    labs(x = "Density of Institutions", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "bottom") +
+    theme_bw()
+  
+  
+  plot4 <- plot_data %>% 
+    ggplot(aes(x = `Names2 > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Density of Institutions from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "bottom") +
+    theme_bw()
+  
+  
+  
+  
+  plot_all <- plot_grid(plot1, plot2, plot3, plot4)
+  return(plot_all)
+  
+}
+
+Plot_function_topright <- function(plot_data, yvar, yname) {
+  plot1 <- plot_data %>% 
+    ggplot(aes(x = Names1, y = yvar)) +
+    geom_point() +
+    labs(x = "Density of Studies", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "top") +
+    theme_bw()
+  
+  plot2 <- plot_data %>% 
+    ggplot(aes(x = `Names1 > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Density of Studies from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "top") +
+    theme_bw()
+  
+  plot3 <- plot_data %>% 
+    ggplot(aes(x = Names2, y = yvar)) +
+    geom_point() +
+    labs(x = "Density of Institutions", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "top") +
+    theme_bw()
+  
+  
+  plot4 <- plot_data %>% 
+    ggplot(aes(x = `Names2 > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Density of Institutions from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "top") +
+    theme_bw()
+  
+  
+  
+  
+  plot_all <- plot_grid(plot1, plot2, plot3, plot4)
+  return(plot_all)
+  
+}
+
+Plot_function_log <- function(plot_data, yvar, yname) {
+  plot1 <- plot_data %>% 
+    ggplot(aes(x = Names1_log, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Studies", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "left", label.y = "top") +
+    theme_bw()
+  
+  plot2 <- plot_data %>% 
+    ggplot(aes(x = `Names1_log > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Studies from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "left", label.y = "top") +
+    theme_bw()
+  
+  plot3 <- plot_data %>% 
+    ggplot(aes(x = Names2_log, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Institutions", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "left", label.y = "top") +
+    theme_bw()
+  
+  
+  plot4 <- plot_data %>% 
+    ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Institutions from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "left", label.y = "top") +
+    theme_bw()
+  
+  
+  
+  
+  plot_all <- plot_grid(plot1, plot2, plot3, plot4)
+  return(plot_all)
+  
+} 
+
+Plot_function_log_topright <- function(plot_data, yvar, yname) {
+  plot1 <- plot_data %>% 
+    ggplot(aes(x = Names1_log, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Studies", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "top") +
+    theme_bw()
+  
+  plot2 <- plot_data %>% 
+    ggplot(aes(x = `Names1_log > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Studies from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "top") +
+    theme_bw()
+  
+  plot3 <- plot_data %>% 
+    ggplot(aes(x = Names2_log, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Institutions", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "top") +
+    theme_bw()
+  
+  
+  plot4 <- plot_data %>% 
+    ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Institutions from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "top") +
+    theme_bw()
+  
+  
+  
+  
+  plot_all <- plot_grid(plot1, plot2, plot3, plot4)
+  return(plot_all)
+  
+}
+
+Plot_function_log_bottomright <- function(plot_data, yvar, yname) {
+  plot1 <- plot_data %>% 
+    ggplot(aes(x = Names1_log, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Studies", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "bottom") +
+    theme_bw()
+  
+  plot2 <- plot_data %>% 
+    ggplot(aes(x = `Names1_log > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Studies from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "bottom") +
+    theme_bw()
+  
+  plot3 <- plot_data %>% 
+    ggplot(aes(x = Names2_log, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Institutions", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "bottom") +
+    theme_bw()
+  
+  
+  plot4 <- plot_data %>% 
+    ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
+    geom_point() +
+    labs(x = "Log Density of Institutions from 2010", y = yname) +
+    geom_smooth(method = "lm") +
+    ggpmisc::stat_fit_glance(method = 'lm',
+                             color = "red3",
+                             aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                             label.x = "right", label.y = "bottom") +
+    theme_bw()
+  
+  
+  
+  
+  plot_all <- plot_grid(plot1, plot2, plot3, plot4)
+  return(plot_all)
+  
+}
+```
+  
 ### Human Development Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the human development index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/HDI.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the human development index"}
+Plot_function(all_data, all_data$hdi_2018, "Human Development Index (2018)")
 ```
-
+  
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the human development index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/HDI_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the human development index"}
+Plot_function_log_bottomright(all_data, all_data$hdi_2018, "Human Development Index (2018)")
 ```
-
+  
 ### Average Harmonized Learning Outcomes Score {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and learning outcomes"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/LearningOutcomes.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and learning outcomes"}
+Plot_function(all_data, all_data$Learning_outcomes_2015, "Learning Oucomes (2015)")
 ```
-
+  
 **Log relationship graphs:**
-
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and learning outcomes"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/LearningOutcomes_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and learning outcomes"}
+Plot_function_log(all_data, all_data$Learning_outcomes_2015, "Learning Oucomes (2015)")
 ```
-
+  
 ### GDP {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and GDP"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/GDP.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and GDP"}
+Plot_function(all_data, all_data$GDP_2019, "GDP (2019)")
 ```
-
+  
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "LLog relationships between density of valuation studies and associated insitutions, and GDP"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/GDP_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and GDP"}
+Plot_function_log(all_data, all_data$GDP_2019, "GDP (2019)")
 ```
 
 ### Corruption Perception Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the corruption perception index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/CPI.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the corruption perception index"}
+Plot_function(all_data, all_data$CPI_2020, "Corruption Perception Index (2020)")
 ```
-
+  
 **Log relationship graphs:**
-
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the corruption perception index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/CPI_log.svg")
+  
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the corruption perception index"}
+Plot_function_log(all_data, all_data$CPI_2020, "Corruption Perception Index (2020)")
 ```
-
+  
 ### Population {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and population"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/POP.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and population"}
+Plot_function(all_data, all_data$Pop_2018, "Population in Millions (2018)")
 ```
-
+  
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and population"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/POP_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and population"}
+Plot_function_log(all_data, all_data$Pop_2018, "Population in Millions (2018)")
 ```
-
+  
 ### GDP per capita {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and GDP per capita"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/GDP_per_capita.svg")
-```
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and GDP per capita"}
+d <- all_data %>% 
+  mutate(GDP_per_capita = GDP_2019/Pop_2018) 
 
+Plot_function_topright(d, d$GDP_per_capita, "GDP per Capita")
+```
+   
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and GDP per capita"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/GDP_per_capita_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and GDP per capita"}
+Plot_function_log_topright(d, d$GDP_per_capita, "GDP per Capita")
 ```
-
+  
 ### Forest Area Under FSC Certification {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and forest area under FSC certification"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/FSC.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and forest area under FSC certification"}
+Plot_function(all_data, all_data$`Forest Area under FSC certification`, "Forest area under FSC certification")
 ```
-
+   
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and forest area under FSC certification"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/FSC_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and forest area under FSC certification"}
+Plot_function_log(all_data, all_data$`Forest Area under FSC certification`, "Forest area under FSC certification")
 ```
-
+  
 ### Biodiversity Habitat Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the biodiversity habitat index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Biodiversity_habitat_index.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the biodiversity habitat index"}
+Plot_function_topright(all_data, all_data$`Biodiversity Habitat Index`, "Biodiversity Habitat Index")
 ```
-
+   
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biodiversity habitat index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Biodiversity_habitat_index_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biodiversity habitat index"}
+Plot_function_log_topright(all_data, all_data$`Biodiversity Habitat Index`, "Biodiversity Habitat Index")
 ```
-
+   
 ### Biodiversity Intactness Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the biodiversity intactness index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Biodiversity_intactness_index.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the biodiversity intactness index"}
+Plot_function_topright(all_data, all_data$`Biodiversity Intactness Index`, "Biodiversity Intactness Index")
 ```
-
+   
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biodiversity intactness index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Biodiversity_intactness_index_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biodiversity intactness index"}
+Plot_function_log_topright(all_data, all_data$`Biodiversity Intactness Index`, "Biodiversity Intactness Index")
 ```
-
+  
 ### Biocapacity Per Capita {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the biocapacity per capita"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Biocapacity_per_capita.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the biocapacity per capita"}
+Plot_function_topright(all_data, all_data$`Biocapacity per capita`, "Biocapacity per Capita")
 ```
-
+   
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biocapacity per capita"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Biocapacity_per_capita_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biocapacity per capita"}
+Plot_function_log(all_data, all_data$`Biocapacity per capita`, "Biocapacity per Capita")
 ```
-
+  
 ### Ecological Footprint Per Capita {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the ecological footprint per capita"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Ecological_footprint.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the ecological footprint per capita"}
+Plot_function(all_data, all_data$`Ecological Footprint per capita`, "Ecological Footprint per Capita")
 ```
-
+  
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the ecological footprint per capita"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Ecological_footprint_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the ecological footprint per capita"}
+Plot_function_log_topright(all_data, all_data$`Ecological Footprint per capita`, "Ecological Footprint per Capita")
 ```
-
+   
 ### Forest Area {.unnumbered}
-
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and forest area"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Forest_area.svg")
+  
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and forest area"}
+Plot_function(all_data, all_data$`Forest area`, "Forest Area")
 ```
-
+  
 **Log relationship graphs:**
-
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and forest area"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Forest_area_log.svg")
+  
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and forest area"}
+Plot_function_log(all_data, all_data$`Forest area`, "Forest Area")
 ```
-
+   
 ### Water Footprint {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the water footprint"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Water_footprint.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the water footprint"}
+Plot_function(all_data, all_data$`Water Footprint`, "Water Footprint")
 ```
-
+  
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the water footprint"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Water_footprint_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the water footprint"}
+Plot_function_log(all_data, all_data$`Water Footprint`, "Water Footprint")
 ```
-
+  
 ### Inland Fishery Production {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and inland fishery production"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Inland_fishery_production.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and inland fishery production"}
+Plot_function(all_data, all_data$`Inland Fishery Production`, "Inland Fishery Production")
 ```
-
+   
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and inland fishery production"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Inland_fishery_production_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and inland fishery production"}
+Plot_function_log(all_data, all_data$`Inland Fishery Production`, "Inland Fishery Production")
 ```
-
+   
 ### Region-based Marine Trophic Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the region-based marine trophic index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Marine_tropic_index.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the region-based marine trophic index"}
+Plot_function(all_data, all_data$`Marine Trophic Index (1950)`, "Marine Trophic Index in reference to 1950")
 ```
-
+   
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the region-based marine trophic index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Marine_tropic_index_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the region-based marine trophic index"}
+Plot_function_log_bottomright(all_data, all_data$`Marine Trophic Index (1950)`, "Marine Trophic Index in reference to 1950")
 ```
-
+   
 ### Nitrogen Fertilizers {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen fertization"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_fertilizers.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen fertization"}
+Plot_function(all_data, all_data$`Nitrogen Fertilizers`, "Nitrogen Fertilizers")
 ```
-
+  
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and nitrogen fertization"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_fertilizers_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and nitrogen fertization"}
+Plot_function_log(all_data, all_data$`Nitrogen Fertilizers`, "Nitrogen Fertilizers")
 ```
-
+   
 ### Percent Nitrogen Use Efficiency {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen use efficiency"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_use_efficiency.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen use efficiency"}
+Plot_function(all_data, all_data$`Nitrogen Use Efficiency (%)`, "Nitrogen Use Efficiency (%)")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and nitrogen use efficiency"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_use_efficiency_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and nitrogen use efficiency"}
+Plot_function_log(all_data, all_data$`Nitrogen Use Efficiency (%)`, "Nitrogen Use Efficiency (%)")
 ```
 
 ### Percentage of Area Covered by Protected Areas {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and percentage of area covered by protected areas"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Percentage_protected.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and percentage of area covered by protected areas"}
+Plot_function_topright(all_data, all_data$`Percentage protected`, "Percentage of Area Covered by PAs")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and percentage of area covered by protected areas"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Percentage_protected_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and percentage of area covered by protected areas"}
+Plot_function_log_topright(all_data, all_data$`Percentage protected`, "Percentage of Area Covered by PAs")
 ```
 
 ### Percentage of Undernourished People {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and percentage of undernourished people"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Percentage_of_undernourished_people.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and percentage of undernourished people"}
+Plot_function_topright(all_data, all_data$`Percentage of undernourished people`, "Percentage of Undernourished People")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and percentage of undernourished people"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Percentage_of_undernourished_people_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and percentage of undernourished people"}
+Plot_function_log_topright(all_data, all_data$`Percentage of undernourished people`, "Percentage of Undernourished People") 
 ```
 
 ### Local Breeds at Risk of Extinction {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and local breeds at risk of extinction"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Local_breeds.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and local breeds at risk of extinction"}
+Plot_function_topright(all_data, all_data$`Local Breeds at risk of extinction`, "Local Breeds At Risk of Extinction")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between density of valuation studies and associated insitutions, and local breeds at risk of extinction"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Local_breeds_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and local breeds at risk of extinction"}
+Plot_function_log_topright(all_data, all_data$`Local Breeds at risk of extinction`, "Local Breeds At Risk of Extinction")
 ```
 
 ### Percentage of Key Biodiversity Areas Protected {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and PA of key biodiverisy area coverage"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_of_key_biodiversity_area_coverage.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and PA of key biodiverisy area coverage"}
+Plot_function_topright(all_data, all_data$`PA of Key Biodiversity Areas Coverage (%)`, "Percentage of KBA covered by PAs")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and PA of key biodiverisy area coverage"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_of_key_biodiversity_area_coverage_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and PA of key biodiverisy area coverage"}
+Plot_function_log_topright(all_data, all_data$`PA of Key Biodiversity Areas Coverage (%)`, "Percentage of KBA covered by PAs")
 ```
 
 ### Protected Area Management Effectiveness {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and protected area management effectiveness"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_management_effectiveness.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and protected area management effectiveness"}
+Plot_function_topright(all_data, all_data$`Protected area management effectiveness`, "PA Assessed on Management Effectiveness (%)")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and protected area management effectiveness"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_management_effectiveness_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and protected area management effectiveness"}
+Plot_function_log_topright(all_data, all_data$`Protected area management effectiveness`, "PA Assessed on Management Effectiveness (%)")
 ```
 
 ### Protected Area Connectedness Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the protected area connectedness index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_connectedness.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and the protected area connectedness index"}
+Plot_function(all_data, all_data$`Protected Area Connectedness Index`, "PA Connectedness Index")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the protected area connectedness index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/PA_connectedness_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and the protected area connectedness index"}
+Plot_function_log(all_data, all_data$`Protected Area Connectedness Index`, "PA Connectedness Index")
 ```
 
 ### Species Habitat Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the species habitat index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_habitat_index.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and the species habitat index"}
+Plot_function(all_data, all_data$`Species Habitat Index`, "Species Habitat Index")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the species habitat index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_habitat_index_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and the species habitat index"}
+Plot_function_log_bottomright(all_data, all_data$`Species Habitat Index`, "Species Habitat Index")
 ```
 
 ### Species Protection Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the species protection index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/species_protection_index.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and the species protection index"}
+Plot_function(all_data, all_data$`Species Protection Index (%)`, "Species Protection Index (%)")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the species protection index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/species_protection_index_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and the species protection index"}
+Plot_function_log_bottomright(all_data, all_data$`Species Protection Index (%)`, "Species Protection Index (%)")
 ```
 
 ### Species Status Information Index {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and the species status information index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_status.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and the species status information index"}
+Plot_function_topright(all_data, all_data$`Species Status Information Index`, "Species Status Information Index")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and the species status information index"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Species_status_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and the species status information index"}
+Plot_function_log_topright(all_data, all_data$`Species Status Information Index`, "Species Status Information Index")
 ```
 
 ### Total Wood Removals {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and total wood removals"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Total_wood_removals.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and total wood removals"}
+Plot_function(all_data, all_data$`Total Wood Removals`, "Total wood removals (roundwood, m3")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and total wood removals"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Total_wood_removals_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and total wood removals"}
+Plot_function_log(all_data, all_data$`Total Wood Removals`, "Total wood removals (roundwood, m3")
 ```
 
 ### Trends in Forest Extent {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in forest extent"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_forest_extent.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in forest extent"}
+Plot_function_topright(all_data, all_data$`Trends in forest extent`, "Trends in forest extent")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and trends in forest extent"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_forest_extent_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and trends in forest extent"}
+Plot_function_log_topright(all_data, all_data$`Trends in forest extent`, "Trends in forest extent")
 ```
 
 ### Nitrogen Deposition Trends {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen deposition trends"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_deposition_trends.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen deposition trends"}
+Plot_function(all_data, all_data$`Nitrogen Deposition Trends`, "Nitrogen Deposition Trends (kg N/ha/yr)")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and nitrogen deposition trends"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Nitrogen_deposition_trends_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and nitrogen deposition trends"}
+Plot_function_log_topright(all_data, all_data$`Nitrogen Deposition Trends`, "Nitrogen Deposition Trends (kg N/ha/yr)")
 ```
 
 ### Trends in Pesticides Use {.unnumbered}
 
-```{r, fig.align = 'center', fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in pesticides use"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_pesticides_use.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in pesticides use"}
+Plot_function(all_data, all_data$`Trends in Pesticides Use`, "Trends in Pesticides Use")
 ```
 
 **Log relationship graphs:**
 
-```{r, fig.align = 'center', fig.cap = "Log relationships between valuation atlas and trends in pesticides use"}
-knitr::include_graphics("Outputs/Figures_Corpus_individual/Trends_in_pesticides_use_log.svg")
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and trends in pesticides use"}
+Plot_function_log(all_data, all_data$`Trends in Pesticides Use`, "Trends in Pesticides Use")
 ```
 
 # References
