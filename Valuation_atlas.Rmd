@@ -1091,13 +1091,31 @@ The timeline for the study application in the georeferenced countries shows a re
 
 Finally, there has been an exponential increase in valuation studies from the 1980's to the present as pictured in the graph below.
 
-```{r, fig.align = 'center'}
-knitr::include_graphics("Outputs/Corpus/Timeline.svg")
+```{r, fig.align='center', fig.height = 6, fig.width = 8, dpi=300, cache=TRUE, results='asis'}
+last_year <- max(data$PY, na.rm = T)
+
+names1_timeline <- data %>% 
+  mutate(n = 1) %>% 
+  group_by(PY) %>% 
+  summarise(year_count = sum(n)) %>% 
+  filter(PY != last_year)
+
+
+ggplot(names1_timeline, aes(x = PY, y = year_count)) +
+  geom_line(color = "blue") +
+  geom_point(size = 2) +
+  theme_bw() +
+  labs(x = "Year", y = "Count of valuation studies")
+
+cat("\n* ", 
+    data %>% filter(is.na(PY)) %>% nrow(), 
+    "studies did not have a year identified.\n\n",
+    "* ", 
+    "Data from",
+    last_year,
+    "was removed due to incomplete sampling.")
 ```
-
--   569 studies did not have a year identified
--   Data from 2020 was removed due to incomplete sampling of 2020.
-
+  
 ### Geographic density of studies {.tabset .tabset-pills}
 
 Additionally, we explored how the density of valuation studies has changed throughout the last four decades. No data is displayed in grey.
@@ -1308,10 +1326,93 @@ Density of institutions is also strongly positively correlated with total wood r
 
 While most significant relationships are positive, there are two negative relationships present. Biodiversity inexactness index is negatively correlated with both the density of studies and institutions, and protected area management effectiveness is slightly negative correlated with the density of institutions.
 
-```{r pearson, fig.align = 'center', fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
-knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure.png")
+```{r, message=F, warning = F}
+#### Load Packages ####
+library(corrplot)
+library(Hmisc)
+library(readxl)
+
+#### Load Data ####
+corpus <- read.csv("Outputs/Corpus/harmonized_data.csv") %>% 
+  mutate(GDP_per_capita = GDP_2019/Pop_2018) %>% 
+  select(-Names1_log, -Names2_log)
+
+corpus_2010 <- read.csv("Outputs/Corpus_2010/harmonized_data.csv") %>% 
+  select(ISO_Alpha_3, Names1, Names2)
+
+indicators <- read.csv("Outputs/Indicators_compiled.csv")
+column_names <- read_excel("Data/names_of_columns.xlsx")
+
+#### Clean and Join Data together ####
+colnames(indicators) <- c("ISO_Alpha_3", column_names$Short_Name)
+colnames(corpus_2010)[2:3] <- paste(colnames(corpus)[2:3], "> 2010")
+
+df <- full_join(corpus_2010, corpus, by = "ISO_Alpha_3")
+df <- full_join(df, indicators, by = "ISO_Alpha_3")
+
+df$remove <- df %>% select(`Names1 > 2010`:Names2) %>% rowSums(na.rm=TRUE) # removing rows where there is no Names1 information
+
+df <- df %>% 
+  filter(df$remove != 0) %>% 
+  select(-remove, -ISO_Alpha_3) %>% 
+  select(Names1, `Names1 > 2010`, Names2, `Names2 > 2010`, hdi_2018:`Trends in Pesticides Use`) %>% 
+  rename("Density of ES/NCP study location" = "Names1",
+         "Density of ES/NCP study location post 2010" = "Names1 > 2010",
+         "Density of research institution location" = "Names2",
+         "Density of research institution location post 2010" = "Names2 > 2010",
+         "Human Development Index" = "hdi_2018",
+         "Learning Outcomes" = "Learning_outcomes_2015",
+         "Gross Domestic Product" = "GDP_2019", 
+         "Corruption Perception Index" = "CPI_2020",
+         "Population" = "Pop_2018",
+         "Gross Domestic Prodct Per Capita" = "GDP_per_capita",
+         "Forest Area Under FSC Cetrification" = "Forest Area under FSC certification",
+         "Biocapacity Per Capita" = "Biocapacity per capita",
+         "Forest Area" = "Forest area",
+         "Region-based Marine Trophic Index" = "Marine Trophic Index (1950)",
+         "Percent Nitrogen Use Efficiency" = "Nitrogen Use Efficiency (%)",
+         "Percentage Protected" = "Percentage protected",
+         "Percentage of Undernourished People" = "Percentage of undernourished people",
+         "Local Breeds at Risk of Extinction" = "Local Breeds at risk of extinction",
+         "Percentage of Key Biodiversity Areas Protected" = "PA of Key Biodiversity Areas Coverage (%)",
+         "Protected Area Management Effectiveness" = "Protected area management effectiveness",
+         "Species Protection Index" = "Species Protection Index (%)",
+         "Trends in Forest Extent" = "Trends in forest extent")
 ```
 
+```{r, fig.align='center', fig.width=8, fig.height=8, dpi=300, cache=TRUE, fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
+#### Correlation Analysis ####
+# calculate correlations 
+res1 <- rcorr(as.matrix(df), type = "pearson") # Only linear relationships 
+
+#### Formatting Data and Export ####
+
+# Selecting the correlation coefficients 
+data_r <- res1$r %>% 
+  as.data.frame() %>% 
+  select(1:4)
+
+data_r <- data_r[-c(1:4), ]
+
+# Selecting the significance levels 
+data_p <- res1$P %>% 
+  as.data.frame() %>% 
+  select(1:4)
+
+data_p <- data_p[-c(1:4), ]
+
+# Selecting the number of observations that went into the calculation 
+data_n <- res1$n %>% 
+  as.data.frame() %>% 
+  select(1:4)
+
+data_n <- data_n[-c(1:4), ]
+
+# plot rectangular correlation plot
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",tl.srt = 45,
+         p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") 
+```
+  
 The same pearson correlation analysis with the indicators was conducted on the log of the number of studies in each country or territory and the log of the number of studies funded from each country.
 
 *Description of results*
@@ -1324,8 +1425,85 @@ For the log density of institutions compared to the non-transformed density of i
 
 For both the log density of studies and institutions, the protected area connected index becomes strongly positively corrrelated.
 
-```{r pearson-log, fig.align = 'center', fig.cap = "Pearson correlations of log geographic valuation studies and the indicators"}
-knitr::include_graphics("Outputs/Pearson_correlation_table/correlation_figure_log.png")
+```{r, message=F, warning = F}
+#### Load Data ####
+corpus <- read.csv("Outputs/Corpus/harmonized_data.csv") %>% 
+  mutate(GDP_per_capita = GDP_2019/Pop_2018) %>% 
+  select(-Names1, -Names2)
+
+corpus_2010 <- read.csv("Outputs/Corpus_2010/harmonized_data.csv") %>% 
+  select(ISO_Alpha_3, Names1_log, Names2_log)
+
+indicators <- read.csv("Outputs/Indicators_compiled.csv")
+column_names <- read_excel("Data/names_of_columns.xlsx")
+
+#### Clean and Join Data together ####
+colnames(indicators) <- c("ISO_Alpha_3", column_names$Short_Name)
+colnames(corpus_2010)[2:3] <- paste(colnames(corpus)[2:3], "> 2010")
+
+df <- full_join(corpus_2010, corpus, by = "ISO_Alpha_3")
+df <- full_join(df, indicators, by = "ISO_Alpha_3")
+
+df$remove <- df %>% select(`Names1_log > 2010`:Names2_log) %>% rowSums(na.rm=TRUE) # removing rows where there is no Names1 information
+df <- df %>% 
+  filter(df$remove != 0) %>% 
+  select(-remove, -ISO_Alpha_3) %>% 
+  select(Names1_log, `Names1_log > 2010`, Names2_log, `Names2_log > 2010`, hdi_2018:`Trends in Pesticides Use`) %>% 
+  rename("Log density of ES/NCP study location" = "Names1_log",
+         "Log density of ES/NCP study location post 2010" = "Names1_log > 2010",
+         "Log density of research institution location" = "Names2_log",
+         "Log density of research institution location post 2010" = "Names2_log > 2010",
+         "Human Development Index" = "hdi_2018",
+         "Learning Outcomes" = "Learning_outcomes_2015",
+         "Gross Domestic Product" = "GDP_2019", 
+         "Corruption Perception Index" = "CPI_2020",
+         "Population" = "Pop_2018",
+         "Gross Domestic Prodct Per Capita" = "GDP_per_capita",
+         "Forest Area Under FSC Cetrification" = "Forest Area under FSC certification",
+         "Biocapacity Per Capita" = "Biocapacity per capita",
+         "Forest Area" = "Forest area",
+         "Region-based Marine Trophic Index" = "Marine Trophic Index (1950)",
+         "Percent Nitrogen Use Efficiency" = "Nitrogen Use Efficiency (%)",
+         "Percentage Protected" = "Percentage protected",
+         "Percentage of Undernourished People" = "Percentage of undernourished people",
+         "Local Breeds at Risk of Extinction" = "Local Breeds at risk of extinction",
+         "Percentage of Key Biodiversity Areas Protected" = "PA of Key Biodiversity Areas Coverage (%)",
+         "Protected Area Management Effectiveness" = "Protected area management effectiveness",
+         "Species Protection Index" = "Species Protection Index (%)",
+         "Trends in Forest Extent" = "Trends in forest extent")
+```
+
+```{r, fig.align='center', fig.width=8, fig.height=8, dpi=300, cache=TRUE, fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
+ #### Correlation Analysis ####
+# calculate correlations 
+res1 <- rcorr(as.matrix(df), type = "pearson") # Only linear relationships 
+
+#### Formatting Data and Export ####
+
+# Selecting the correlation coefficients 
+data_r <- res1$r %>% 
+  as.data.frame() %>% 
+  select(1:4)
+
+data_r <- data_r[-c(1:4), ]
+
+# Selecting the significance levels 
+data_p <- res1$P %>% 
+  as.data.frame() %>% 
+  select(1:4)
+
+data_p <- data_p[-c(1:4), ]
+
+# Selecting the number of observations that went into the calculation 
+data_n <- res1$n %>% 
+  as.data.frame() %>% 
+  select(1:4)
+
+data_n <- data_n[-c(1:4), ]
+
+# plot rectangular correlation plot
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black", tl.srt = 45, 
+         p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 ```
 
 ## Individual Trend Analysis {.tabset .tabset-pills}
