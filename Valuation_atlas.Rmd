@@ -1751,7 +1751,7 @@ Density of studies is also strongly positively correlated to total wood removals
 
 Density of institutions is also strongly positively correlated with total wood removals, and nitrogen fertilizers.
 
-While most significant relationships are positive, there are two negative relationships present. Biodiversity inexactness index is negatively correlated with both the density of studies and institutions, and protected area management effectiveness is slightly negative correlated with the density of institutions.
+While most significant relationships are positive, there are two negative relationships present. Biodiversity intactness index is negatively correlated with both the density of studies and institutions, and protected area management effectiveness is slightly negative correlated with the density of institutions.
 
 ```{r, message=F, warning = F}
 #### Load Packages ####
