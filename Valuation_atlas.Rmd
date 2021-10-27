@@ -51,15 +51,15 @@ Step 2 and 3: *Bundle countries in regions and subregions* The IPBES Regions and
 
 Step 4: *Find TS accordingly* We used a set of files to add additional attributes to the dataset that identified the topics. The set of files contained identifying information for papers derived from sets of web of science searches targeting particular topics. This identifying information was then matched to the corpus, and the topic extracted. For more details on topic identification please see chapter 4 systematic review on valuation uptake (<https://doi.org/10.5281/zenodo.4391335>).
 
-Finally, the complete corpus with the added attributes of country ISO codes of both funding institutions and research locations, and topic identification were used as the basis of the rest of the research project. The complete corpus can be found on Zenodo here: [[https://doi.org/[INSERT](https://doi.org/%5BINSERT](https://doi.org/%5BINSERT%5D(https://doi.org/%5BINSERT){.uri}){.uri} DOI]
+Finally, the complete corpus with the added attributes of country ISO codes of both funding organizations and research locations, and topic identification were used as the basis of the rest of the research project. The complete corpus can be found on Zenodo here: [[https://doi.org/[INSERT](https://doi.org/%5BINSERT](https://doi.org/%5BINSERT%5D(https://doi.org/%5BINSERT){.uri}){.uri} DOI]
 
 # Valuation Maps
 
-The complete georeferenced valuation corpus was used to understand the location of valuation studies throughout the world and the location of the institutions conducting those studies.
+The complete georeferenced valuation corpus was used to understand the location of valuation studies throughout the world and the location of the organizations conducting those studies.
 
 We counted the number of times a country or territory was listed in the corpus from the column of country or territory names obtained from the title, abstract, and keywords search as a proxy for the density of valuation studies.
 
-Separately, we counted the number of times a country or territory was listed in the corpus from the column of country or territory names obtained from the affiliations acknowledgments, and funding text as a proxy for the density of institutions.
+Separately, we counted the number of times a country or territory was listed in the corpus from the column of country or territory names obtained from the affiliations acknowledgments, and funding text as a proxy for the density of organizations.
 
 ```{r results='asis', warning=FALSE}
 data <- readxl::read_excel("Data/IPBES_VA_Uptake_Corpus_06May20_GEONames_TS_16June20.xlsx", sheet = 1)
@@ -86,7 +86,7 @@ cat("Out of", n,"total studies,", studies_na$n, "studies did not identify a coun
 
 ## Geographic Distribution
 
-We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent a higher density of studies, while the darker blue values represent a higher density of institutions.
+We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent a higher density of studies, while the darker blue values represent a higher density of organizations.
 
 ```{r results = 'asis'}
 # Declare Functions
@@ -472,11 +472,11 @@ plotA_log <- ggplot(poly_2010) + # Names 2 log all studies
 plot_grid(plotA, plotA_log, labels = "auto", ncol = 1)
 ```
 
-### Density of institutions {.tabset .tabset-pills}
+### Density of organizations {.tabset .tabset-pills}
 
 #### All {.unnumbered}
 
-Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the **entire dataset** as a proxy for institutions which are conducing the research. Please note that the scales are not consistent between maps.
+Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the **entire dataset** as a proxy for organizations which are conducing the research. Please note that the scales are not consistent between maps.
 
 ```{r results='asis'}
 percentage_VS_all <- percentage_VS_all %>% 
@@ -487,7 +487,7 @@ cat("There were",
     "identifications of a country or territory from the affiliations, acknowledgments, or funding text, consisting of",
     nrow(t_names2) - nrow(names2_na),
     "countries or territories.\n\n",
-    "\nThe United States and the United Kingdom (UK) have disproportionately higher density of institutions than other countries. In descending order, the",
+    "\nThe United States and the United Kingdom (UK) have disproportionately higher density of organizations than other countries. In descending order, the",
     paste(percentage_VS_all$NAME_0[1]), 
     paste("(",round(percentage_VS_all$Names2_percent[1]*100, 2), "%),", sep = ""), 
     paste(percentage_VS_all$NAME_0[2]), 
@@ -498,7 +498,7 @@ cat("There were",
     paste("(",round(percentage_VS_all$Names2_percent[4]*100, 2), "%) and", sep = ""), 
     paste(percentage_VS_all$NAME_0[5]), 
     paste("(",round(percentage_VS_all$Names2_percent[5]*100, 2), "%)", sep = ""),
-    "have the highest density of institutions."
+    "have the highest density of organizations."
     )
 ```
 
@@ -530,7 +530,7 @@ plot2 <- ggplot(poly) + # Names 2 all studies
                            barwidth = 10, 
                            barheight = 0.5
     )) +
-  labs(fill = "Density of Institutions") +
+  labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -564,7 +564,7 @@ plot2_log <- ggplot(poly) + # Names 2 log all studies
                            barwidth = 10, 
                            barheight = 0.5
     )) +
-  labs(fill = "Density of Institutions (log)") +
+  labs(fill = "Density of Organizations (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -575,7 +575,7 @@ plot_grid(plot2, plot2_log, labels = "auto", ncol = 1)
 
 #### Before 2010 {.unnumbered}
 
-Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the studies in the dataset **before 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps.
+Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the studies in the dataset **before 2010** as a proxy for organizations which are conducing the research in this time period. Please note that the scales are not consistent between maps.
 
 ```{r results='asis'}
 percentage_VS_b2010 <- percentage_VS_b2010 %>% 
@@ -592,7 +592,7 @@ cat("Before 2010, in descending order, the",
     paste("(",round(percentage_VS_b2010$Names2_percent[4]*100, 2), "%) and", sep = ""), 
     paste(percentage_VS_b2010$NAME_0[5]), 
     paste("(",round(percentage_VS_b2010$Names2_percent[5]*100, 2), "%)", sep = ""),
-    "have the highest density of institutions."
+    "have the highest density of organizations."
     )
 ```
 
@@ -625,7 +625,7 @@ plotD <- ggplot(poly_b2010) + # Names 2 all studies before 2010
                            barwidth = 10, 
                            barheight = 0.5
     )) +
-  labs(fill = "Density of Institutions") +
+  labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -659,7 +659,7 @@ plotD_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
                            barwidth = 10, 
                            barheight = 0.5
     )) +
-  labs(fill = "Density of Institutions (log)") +
+  labs(fill = "Density of Organizations (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -670,7 +670,7 @@ plot_grid(plotD, plotD_log, labels = "auto", ncol = 1)
 
 #### After 2010 {.unnumbered}
 
-Showcases the number of studies which reference the particular country or territory within the affiliations, acknowledgments, or funding text for the studies in the dataset **from 2010** as a proxy for institutions which are conducing the research in this time period. Please note that the scales are not consistent between maps.
+Showcases the number of studies which reference the particular country or territory within the affiliations, acknowledgments, or funding text for the studies in the dataset **from 2010** as a proxy for organizations which are conducing the research in this time period. Please note that the scales are not consistent between maps.
 
 ```{r results='asis'}
 percentage_VS_a2010 <- percentage_VS_a2010 %>% 
@@ -687,7 +687,7 @@ cat("After 2010, in descending order, the",
     paste("(",round(percentage_VS_a2010$Names2_percent[4]*100, 2), "%) and", sep = ""), 
     paste(percentage_VS_a2010$NAME_0[5]), 
     paste("(",round(percentage_VS_a2010$Names2_percent[5]*100, 2), "%)", sep = ""),
-    "have the highest density of institutions."
+    "have the highest density of organizations."
     )
 ```  
   
@@ -719,7 +719,7 @@ plotB <- ggplot(poly_2010) + # Names 2 all studies
                            barwidth = 10, 
                            barheight = 0.5
     )) +
-  labs(fill = "Density of Institutions") +
+  labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -753,7 +753,7 @@ plotB_log <- ggplot(poly_2010) + # Names 2 log all studies
                            barwidth = 10, 
                            barheight = 0.5
     )) +
-  labs(fill = "Density of Institutions (log)") +
+  labs(fill = "Density of Organizations (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -764,9 +764,9 @@ plot_grid(plotB, plotB_log, labels = "auto", ncol = 1)
 
 ### Summarized by region {.tabset .tabset-pills}
 
-Europe and Central Asia region has the highest density of institutions, but comes in third for the highest density of studies. In contrast, the Americas region comes in first for the highest density of studies and second for institutions.
+Europe and Central Asia region has the highest density of organizations, but comes in third for the highest density of studies. In contrast, the Americas region comes in first for the highest density of studies and second for organizations.
 
-Besides Antarctica, Africa has the lowest density of studies and institutions.
+Besides Antarctica, Africa has the lowest density of studies and organizations.
 
 #### Density of studies {.unnumbered}
 
@@ -831,7 +831,7 @@ region1_na_s <- region1_counts_s %>%
 cat("* ",region1_na_s$n, "studies did not have a region identified for the density of studies.")
 ```
 
-#### Density of institutions {.unnumbered}
+#### Density of organizations {.unnumbered}
 
 ```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
 names2_region_counts <- data %>%
@@ -859,7 +859,7 @@ ggplot(n2_region_poly) +
   annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
   annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
   scale_fill_manual(values = c("#DEEBF7", "#9ECAE1", "#4292C6", "#08519C", "grey")) +
-  labs(fill = "Density of Institutions") +
+  labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -880,7 +880,7 @@ cat("* ",region1_na_i$n, "studies did not have a region identified for the densi
 
 ### Summarized by subregion {.tabset .tabset-pills}
 
-Europe and North America disproportionately have the highest density of studies and institutions between subregions, while Central Asia have the lowest density for both categories.
+Europe and North America disproportionately have the highest density of studies and organizations between subregions, while Central Asia have the lowest density for both categories.
 
 #### Density of studies {.unnumbered}
 
@@ -959,7 +959,7 @@ subregion1_na_s <- subregion1_counts_s %>%
 cat("* ",subregion1_na_s$n, "studies did not have a subregion identified for the density of studies.")
 ```
 
-#### Density of institutions {.unnumbered}
+#### Density of organizations {.unnumbered}
 
 ```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
 # Count number of times per subregion (NAMES 2)
@@ -1007,7 +1007,7 @@ ggplot(n2_subregion_poly) +
                            barwidth = 10, 
                            barheight = 0.5
     )) +
-  labs(fill = "Density of Institutions") +
+  labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -1026,7 +1026,7 @@ subregion1_na_i <- subregion1_counts_i %>%
 cat("* ",subregion1_na_i$n, "studies did not have a region identified for the density of studies.")
 ``` 
 
-## Relationships between density of studies and institutions
+## Relationships between density of studies and organizations
 
 OECD member countries and middle-income countries broadly had relatively more studies in their countries relative to research and funding affiliations; also Greenland, the Antarctic, some Latin American and Asian, most African countries had relatively more research and funding affiliations compared to the number of studies in their countries. Countries mostly in the southern hemisphere had a disproportionate number of researchers engaged in ecosystem services/NCP assessment studies, relative to the number of studies carried out in their country, in comparison to Northern hemisphere countries. Because these are ratios, it is better to consider them in the light of country/population size. From a Southern-country perspective, this could indicate: (i) high frequency of collaboration outside their own countries of researchers from countries in the South, and (ii) underfunding of domestic valuation studies in countries of the South relative to the number of domestic researchers and funding agencies. From the perspective of countries in the North this could indicate (i) relatively limited research collaboration outside their country for researchers from the North, and (ii) well-funded ecosystem services/NCP research relative to number of researchers and funding affiliations. From both these perspectives the narrative is of a relative export of ecosystem services/NCP research capacity from Southern countries to other countries. The data may also simply show a relative deficit of ecosystem services/NCP study applications in the South relative to the North. No data was found on cross-border flows of funding or researchers to make any further interpretation. This is a potential knowledge gap. More analysis is needed on whether there are patterns in relation to ecosystem assessment method families, and whether the patterns have changed over time. There are many exceptions to the broad global pattern which merit country-specific studies of the institutional context of ecosystem assessment to identify barriers and successful leverage points.
 
@@ -1059,7 +1059,7 @@ plot_1and2_ratio <- ggplot(poly) + # Names 2 log all studies
                            barwidth = 10, 
                            barheight = 0.5
     )) +
-  labs(fill = "Ratio of Studies and Institutions") +
+  labs(fill = "Ratio of studies and organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
         axis.title = element_blank(),
@@ -1068,13 +1068,13 @@ plot_1and2_ratio <- ggplot(poly) + # Names 2 log all studies
 plot_1and2_ratio
 ```
 
-It is clear that there is a significant positive linear relationship between the density of studies and institutions. It is important to note that there were many more identified countries for institutions than location of studies.
+It is clear that there is a significant positive linear relationship between the density of studies and organizations. It is important to note that there were many more identified countries for organizations than location of studies.
 
-```{r names1/names2, fig.height = 6, fig.width = 8, fig.align = 'center', fig.cap = "Density of studies vs density of institutions", message = F, warning = F}
+```{r names1/names2, fig.height = 6, fig.width = 8, fig.align = 'center', fig.cap = "Density of studies vs density of organizations", message = F, warning = F}
 harmonized_data %>% 
   ggplot(aes(x = Names1, y = Names2)) +
   geom_point() +
-  labs(x = "Density of Studies", y = "Density of Institutions") +
+  labs(x = "Density of Studies", y = "Density of Organizations") +
   geom_smooth(method = "lm") +
   ggpmisc::stat_fit_glance(method = 'lm',
                            color = "red3",
@@ -1365,9 +1365,9 @@ ggplot(poly_2020) + # Names 1 all studies
   labs(fill = "Density of Studies", title = "Post 2010")
 ```
 
-### Geographic density of institutions {.tabset .tabset-pills}
+### Geographic density of organizations {.tabset .tabset-pills}
 
-Additionally, we explored how the density of valuation institutions has changed through time throughout the last four decades. No data is displayed in gray.
+Additionally, we explored how the density of valuation organizations has changed through time throughout the last four decades. No data is displayed in gray.
 
 ```{r}
 # Names 2
@@ -1462,7 +1462,7 @@ ggplot(poly_1990) + # Names 1 all studies
         axis.title = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5, face = "bold")) +
-  labs(fill = "Density of Institutions", title = "Pre 1990") 
+  labs(fill = "Density of Organizations", title = "Pre 1990") 
 ```
 
 #### 1990 - 2000 {.unnumbered}
@@ -1512,7 +1512,7 @@ ggplot(poly_2000) + # Names 1 all studies
         axis.title = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5, face = "bold")) +
-  labs(fill = "Density of Institutions", title = "1990 - 2000") 
+  labs(fill = "Density of Organizations", title = "1990 - 2000") 
 ```
 
 #### 2000 - 2010 {.unnumbered}
@@ -1562,7 +1562,7 @@ ggplot(poly_2010) + # Names 1 all studies
         axis.title = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5, face = "bold")) +
-  labs(fill = "Density of Institutions", title = "2000 - 2010") 
+  labs(fill = "Density of Organizations", title = "2000 - 2010") 
 ```
 
 #### Post 2010 {.unnumbered}
@@ -1612,7 +1612,7 @@ ggplot(poly_2020) + # Names 1 all studies
         axis.title = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5, face = "bold")) +
-  labs(fill = "Density of Institutions", title = "Post 2010")
+  labs(fill = "Density of Organizations", title = "Post 2010")
 ```
 
 # Indicator Analysis
@@ -1731,27 +1731,27 @@ There were a few instances of duplicated values which were double checked with t
 
 ## Dataset Compilation
 
-To understand how valuation is spread across geographies, we counted the number of times each country's or territories' ISO code appeared in the corpus for both geography columns added in step 2. The result is the density of studies per country or territory and the density of funding institutions per country or territory for the entire corpus.
+To understand how valuation is spread across geographies, we counted the number of times each country's or territories' ISO code appeared in the corpus for both geography columns added in step 2. The result is the density of studies per country or territory and the density of funding organizations per country or territory for the entire corpus.
 
-The external indicators were also joined onto the dataset to analyze the relationships between these socioeconomic indicators and the density of studies and funding institutions.
+The external indicators were also joined onto the dataset to analyze the relationships between these socioeconomic indicators and the density of studies and funding organizations.
 
 This process was also repeated with an additional filter that excluded any studies published before 2010.
 
 ## Pearson Correlation Analysis
 
-To investigate the relationships between indicators and the number of valuation studies, we ran a pearson correlation analysis. The statistical analysis calculated the trends between the number of studies in each country or territory (Density of studies) and the number of studies funded in each country or territory (Density of institutions) and each of the indicators. The results are shown below.
+To investigate the relationships between indicators and the number of valuation studies, we ran a pearson correlation analysis. The statistical analysis calculated the trends between the number of studies in each country or territory (Density of studies) and the number of studies funded in each country or territory (Density of organizations) and each of the indicators. The results are shown below.
 
 Insignificant relationships are blank, significant relationships (*P \< 0.01*) are shown with circles. The strength of the correlation corresponds to the size of the circle and the color represents positive (blue) or negative (red) trends.
 
 *Description of results*
 
-There is a very strong positive relationship between GDP and the density of both studies and institutions. GDP per capita does not exhibit the same strong correlation.
+There is a very strong positive relationship between GDP and the density of both studies and organizations. GDP per capita does not exhibit the same strong correlation.
 
 Density of studies is also strongly positively correlated to total wood removals, trends in pesticide use, population, nitrogen fertilizers, and water footprint index.
 
-Density of institutions is also strongly positively correlated with total wood removals, and nitrogen fertilizers.
+Density of organizations is also strongly positively correlated with total wood removals, and nitrogen fertilizers.
 
-While most significant relationships are positive, there are two negative relationships present. Biodiversity intactness index is negatively correlated with both the density of studies and institutions, and protected area management effectiveness is slightly negative correlated with the density of institutions.
+While most significant relationships are positive, there are two negative relationships present. Biodiversity intactness index is negatively correlated with both the density of studies and organizations, and protected area management effectiveness is slightly negative correlated with the density of organizations.
 
 ```{r, message=F, warning = F}
 #### Load Packages ####
@@ -1785,8 +1785,8 @@ df <- df %>%
   select(Names1, `Names1 > 2010`, Names2, `Names2 > 2010`, hdi_2018:`Trends in Pesticides Use`) %>% 
   rename("Density of ES/NCP study location" = "Names1",
          "Density of ES/NCP study location post 2010" = "Names1 > 2010",
-         "Density of research institution location" = "Names2",
-         "Density of research institution location post 2010" = "Names2 > 2010",
+         "Density of research organization location" = "Names2",
+         "Density of research organization location post 2010" = "Names2 > 2010",
          "Human Development Index" = "hdi_2018",
          "Learning Outcomes" = "Learning_outcomes_2015",
          "Gross Domestic Product" = "GDP_2019", 
@@ -1844,13 +1844,13 @@ The same pearson correlation analysis with the indicators was conducted on the l
 
 *Description of results*
 
-Generally, the log density of studies and institutions show stronger and more correlations with the indicators. Within the log relationship, the protected area management effectiveness becomes significantly negatively correlated with both the density of studies and institutions. The biodiversity inexactness index also follows the same pattern.
+Generally, the log density of studies and organizations show stronger and more correlations with the indicators. Within the log relationship, the protected area management effectiveness becomes significantly negatively correlated with both the density of studies and organizations. The biodiversity intactness index also follows the same pattern.
 
 For the log density of studies compared to the non-transformed density of studies, GDP becomes less strongly correlated, local breeds at risk of extinction becomes positively correlated, protected area connectedness index becomes strongly positively correlated, species protection index becomes positively correlated, as well as trends in forest extent, and nitrogen deposition trends.
 
-For the log density of institutions compared to the non-transformed density of institutions, the human development index, average harmonized learning outcomes, corruption perception index, population, and local breeds at risk of extinction all become more strongly positively correlated, while the GDP becomes slightly less positively correlated. Additionally, the percentage of undernourished people becomes negatively correlated with the log density of studies, the species protection index and the species status information index become positively correlated, and finally the relationship to trends in pesticide use is no longer significant.
+For the log density of organizations compared to the non-transformed density of organizations, the human development index, average harmonized learning outcomes, corruption perception index, population, and local breeds at risk of extinction all become more strongly positively correlated, while the GDP becomes slightly less positively correlated. Additionally, the percentage of undernourished people becomes negatively correlated with the log density of studies, the species protection index and the species status information index become positively correlated, and finally the relationship to trends in pesticide use is no longer significant.
 
-For both the log density of studies and institutions, the protected area connected index becomes strongly positively corrrelated.
+For both the log density of studies and organizations, the protected area connected index becomes strongly positively corrrelated.
 
 ```{r, message=F, warning = F}
 #### Load Data ####
@@ -1878,8 +1878,8 @@ df <- df %>%
   select(Names1_log, `Names1_log > 2010`, Names2_log, `Names2_log > 2010`, hdi_2018:`Trends in Pesticides Use`) %>% 
   rename("Log density of ES/NCP study location" = "Names1_log",
          "Log density of ES/NCP study location post 2010" = "Names1_log > 2010",
-         "Log density of research institution location" = "Names2_log",
-         "Log density of research institution location post 2010" = "Names2_log > 2010",
+         "Log density of research organization location" = "Names2_log",
+         "Log density of research organization location post 2010" = "Names2_log > 2010",
          "Human Development Index" = "hdi_2018",
          "Learning Outcomes" = "Learning_outcomes_2015",
          "Gross Domestic Product" = "GDP_2019", 
@@ -1935,7 +1935,7 @@ corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black", tl.s
 
 ## Individual Trend Analysis {.tabset .tabset-pills}
 
-The individual trends between each indicator, and the number of studies and number of funding institutions are shown here for the entire corpus. For each indicator, there are two four panel figures with the top figure showing the trends with the raw values, and the bottom figure displaying the trends with log transformed x-axis values.
+The individual trends between each indicator, and the number of studies and number of funding organizations are shown here for the entire corpus. For each indicator, there are two four panel figures with the top figure showing the trends with the raw values, and the bottom figure displaying the trends with log transformed x-axis values.
 
 The dots represent countries within the dataset that have values for both the indicator and valuation atlas. The associated p value of the linear trend model is shown in the corner of the image in red. The trend line is shown in blue and the associated standard error in grey. Please note that the y axis is not necessarily consistent between the four boxes and may include values that aren't actually found in the data to showcase the full extent of the standard error of the trend line.
 
@@ -1955,9 +1955,9 @@ For each figure the panels are arranged as follows:
 
 -   Density of studies from 2010 (top-right) is the number of valuation studies for each country or territory in the corpus from 2010 to 2020
 
--   Density of institutions (bottom-left) is the number of valuation studies funded from each country or territory in the corpus
+-   Density of organizations (bottom-left) is the number of valuation studies funded from each country or territory in the corpus
 
--   Density of institutions from 2010 (bottom-right) is the number of valuation studies funded from each country or territory in the corpus from 2010 to 2020
+-   Density of organizations from 2010 (bottom-right) is the number of valuation studies funded from each country or territory in the corpus from 2010 to 2020
 
 ```{r plot functions}
 # Prepare data 
@@ -2009,7 +2009,7 @@ Plot_function <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2, y = yvar)) +
     geom_point() +
-    labs(x = "Density of Institutions", y = yname) +
+    labs(x = "Density of Organizations", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2021,7 +2021,7 @@ Plot_function <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2 > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Density of Institutions from 2010", y = yname) +
+    labs(x = "Density of Organizations from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2063,7 +2063,7 @@ Plot_function_topright <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2, y = yvar)) +
     geom_point() +
-    labs(x = "Density of Institutions", y = yname) +
+    labs(x = "Density of Organizations", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2075,7 +2075,7 @@ Plot_function_topright <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2 > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Density of Institutions from 2010", y = yname) +
+    labs(x = "Density of Organizations from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2117,7 +2117,7 @@ Plot_function_log <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2_log, y = yvar)) +
     geom_point() +
-    labs(x = "Log Density of Institutions", y = yname) +
+    labs(x = "Log Density of Organizations", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2129,7 +2129,7 @@ Plot_function_log <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Log Density of Institutions from 2010", y = yname) +
+    labs(x = "Log Density of Organizations from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2171,7 +2171,7 @@ Plot_function_log_topright <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2_log, y = yvar)) +
     geom_point() +
-    labs(x = "Log Density of Institutions", y = yname) +
+    labs(x = "Log Density of Organizations", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2183,7 +2183,7 @@ Plot_function_log_topright <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Log Density of Institutions from 2010", y = yname) +
+    labs(x = "Log Density of Organizations from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2225,7 +2225,7 @@ Plot_function_log_bottomright <- function(plot_data, yvar, yname) {
   plot3 <- plot_data %>% 
     ggplot(aes(x = Names2_log, y = yvar)) +
     geom_point() +
-    labs(x = "Log Density of Institutions", y = yname) +
+    labs(x = "Log Density of Organizations", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2237,7 +2237,7 @@ Plot_function_log_bottomright <- function(plot_data, yvar, yname) {
   plot4 <- plot_data %>% 
     ggplot(aes(x = `Names2_log > 2010`, y = yvar)) +
     geom_point() +
-    labs(x = "Log Density of Institutions from 2010", y = yname) +
+    labs(x = "Log Density of Organizations from 2010", y = yname) +
     geom_smooth(method = "lm") +
     ggpmisc::stat_fit_glance(method = 'lm',
                              color = "red3",
@@ -2256,66 +2256,66 @@ Plot_function_log_bottomright <- function(plot_data, yvar, yname) {
   
 ### Human Development Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the human development index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and the human development index"}
 Plot_function(all_data, all_data$hdi_2018, "Human Development Index (2018)")
 ```
   
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the human development index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and the human development index"}
 Plot_function_log_bottomright(all_data, all_data$hdi_2018, "Human Development Index (2018)")
 ```
   
 ### Average Harmonized Learning Outcomes Score {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and learning outcomes"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and learning outcomes"}
 Plot_function(all_data, all_data$Learning_outcomes_2015, "Learning Oucomes (2015)")
 ```
   
 **Log relationship graphs:**
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and learning outcomes"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and learning outcomes"}
 Plot_function_log(all_data, all_data$Learning_outcomes_2015, "Learning Oucomes (2015)")
 ```
   
 ### GDP {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and GDP"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and GDP"}
 Plot_function(all_data, all_data$GDP_2019, "GDP (2019)")
 ```
   
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and GDP"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and GDP"}
 Plot_function_log(all_data, all_data$GDP_2019, "GDP (2019)")
 ```
 
 ### Corruption Perception Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the corruption perception index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and the corruption perception index"}
 Plot_function(all_data, all_data$CPI_2020, "Corruption Perception Index (2020)")
 ```
   
 **Log relationship graphs:**
   
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the corruption perception index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and the corruption perception index"}
 Plot_function_log(all_data, all_data$CPI_2020, "Corruption Perception Index (2020)")
 ```
   
 ### Population {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and population"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and population"}
 Plot_function(all_data, all_data$Pop_2018, "Population in Millions (2018)")
 ```
   
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and population"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and population"}
 Plot_function_log(all_data, all_data$Pop_2018, "Population in Millions (2018)")
 ```
   
 ### GDP per capita {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and GDP per capita"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and GDP per capita"}
 d <- all_data %>% 
   mutate(GDP_per_capita = GDP_2019/Pop_2018) 
 
@@ -2324,295 +2324,295 @@ Plot_function_topright(d, d$GDP_per_capita, "GDP per Capita")
    
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and GDP per capita"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and GDP per capita"}
 Plot_function_log_topright(d, d$GDP_per_capita, "GDP per Capita")
 ```
   
 ### Forest Area Under FSC Certification {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and forest area under FSC certification"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and forest area under FSC certification"}
 Plot_function(all_data, all_data$`Forest Area under FSC certification`, "Forest area under FSC certification")
 ```
    
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and forest area under FSC certification"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and forest area under FSC certification"}
 Plot_function_log(all_data, all_data$`Forest Area under FSC certification`, "Forest area under FSC certification")
 ```
   
 ### Biodiversity Habitat Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the biodiversity habitat index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and the biodiversity habitat index"}
 Plot_function_topright(all_data, all_data$`Biodiversity Habitat Index`, "Biodiversity Habitat Index")
 ```
    
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biodiversity habitat index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and the biodiversity habitat index"}
 Plot_function_log_topright(all_data, all_data$`Biodiversity Habitat Index`, "Biodiversity Habitat Index")
 ```
    
 ### Biodiversity Intactness Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the biodiversity intactness index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and the biodiversity intactness index"}
 Plot_function_topright(all_data, all_data$`Biodiversity Intactness Index`, "Biodiversity Intactness Index")
 ```
    
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biodiversity intactness index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and the biodiversity intactness index"}
 Plot_function_log_topright(all_data, all_data$`Biodiversity Intactness Index`, "Biodiversity Intactness Index")
 ```
   
 ### Biocapacity Per Capita {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the biocapacity per capita"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and the biocapacity per capita"}
 Plot_function_topright(all_data, all_data$`Biocapacity per capita`, "Biocapacity per Capita")
 ```
    
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the biocapacity per capita"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and the biocapacity per capita"}
 Plot_function_log(all_data, all_data$`Biocapacity per capita`, "Biocapacity per Capita")
 ```
   
 ### Ecological Footprint Per Capita {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the ecological footprint per capita"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and the ecological footprint per capita"}
 Plot_function(all_data, all_data$`Ecological Footprint per capita`, "Ecological Footprint per Capita")
 ```
   
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the ecological footprint per capita"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and the ecological footprint per capita"}
 Plot_function_log_topright(all_data, all_data$`Ecological Footprint per capita`, "Ecological Footprint per Capita")
 ```
    
 ### Forest Area {.unnumbered}
   
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and forest area"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and forest area"}
 Plot_function(all_data, all_data$`Forest area`, "Forest Area")
 ```
   
 **Log relationship graphs:**
   
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and forest area"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and forest area"}
 Plot_function_log(all_data, all_data$`Forest area`, "Forest Area")
 ```
    
 ### Water Footprint {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the water footprint"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and the water footprint"}
 Plot_function(all_data, all_data$`Water Footprint`, "Water Footprint")
 ```
   
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the water footprint"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and the water footprint"}
 Plot_function_log(all_data, all_data$`Water Footprint`, "Water Footprint")
 ```
   
 ### Inland Fishery Production {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and inland fishery production"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and inland fishery production"}
 Plot_function(all_data, all_data$`Inland Fishery Production`, "Inland Fishery Production")
 ```
    
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and inland fishery production"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and inland fishery production"}
 Plot_function_log(all_data, all_data$`Inland Fishery Production`, "Inland Fishery Production")
 ```
    
 ### Region-based Marine Trophic Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated institutions, and the region-based marine trophic index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Relationships between density of valuation studies and associated organizations, and the region-based marine trophic index"}
 Plot_function(all_data, all_data$`Marine Trophic Index (1950)`, "Marine Trophic Index in reference to 1950")
 ```
    
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated insitutions, and the region-based marine trophic index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7,fig.cap = "Log relationships between density of valuation studies and associated organizations, and the region-based marine trophic index"}
 Plot_function_log_bottomright(all_data, all_data$`Marine Trophic Index (1950)`, "Marine Trophic Index in reference to 1950")
 ```
    
 ### Nitrogen Fertilizers {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen fertization"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and nitrogen fertization"}
 Plot_function(all_data, all_data$`Nitrogen Fertilizers`, "Nitrogen Fertilizers")
 ```
   
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and nitrogen fertization"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and nitrogen fertization"}
 Plot_function_log(all_data, all_data$`Nitrogen Fertilizers`, "Nitrogen Fertilizers")
 ```
    
 ### Percent Nitrogen Use Efficiency {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen use efficiency"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and nitrogen use efficiency"}
 Plot_function(all_data, all_data$`Nitrogen Use Efficiency (%)`, "Nitrogen Use Efficiency (%)")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and nitrogen use efficiency"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and nitrogen use efficiency"}
 Plot_function_log(all_data, all_data$`Nitrogen Use Efficiency (%)`, "Nitrogen Use Efficiency (%)")
 ```
 
 ### Percentage of Area Covered by Protected Areas {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and percentage of area covered by protected areas"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and percentage of area covered by protected areas"}
 Plot_function_topright(all_data, all_data$`Percentage protected`, "Percentage of Area Covered by PAs")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and percentage of area covered by protected areas"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and percentage of area covered by protected areas"}
 Plot_function_log_topright(all_data, all_data$`Percentage protected`, "Percentage of Area Covered by PAs")
 ```
 
 ### Percentage of Undernourished People {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and percentage of undernourished people"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and percentage of undernourished people"}
 Plot_function_topright(all_data, all_data$`Percentage of undernourished people`, "Percentage of Undernourished People")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and percentage of undernourished people"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and percentage of undernourished people"}
 Plot_function_log_topright(all_data, all_data$`Percentage of undernourished people`, "Percentage of Undernourished People") 
 ```
 
 ### Local Breeds at Risk of Extinction {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and local breeds at risk of extinction"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and local breeds at risk of extinction"}
 Plot_function_topright(all_data, all_data$`Local Breeds at risk of extinction`, "Local Breeds At Risk of Extinction")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated insitutions, and local breeds at risk of extinction"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and local breeds at risk of extinction"}
 Plot_function_log_topright(all_data, all_data$`Local Breeds at risk of extinction`, "Local Breeds At Risk of Extinction")
 ```
 
 ### Percentage of Key Biodiversity Areas Protected {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and PA of key biodiverisy area coverage"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and PA of key biodiverisy area coverage"}
 Plot_function_topright(all_data, all_data$`PA of Key Biodiversity Areas Coverage (%)`, "Percentage of KBA covered by PAs")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and PA of key biodiverisy area coverage"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and PA of key biodiverisy area coverage"}
 Plot_function_log_topright(all_data, all_data$`PA of Key Biodiversity Areas Coverage (%)`, "Percentage of KBA covered by PAs")
 ```
 
 ### Protected Area Management Effectiveness {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and protected area management effectiveness"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and protected area management effectiveness"}
 Plot_function_topright(all_data, all_data$`Protected area management effectiveness`, "PA Assessed on Management Effectiveness (%)")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and protected area management effectiveness"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and protected area management effectiveness"}
 Plot_function_log_topright(all_data, all_data$`Protected area management effectiveness`, "PA Assessed on Management Effectiveness (%)")
 ```
 
 ### Protected Area Connectedness Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and the protected area connectedness index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and the protected area connectedness index"}
 Plot_function(all_data, all_data$`Protected Area Connectedness Index`, "PA Connectedness Index")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and the protected area connectedness index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and the protected area connectedness index"}
 Plot_function_log(all_data, all_data$`Protected Area Connectedness Index`, "PA Connectedness Index")
 ```
 
 ### Species Habitat Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and the species habitat index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and the species habitat index"}
 Plot_function(all_data, all_data$`Species Habitat Index`, "Species Habitat Index")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and the species habitat index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and the species habitat index"}
 Plot_function_log_bottomright(all_data, all_data$`Species Habitat Index`, "Species Habitat Index")
 ```
 
 ### Species Protection Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and the species protection index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and the species protection index"}
 Plot_function(all_data, all_data$`Species Protection Index (%)`, "Species Protection Index (%)")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and the species protection index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and the species protection index"}
 Plot_function_log_bottomright(all_data, all_data$`Species Protection Index (%)`, "Species Protection Index (%)")
 ```
 
 ### Species Status Information Index {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and the species status information index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and the species status information index"}
 Plot_function_topright(all_data, all_data$`Species Status Information Index`, "Species Status Information Index")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and the species status information index"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and the species status information index"}
 Plot_function_log_topright(all_data, all_data$`Species Status Information Index`, "Species Status Information Index")
 ```
 
 ### Total Wood Removals {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and total wood removals"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and total wood removals"}
 Plot_function(all_data, all_data$`Total Wood Removals`, "Total wood removals (roundwood, m3")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and total wood removals"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and total wood removals"}
 Plot_function_log(all_data, all_data$`Total Wood Removals`, "Total wood removals (roundwood, m3")
 ```
 
 ### Trends in Forest Extent {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in forest extent"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and trends in forest extent"}
 Plot_function_topright(all_data, all_data$`Trends in forest extent`, "Trends in forest extent")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and trends in forest extent"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and trends in forest extent"}
 Plot_function_log_topright(all_data, all_data$`Trends in forest extent`, "Trends in forest extent")
 ```
 
 ### Nitrogen Deposition Trends {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and nitrogen deposition trends"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and nitrogen deposition trends"}
 Plot_function(all_data, all_data$`Nitrogen Deposition Trends`, "Nitrogen Deposition Trends (kg N/ha/yr)")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and nitrogen deposition trends"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and nitrogen deposition trends"}
 Plot_function_log_topright(all_data, all_data$`Nitrogen Deposition Trends`, "Nitrogen Deposition Trends (kg N/ha/yr)")
 ```
 
 ### Trends in Pesticides Use {.unnumbered}
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated institutions, and trends in pesticides use"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Relationships between density of valuation studies and associated organizations, and trends in pesticides use"}
 Plot_function(all_data, all_data$`Trends in Pesticides Use`, "Trends in Pesticides Use")
 ```
 
 **Log relationship graphs:**
 
-```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between valuation atlas and trends in pesticides use"}
+```{r fig.align = 'center', message = F, warning=F, fig.height=7, fig.width=7, fig.cap = "Log relationships between density of valuation studies and associated organizations, and trends in pesticides use"}
 Plot_function_log(all_data, all_data$`Trends in Pesticides Use`, "Trends in Pesticides Use")
 ```
 
