@@ -86,7 +86,7 @@ cat("Out of", n,"total studies,", studies_na$n, "studies did not identify a coun
 
 ## Geographic Distribution
 
-We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent higher density of studies, while the darker blue values represent higher density of institutions.
+We will now present the results from the analysis through a series of maps showing both the raw country or territory results and summarized by IPBES regions and subregions. No data is always displayed in grey. The darker green values represent a higher density of studies, while the darker blue values represent a higher density of institutions.
 
 ```{r results = 'asis'}
 # Declare Functions
@@ -1120,72 +1120,499 @@ cat("\n* ",
 
 Additionally, we explored how the density of valuation studies has changed throughout the last four decades. No data is displayed in grey.
 
+```{r}
+# Prepare data
+corpus <- data
+
+# NAMES 1
+# Group data temporally 
+b1990 <- corpus %>% 
+  filter(PY < 1990) %>% 
+  countFunction(.$CountryName_TI_AB_DE_ID) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n)
+  
+b2000 <- corpus %>% 
+  filter(PY >= 1990 & PY < 2000) %>% 
+  countFunction(.$CountryName_TI_AB_DE_ID) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n)
+
+b2010 <- corpus %>% 
+  filter(PY >= 2000 & PY < 2010) %>% 
+  countFunction(.$CountryName_TI_AB_DE_ID) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n)
+
+b2020 <- corpus %>% 
+  filter(PY >= 2010) %>% 
+  countFunction(.$CountryName_TI_AB_DE_ID) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n)
+
+
+# Combine and project data 
+robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
+
+poly_1990 <- left_join(countries, b1990, by = "ISO_Alpha_3")  %>% 
+  st_transform(robin_crs)
+
+poly_2000 <- left_join(countries, b2000, by = "ISO_Alpha_3") %>% 
+  st_transform(robin_crs)
+
+poly_2010 <- left_join(countries, b2010, by = "ISO_Alpha_3") %>% 
+  st_transform(robin_crs)
+
+poly_2020 <- left_join(countries, b2020, by = "ISO_Alpha_3") %>% 
+  st_transform(robin_crs)
+```
+
 #### Pre 1990 {.unnumbered}
 
-Pre 1990 within the corpus, there are four countries represented (USA, Brazil, Norway, and Sweden) with a total of 5 identifications of a country or territory. All countries had only one identification, except for the USA with 2.
-
-```{r, fig.align = 'center', out.width="75%"}
-knitr::include_graphics("Outputs/Maps/temporal/Names1_1980-1990.png")
+```{r results = 'asis'}
+cat("Pre 1990 within the corpus, there are",
+    nrow(b1990),
+    "countries or territories represented with a total of",
+    sum(b1990$Names1), 
+    "identifications of a country or terriotry.",
+    "The", 
+    b1990$ISO_Alpha_3[1],
+    "had the most identifications with", 
+    paste0(b1990$Names1[1], ".")
+)
+```
+  
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+ggplot(poly_1990) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    limits = c(0, 5000),
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    breaks = c(1000,2000,3000,4000,5000), 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  labs(fill = "Density of Studies", title = "Pre 1990")
 ```
 
 #### 1990 - 2000 {.unnumbered}
 
-Between 1990 and 2000 within the corpus, there are 153 countries or territories represented with a total of 2,704 identifications, three orders of magnitude larger than the number of identifications before 1990.
-
-```{r, fig.align = 'center', out.width="75%"}
-knitr::include_graphics("Outputs/Maps/temporal/Names1_1990-2000.png")
+```{r results = 'asis'}
+cat("Between 1990 and 2000 within the corpus, there are",
+    nrow(b2000),
+    "countries or territories represented with a total of",
+    sum(b2000$Names1), 
+    "identifications,",
+    floor(sum(b2000$Names1)/sum(b1990$Names1)),
+    "times larger than the number of identifications before 1990."
+)
+```
+  
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+ggplot(poly_2000) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    limits = c(0, 5000),
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    breaks = c(1000,2000,3000,4000,5000), 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  labs(fill = "Density of Studies", title = "1990 - 2000") 
 ```
 
 #### 2000 - 2010 {.unnumbered}
 
-Between 2000 and 2010 within the corpus, there are 200 countries or territories represented with a total of 14,644 identifications, again an order of magnitude increase from before 2000.
-
-```{r, fig.align = 'center', out.width="75%"}
-knitr::include_graphics("Outputs/Maps/temporal/Names1_2000-2010.png")
+```{r results = 'asis'}
+cat("Between 2000 and 2010 within the corpus, there are",
+    nrow(b2010),
+    "countries or territories represented with a total of",
+    sum(b2010$Names1), 
+    "identifications,",
+    floor(sum(b2010$Names1)/sum(b2000$Names1)),
+    "times larger than the number of identifications before 2000."
+)
+```
+  
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+ggplot(poly_2010) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    limits = c(0, 5000),
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    breaks = c(1000,2000,3000,4000,5000), 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  labs(fill = "Density of Studies", title = "2000 - 2010")
 ```
 
 #### Post 2010 {.unnumbered}
 
-2010 and later within the corpus, there are 214 countries or territories represented with a total of 46,918 identifications.
-
-```{r, fig.align = 'center', out.width="75%"}
-knitr::include_graphics("Outputs/Maps/temporal/Names1_2010-2020.png")
+```{r results = 'asis'}
+cat("From 2010 and later within the corpus, there are",
+    nrow(b2020),
+    "countries or territories represented with a total of",
+    sum(b2020$Names1), 
+    "identifications,",
+    floor(sum(b2020$Names1)/sum(b2010$Names1)),
+    "times larger than the number of identifications before 2010."
+)
+```
+  
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+ggplot(poly_2020) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    limits = c(0, 5000),
+    low = "#F7FCB9",
+    high = "#006837",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    breaks = c(1000,2000,3000,4000,5000), 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  labs(fill = "Density of Studies", title = "Post 2010")
 ```
 
 ### Geographic density of institutions {.tabset .tabset-pills}
 
 Additionally, we explored how the density of valuation institutions has changed through time throughout the last four decades. No data is displayed in gray.
 
+```{r}
+# Names 2
+# Group data temporally 
+b1990 <- corpus %>% 
+  filter(PY < 1990) %>% 
+  countFunction(.$CountryName_CI_FU_FX) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n)
+
+b2000 <- corpus %>% 
+  filter(PY >= 1990 & PY < 2000) %>% 
+  countFunction(.$CountryName_CI_FU_FX) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n)
+
+b2010 <- corpus %>% 
+  filter(PY >= 2000 & PY < 2010) %>% 
+  countFunction(.$CountryName_CI_FU_FX) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n)
+
+b2020 <- corpus %>% 
+  filter(PY >= 2010) %>% 
+  countFunction(.$CountryName_CI_FU_FX) %>% 
+  rename("ISO_Alpha_3" = x, "Names1" = n)
+
+
+# Combine and project data 
+robin_crs <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m"
+
+poly_1990 <- left_join(countries, b1990, by = "ISO_Alpha_3")  %>% 
+  st_transform(robin_crs)
+
+poly_2000 <- left_join(countries, b2000, by = "ISO_Alpha_3") %>% 
+  st_transform(robin_crs)
+
+poly_2010 <- left_join(countries, b2010, by = "ISO_Alpha_3") %>% 
+  st_transform(robin_crs)
+
+poly_2020 <- left_join(countries, b2020, by = "ISO_Alpha_3") %>% 
+  st_transform(robin_crs)
+```
+
 #### Pre 1990 {.unnumbered}
 
-Pre 1990 within the corpus, there are eight countries or territories represented with a total of 24 identifications of a country or territory. USA had 14 identifications, Canada 3 identifications, Norway 2 identifications, while the rest of the represented countries had 1.
+```{r results = 'asis'}
+b1990 <- left_join(b1990, st_drop_geometry(countries), by = "ISO_Alpha_3")
 
-```{r, fig.align = 'center', out.width="75%"}
-knitr::include_graphics("Outputs/Maps/temporal/Names2_1980-1990.png")
+cat("Pre 1990 within the corpus, there are",
+    nrow(b1990),
+    "countries or territories represented with a total of",
+    sum(b1990$Names1), 
+    "identifications of a country or territory. The",
+    b1990$NAME_0[1],
+    "had the most with",
+    b1990$Names1[1], "identifications,",
+    b1990$NAME_0[2], "had", b1990$Names1[2], "identifications,",
+    "and",
+    b1990$NAME_0[3], "had", b1990$Names1[3], "identifications."
+)
+```
+  
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+ggplot(poly_1990) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    limits = c(0, 17091),
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    breaks = c(4000,8000,12000,16000),  
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  labs(fill = "Density of Institutions", title = "Pre 1990") 
 ```
 
 #### 1990 - 2000 {.unnumbered}
 
-Between 1990 and 2000 within the corpus, there are 110 countries or territories represented with a total of 4,461 identifications of a country or territory, two orders of magnitude larger than pre 1990.
-
-```{r, fig.align = 'center', out.width="75%"}
-knitr::include_graphics("Outputs/Maps/temporal/Names2_1990-2000.png")
+```{r results = 'asis'}
+cat("Between 1990 and 2000 within the corpus, there are",
+    nrow(b2000),
+    "countries or territories represented with a total of",
+    sum(b2000$Names1), 
+    "identifications,",
+    floor(sum(b2000$Names1)/sum(b1990$Names1)),
+    "times larger than the number of identifications before 1990."
+)
+```
+   
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+ggplot(poly_2000) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    limits = c(0, 17091),
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    breaks = c(4000,8000,12000,16000), 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  labs(fill = "Density of Institutions", title = "1990 - 2000") 
 ```
 
 #### 2000 - 2010 {.unnumbered}
 
-Between 2000 and 2010 within the corpus, there are 179 countries or territories represented with a total of 26,476 identifications of a country or territory, an order of magnitude larger than pre 2000.
-
-```{r, fig.align = 'center', out.width="75%"}
-knitr::include_graphics("Outputs/Maps/temporal/Names2_2000-2010.png")
+```{r results = 'asis'}
+cat("Between 2000 and 2010 within the corpus, there are",
+    nrow(b2010),
+    "countries or territories represented with a total of",
+    sum(b2010$Names1), 
+    "identifications,",
+    floor(sum(b2010$Names1)/sum(b2000$Names1)),
+    "times larger than the number of identifications before 2000."
+)
+```
+  
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+ggplot(poly_2010) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    limits = c(0, 17091),
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    breaks = c(4000,8000,12000,16000), 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  labs(fill = "Density of Institutions", title = "2000 - 2010") 
 ```
 
 #### Post 2010 {.unnumbered}
 
-2010 and later within the corpus, there are 207 countries or territories represented with a total of 108,101 identifications of a country or territory.
-
-```{r, fig.align = 'center', out.width="75%"}
-knitr::include_graphics("Outputs/Maps/temporal/Names2_2010-2020.png")
+```{r results = 'asis'}
+cat("2010 and later within the corpus, there are",
+    nrow(b2020),
+    "countries or territories represented with a total of",
+    sum(b2020$Names1), 
+    "identifications,",
+    floor(sum(b2020$Names1)/sum(b2010$Names1)),
+    "times larger than the number of identifications before 2010."
+)
+```
+  
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+ggplot(poly_2020) + # Names 1 all studies 
+  geom_sf(data = grid, 
+          colour = "gray60",
+          linetype = "dashed") +
+  geom_sf(aes(fill = Names1, colour = NULL)) +
+  annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
+  annotate("text", x = -18000000, y = 3200000, label = "30° N", size = 3) +
+  annotate("text", x = -15500000, y = 6200000, label = "60° N", size = 3) +
+  annotate("text", x = -18000000, y = -3200000, label = "30° S", size = 3) +
+  annotate("text", x = -15500000, y = -6200000, label = "60° S", size = 3) +
+  annotate("text", x = 0, y = 9500000, label = "0°", size = 3) +
+  annotate("text", x = -3000000, y = 9500000, label = "60°W", size = 3) +
+  annotate("text", x = 3000000, y = 9500000, label = "60°E", size = 3) +
+  annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
+  annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
+  scale_fill_gradient(
+    limits = c(0, 17091),
+    low = "#DEEBF7",
+    high = "#08519C",
+    space = "Lab",
+    na.value = "grey",
+    aesthetics = "fill",
+    breaks = c(4000,8000,12000,16000), 
+    guide = guide_colorbar(title.position = "top",
+                           title.hjust = .5,
+                           barwidth = 10, 
+                           barheight = 0.5
+    )) +
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(size = 12),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  labs(fill = "Density of Institutions", title = "Post 2010")
 ```
 
 # Indicator Analysis
@@ -1194,7 +1621,7 @@ The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were used al
 
 ## Selection of Indicators
 
-We used all the most recent year of the IPBES Core Indicators available within the [country dataset](https://doi.org/10.5281/zenodo.4439411) except for two indicators, Countries/Regions with Active NBSAP and Category 1 nations in CTIES, as these are binary in the dataset and would not be compatible with the following analysis. We selected a specific category from the indicators with multiple categories. For example, for the indicator "Area of forest production under FSC and PEFC certification" we chose the FSC certification area and not the PEFC certification area.
+We used all of the IPBES Core Indicators available within the [country dataset](https://doi.org/10.5281/zenodo.4439411) except for two indicators, Countries/Regions with Active NBSAP and Category 1 nations in CTIES, as these are binary in the dataset and would not be compatible with the following analysis. We selected a specific category from the indicators with multiple categories and the most recent year available within the dataset. For example, for the indicator "Area of forest production under FSC and PEFC certification" we chose the FSC certification area and not the PEFC certification area for 2016.
 
 A set of other indicators were included in the analysis to expand the coverage of socioeconomic variables. We included the [human development index (HDI)](http://hdr.undp.org/en/indicators/137506#), [average harmonized learning outcomes score](https://ourworldindata.org/grapher/learning-outcomes-vs-gdp-per-capita), [gross domestic product (GDP)](http://www.fao.org/faostat/en/#data/MK), [corruption perception index (CPI)](https://www.transparency.org/en/cpi/2020/index/nzl), and [population](http://www.fao.org/faostat/en/#data/OA).
 
@@ -1473,7 +1900,7 @@ df <- df %>%
          "Trends in Forest Extent" = "Trends in forest extent")
 ```
 
-```{r, fig.align='center', fig.width=8, fig.height=8, dpi=300, cache=TRUE, fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
+```{r, fig.align='center', fig.width=9, fig.height=8, dpi=300, cache=TRUE, fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
  #### Correlation Analysis ####
 # calculate correlations 
 res1 <- rcorr(as.matrix(df), type = "pearson") # Only linear relationships 
@@ -1508,7 +1935,7 @@ corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black", tl.s
 
 ## Individual Trend Analysis {.tabset .tabset-pills}
 
-The individual trends between each indicator and the number of studies and number of funding institutions are shown here for the entire corpus. For each indicator, there are two four panel figures with the top figure showing the trends with the raw values, and the bottom figure displaying the trends with log transformed x-axis values.
+The individual trends between each indicator, and the number of studies and number of funding institutions are shown here for the entire corpus. For each indicator, there are two four panel figures with the top figure showing the trends with the raw values, and the bottom figure displaying the trends with log transformed x-axis values.
 
 The dots represent countries within the dataset that have values for both the indicator and valuation atlas. The associated p value of the linear trend model is shown in the corner of the image in red. The trend line is shown in blue and the associated standard error in grey. Please note that the y axis is not necessarily consistent between the four boxes and may include values that aren't actually found in the data to showcase the full extent of the standard error of the trend line.
 
@@ -1522,7 +1949,7 @@ There are some broad narratives emerge from this analysis:
 
 Some contradictions between these single variable narratives exist, such as more ecosystem services/NCP assessments carried out in countries with a lower protected area effectiveness index, and in countries with a higher species protection index, while these are significantly negatively correlated across countries. There is a knowledge gap and no robust understanding can be concluded on this.
 
-For each figure the panels are arranged accordingly:
+For each figure the panels are arranged as follows:
 
 -   Density of studies (top-left) is the number of valuation studies for each country or territory in the corpus
 
