@@ -27,6 +27,8 @@ library(sf)
 
 The maps and analyses in this section are based on a corpus of 79,040 studies in the published scientific literature. The corpus is shared between chapter 3 and 4 of the values assessment. For more information about the corpus see IPBES VA Chapter 3. Systematic review on Method Families (<https://doi.org/10.5281/zenodo.4404436>) and IPBES VA Chapter 4. Systematic review on valuation uptake (<https://doi.org/10.5281/zenodo.4391335>).
 
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 # Georeferencing the Corpus
 
 To identify country names in the corpus of literature a two step approach was used. First, we wanted to understand where studies were conducted and searched the title, abstract, and keywords of each paper for country names. Second, to understand where the funding organizations were located we searched the affiliations, acknowledgments, and funding text for country names.
@@ -284,6 +286,8 @@ plot1_log <- ggplot(poly) + # Names 2 log all studies
 plot_grid(plot1, plot1_log, labels = "auto", ncol = 1)
 ```
 
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### Before 2010 {.unnumbered}
 
 Showcases the number of valuation studies conducted within each country or territory in the dataset **before 2010**. Please note that the scales are not consistent between maps.
@@ -377,7 +381,9 @@ plotC_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
 
 plot_grid(plotC, plotC_log, labels = "auto", ncol = 1)
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### After 2010 {.unnumbered}
 
 Showcases the number of valuation studies conducted within each country or territory in the **dataset from 2010**. Please note that the scales are not consistent between maps.
@@ -471,7 +477,9 @@ plotA_log <- ggplot(poly_2010) + # Names 2 log all studies
 
 plot_grid(plotA, plotA_log, labels = "auto", ncol = 1)
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 ### Density of organizations {.tabset .tabset-pills}
 
 #### All {.unnumbered}
@@ -572,7 +580,9 @@ plot2_log <- ggplot(poly) + # Names 2 log all studies
 
 plot_grid(plot2, plot2_log, labels = "auto", ncol = 1)
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### Before 2010 {.unnumbered}
 
 Showcases the number of studies which reference the particular country within the affiliations, acknowledgments, or funding text for the studies in the dataset **before 2010** as a proxy for organizations which are conducing the research in this time period. Please note that the scales are not consistent between maps.
@@ -667,7 +677,9 @@ plotD_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
 
 plot_grid(plotD, plotD_log, labels = "auto", ncol = 1)
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### After 2010 {.unnumbered}
 
 Showcases the number of studies which reference the particular country or territory within the affiliations, acknowledgments, or funding text for the studies in the dataset **from 2010** as a proxy for organizations which are conducing the research in this time period. Please note that the scales are not consistent between maps.
@@ -761,7 +773,9 @@ plotB_log <- ggplot(poly_2010) + # Names 2 log all studies
 
 plot_grid(plotB, plotB_log, labels = "auto", ncol = 1)
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 ### Summarized by region {.tabset .tabset-pills}
 
 Europe and Central Asia region has the highest density of organizations, but comes in third for the highest density of studies. In contrast, the Americas region comes in first for the highest density of studies and second for organizations.
@@ -1067,7 +1081,10 @@ plot_1and2_ratio <- ggplot(poly) + # Names 2 log all studies
 
 plot_1and2_ratio
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
+    
 It is clear that there is a significant positive linear relationship between the density of studies and organizations. It is important to note that there were many more identified countries for organizations than location of studies.
 
 ```{r names1/names2, fig.height = 6, fig.width = 8, fig.align = 'center', fig.cap = "Density of studies vs density of organizations", message = F, warning = F}
@@ -1214,7 +1231,9 @@ ggplot(poly_1990) + # Names 1 all studies
         plot.title = element_text(hjust = 0.5, face = "bold")) +
   labs(fill = "Density of Studies", title = "Pre 1990")
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### 1990 - 2000 {.unnumbered}
 
 ```{r results = 'asis'}
@@ -1264,7 +1283,9 @@ ggplot(poly_2000) + # Names 1 all studies
         plot.title = element_text(hjust = 0.5, face = "bold")) +
   labs(fill = "Density of Studies", title = "1990 - 2000") 
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### 2000 - 2010 {.unnumbered}
 
 ```{r results = 'asis'}
@@ -1314,7 +1335,9 @@ ggplot(poly_2010) + # Names 1 all studies
         plot.title = element_text(hjust = 0.5, face = "bold")) +
   labs(fill = "Density of Studies", title = "2000 - 2010")
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### Post 2010 {.unnumbered}
 
 ```{r results = 'asis'}
@@ -1364,7 +1387,9 @@ ggplot(poly_2020) + # Names 1 all studies
         plot.title = element_text(hjust = 0.5, face = "bold")) +
   labs(fill = "Density of Studies", title = "Post 2010")
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 ### Geographic density of organizations {.tabset .tabset-pills}
 
 Additionally, we explored how the density of valuation organizations has changed through time throughout the last four decades. No data is displayed in gray.
@@ -1464,7 +1489,9 @@ ggplot(poly_1990) + # Names 1 all studies
         plot.title = element_text(hjust = 0.5, face = "bold")) +
   labs(fill = "Density of Organizations", title = "Pre 1990") 
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### 1990 - 2000 {.unnumbered}
 
 ```{r results = 'asis'}
@@ -1514,7 +1541,9 @@ ggplot(poly_2000) + # Names 1 all studies
         plot.title = element_text(hjust = 0.5, face = "bold")) +
   labs(fill = "Density of Organizations", title = "1990 - 2000") 
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### 2000 - 2010 {.unnumbered}
 
 ```{r results = 'asis'}
@@ -1564,7 +1593,9 @@ ggplot(poly_2010) + # Names 1 all studies
         plot.title = element_text(hjust = 0.5, face = "bold")) +
   labs(fill = "Density of Organizations", title = "2000 - 2010") 
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 #### Post 2010 {.unnumbered}
 
 ```{r results = 'asis'}
@@ -1614,7 +1645,9 @@ ggplot(poly_2020) + # Names 1 all studies
         plot.title = element_text(hjust = 0.5, face = "bold")) +
   labs(fill = "Density of Organizations", title = "Post 2010")
 ```
-
+  
+*The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
+  
 # Indicator Analysis
 
 The [IPBES Core Indicators](https://doi.org/10.5281/zenodo.4439411) were used alongside a chosen set of other relevant indicators to understand geographic trends between density of valuation studies and how they relate to biological and socioeconomic indicators.
