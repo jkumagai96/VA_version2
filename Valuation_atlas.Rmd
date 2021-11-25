@@ -1840,7 +1840,7 @@ df <- df %>%
          "Trends in Forest Extent" = "Trends in forest extent")
 ```
 
-```{r, fig.align='center', fig.width=8, fig.height=8, dpi=300, cache=TRUE, fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
+```{r, fig.align='center', fig.width=10, fig.height=8, dpi=300, cache=TRUE, fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
 #### Correlation Analysis ####
 # calculate correlations 
 res1 <- rcorr(as.matrix(df), type = "pearson") # Only linear relationships 
@@ -1869,7 +1869,8 @@ data_n <- res1$n %>%
 data_n <- data_n[-c(1:4), ]
 
 # plot rectangular correlation plot
-corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black",tl.srt = 45,
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, cl.cex = .8, cl.align.text = "l",
+          tl.col="black",tl.srt = 45,
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") 
 ```
   
@@ -1933,7 +1934,7 @@ df <- df %>%
          "Trends in Forest Extent" = "Trends in forest extent")
 ```
 
-```{r, fig.align='center', fig.width=9, fig.height=8, dpi=300, cache=TRUE, fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
+```{r, fig.align='center', fig.width=10, fig.height=8, dpi=300, cache=TRUE, fig.cap = "Pearson correlations of geographic valuation studies and indicators"}
  #### Correlation Analysis ####
 # calculate correlations 
 res1 <- rcorr(as.matrix(df), type = "pearson") # Only linear relationships 
@@ -1962,7 +1963,7 @@ data_n <- res1$n %>%
 data_n <- data_n[-c(1:4), ]
 
 # plot rectangular correlation plot
-corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, tl.col="black", tl.srt = 45, 
+corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, cl.cex = .8, cl.align.text = "l", tl.col="black", tl.srt = 45, 
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 ```
 
