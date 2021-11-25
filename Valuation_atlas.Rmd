@@ -1869,9 +1869,15 @@ data_n <- res1$n %>%
 data_n <- data_n[-c(1:4), ]
 
 # plot rectangular correlation plot
-corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, cl.cex = .8, cl.align.text = "l",
-          tl.col="black",tl.srt = 45,
-         p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") 
+scalebluered <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", 
+      "#F4A582", "#FDDBC7", "#FFFFFF", "#D1E5F0", "#92C5DE", 
+      "#4393C3", "#2166AC", "#053061"))(200)
+
+corrplot(as.matrix(data_r), is.corr = TRUE, cl.pos = 'n', tl.col="black", tl.srt = 45, 
+         p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
+
+colorlegend(scalebluered , c(seq(-1,1,len = 11)), align = 'l', vertical = TRUE, addlabels = TRUE,
+            xlim=c(5,6), ylim=c(3,28))
 ```
   
 The same pearson correlation analysis with the indicators was conducted on the log of the number of studies in each country or territory and the log of the number of studies funded from each country.
@@ -1963,8 +1969,15 @@ data_n <- res1$n %>%
 data_n <- data_n[-c(1:4), ]
 
 # plot rectangular correlation plot
-corrplot(as.matrix(data_r), is.corr = FALSE, cl.ratio = .6, cl.cex = .8, cl.align.text = "l", tl.col="black", tl.srt = 45, 
+scalebluered <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", 
+      "#F4A582", "#FDDBC7", "#FFFFFF", "#D1E5F0", "#92C5DE", 
+      "#4393C3", "#2166AC", "#053061"))(200)
+
+corrplot(as.matrix(data_r), is.corr = TRUE, cl.pos = 'n', tl.col="black", tl.srt = 45, 
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
+
+colorlegend(scalebluered ,c(seq(-1,1,len = 11)), align = 'l', vertical = TRUE, addlabels = TRUE,
+            xlim=c(5,6), ylim=c(3,28))
 ```
 
 ## Individual Trend Analysis {.tabset .tabset-pills}
