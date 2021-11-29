@@ -1876,8 +1876,9 @@ scalebluered <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D",
 corrplot(as.matrix(data_r), is.corr = TRUE, cl.pos = 'n', tl.col="black", tl.srt = 45, 
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 
-colorlegend(scalebluered , c(seq(-1,1,len = 11)), align = 'l', vertical = TRUE, addlabels = TRUE,
-            xlim=c(5,6), ylim=c(3,28))
+colorlegend(scalebluered , c(seq(-1,1,len = 11)), align = 'l', vertical = TRUE, addlabels = TRUE, xlim=c(12,14), ylim=c(5,26))
+
+text(c(12.5),c(28),labels="Legend", font = 2, cex = 1.1)
 ```
   
 The same pearson correlation analysis with the indicators was conducted on the log of the number of studies in each country or territory and the log of the number of studies funded from each country.
@@ -1976,8 +1977,9 @@ scalebluered <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D",
 corrplot(as.matrix(data_r), is.corr = TRUE, cl.pos = 'n', tl.col="black", tl.srt = 45, 
          p.mat = as.matrix(data_p), sig.level = 0.01, insig = "blank") # Insignificant correlation are blank
 
-colorlegend(scalebluered ,c(seq(-1,1,len = 11)), align = 'l', vertical = TRUE, addlabels = TRUE,
-            xlim=c(5,6), ylim=c(3,28))
+colorlegend(scalebluered , c(seq(-1,1,len = 11)), align = 'l', vertical = TRUE, addlabels = TRUE, xlim=c(12,14), ylim=c(5,26))
+
+text(c(12.5),c(28),labels="Legend", font = 2, cex = 1.1)
 ```
 
 ## Individual Trend Analysis {.tabset .tabset-pills}
