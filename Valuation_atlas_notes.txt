@@ -1,0 +1,15 @@
+VA Notes
+
+Notes for loading shapefile data for new borders (Starting after ~ Line 120):
+ When not adding st_wrap_dateline, there are multiple artifact lines (probably because they cross the east/west margins of the map) 
+ When adding st_wrap_dateline, the artifact lines are removed 
+ but the borders at the margins of the map are open in some instances (e.g see eastern Russia, western Antarcica)
+
+ Test here whether the outlines look good
+ X <-ggplot()+
+     geom_sf(data = grey_areas, fill = "grey", colour = NA) +
+     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
+     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
+     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
+     geom_sf(data = major_lakes, fill = "white", colour = "gray40")
+ print(X)
