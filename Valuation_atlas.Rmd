@@ -135,19 +135,6 @@ dotted_borders <- st_transform(st_wrap_dateline(dotted_borders), robin_crs)
 major_lakes <- read_sf("Data/Data_Final/Major_Lakes.shp") # dotted lines, color X
 major_lakes <- st_transform(st_wrap_dateline(major_lakes), robin_crs)
 
-# When not adding st_wrap_dateline, there are multiple artifact lines (probably because they cross the east/west margins of the map) 
-# When adding st_wrap_dateline, the artifact lines are removed 
-# but the borders at the margins of the map are open in some instances (e.g see eastern Russia, western Antarcica)
-
-# Test here whether the outlines look good
-# X <-ggplot()+
-#     geom_sf(data = grey_areas, fill = "grey", colour = NA) +
-#     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
-#     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-#     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-#     geom_sf(data = major_lakes, fill = "grey", colour = NA)
-# print(X)
-
 ```
 
 ### Density of studies {.tabset .tabset-pills}
@@ -282,7 +269,7 @@ plot1 <- ggplot(poly) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies") 
 
 # Names 1 Log
@@ -317,7 +304,7 @@ plot1_log <- ggplot(poly) + # Names 2 log all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -388,7 +375,7 @@ plotC <- ggplot(poly_b2010) + # Names 1 all studies before 2010
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies") 
 
 # Plotting Names 1 log 
@@ -423,7 +410,7 @@ plotC_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -494,7 +481,7 @@ plotA <- ggplot(poly_2010) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies") 
 
 # Plotting Names 1 log 
@@ -529,7 +516,7 @@ plotA_log <- ggplot(poly_2010) + # Names 2 log all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -603,7 +590,7 @@ plot2 <- ggplot(poly) + # Names 2 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -642,7 +629,7 @@ plot2_log <- ggplot(poly) + # Names 2 log all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -710,7 +697,7 @@ plotD <- ggplot(poly_b2010) + # Names 2 all studies before 2010
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -749,7 +736,7 @@ plotD_log <- ggplot(poly_b2010) + # Names 2 log all studies before 2010
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -816,7 +803,7 @@ plotB <- ggplot(poly_2010) + # Names 2 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -855,7 +842,7 @@ plotB_log <- ggplot(poly_2010) + # Names 2 log all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations (log)") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -905,7 +892,7 @@ ggplot(n1_region_poly) +
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
-  geom_sf(aes(fill = n), colour = NA) +
+  geom_sf(aes(fill = n), colour = "gray40") +
   annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
   annotate("text", x = -18000000, y = 3200000, label = "30°N", size = 3) +
   annotate("text", x = -15500000, y = 6200000, label = "60°N", size = 3) +
@@ -917,8 +904,8 @@ ggplot(n1_region_poly) +
   annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
   annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
   scale_fill_manual(values = c("#F7FCB9", "#ADDD8E", "#41AB5D", "#006837", "grey")) +
-  geom_sf(data = grey_areas, fill = "grey", colour = NA) +
-  geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+  # geom_sf(data = grey_areas, fill = "grey", colour = NA) +
+  geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -954,7 +941,7 @@ ggplot(n2_region_poly) +
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
-  geom_sf(aes(fill = n), colour = NA) +
+  geom_sf(aes(fill = n), colour = "gray40") +
   annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
   annotate("text", x = -18000000, y = 3200000, label = "30°N", size = 3) +
   annotate("text", x = -15500000, y = 6200000, label = "60°N", size = 3) +
@@ -966,8 +953,8 @@ ggplot(n2_region_poly) +
   annotate("text", x = -8000000, y = 9500000, label = "180°W", size = 3) +
   annotate("text", x = 8000000, y = 9500000, label = "180°E", size = 3) +
   scale_fill_manual(values = c("#DEEBF7", "#9ECAE1", "#4292C6", "#08519C", "grey")) +
-  geom_sf(data = grey_areas, fill = "grey", colour = NA) +
-  geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+  # geom_sf(data = grey_areas, fill = "grey", colour = NA) +
+  geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -1025,7 +1012,7 @@ ggplot(n1_subregion_poly) +
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
-  geom_sf(aes(fill = n), colour = NA) +
+  geom_sf(aes(fill = n), colour = "gray40") +
   annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
   annotate("text", x = -18000000, y = 3200000, label = "30°N", size = 3) +
   annotate("text", x = -15500000, y = 6200000, label = "60°N", size = 3) +
@@ -1049,7 +1036,7 @@ ggplot(n1_subregion_poly) +
                            barheight = 0.5
     )) +
   # geom_sf(data = grey_areas, fill = "grey", colour = NA) +
-  geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+  geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -1095,7 +1082,7 @@ ggplot(n2_subregion_poly) +
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
-  geom_sf(aes(fill = n), colour = NA) +
+  geom_sf(aes(fill = n), colour = "gray40") +
   annotate("text", x = -18000000, y = 0, label = "0°", size = 3) +
   annotate("text", x = -18000000, y = 3200000, label = "30°N", size = 3) +
   annotate("text", x = -15500000, y = 6200000, label = "60°N", size = 3) +
@@ -1119,7 +1106,7 @@ ggplot(n2_subregion_poly) +
                            barheight = 0.5
     )) +
   # geom_sf(data = grey_areas, fill = "grey", colour = NA) +
-  geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+  geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -1176,7 +1163,7 @@ plot_1and2_ratio <- ggplot(poly) + # Names 2 log all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Ratio of studies and organizations") +
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(size = 12),
@@ -1337,7 +1324,7 @@ ggplot(poly_1990) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies", title = "Pre 1990")
 ```
   
@@ -1394,7 +1381,7 @@ ggplot(poly_2000) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies", title = "1990 - 2000") 
 ```
   
@@ -1451,7 +1438,7 @@ ggplot(poly_2010) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies", title = "2000 - 2010")
 ```
   
@@ -1508,7 +1495,7 @@ ggplot(poly_2020) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies", title = "Post 2010")
 ```
   
@@ -1615,7 +1602,7 @@ ggplot(poly_1990) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations", title = "Pre 1990") 
 ```
   
@@ -1672,7 +1659,7 @@ ggplot(poly_2000) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations", title = "1990 - 2000") 
 ```
   
@@ -1729,7 +1716,7 @@ ggplot(poly_2010) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations", title = "2000 - 2010") 
 ```
   
@@ -1786,7 +1773,7 @@ ggplot(poly_2020) + # Names 1 all studies
     geom_sf(data = solid_borders, fill= NA, colour = "gray40")+
     geom_sf(data = dashed_borders, fill = NA, colour = "gray40", linetype = "dashed") +
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dashed") +
-    geom_sf(data = major_lakes, fill = "grey", colour = NA) +
+    geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Organizations", title = "Post 2010")
 ```
   
