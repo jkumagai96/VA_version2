@@ -523,6 +523,8 @@ plotA_log <- ggplot(poly_2010) + # Names 2 log all studies
         axis.title = element_blank(),
         legend.position = "bottom")
 
+ggsave(file = "Outputs/Figures/Density_of_studies_after_2010_log.svg", plot = plotA_log, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_after_2010_log.png", plot = plotA_log, width = 7, height = 5, dpi = 600)
 plot_grid(plotA, plotA_log, labels = "auto", ncol = 1)
 ```
   
@@ -980,7 +982,7 @@ Europe and North America disproportionately have the highest density of studies 
 
 #### Density of studies {.unnumbered}
 
-```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
+```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE, message=FALSE}
 ##### Prepare data by subregion #####  
 # Dissolve data by ipbes subregion
 #data_subregion <- regions %>% # this dissolves the data by subregion
@@ -1008,7 +1010,7 @@ names1_subregion_counts <- names1_subregion_counts %>%
 # final join
 n1_subregion_poly <- left_join(data_subregion, names1_subregion_counts, by = "Sub_Region") 
 
-ggplot(n1_subregion_poly) + 
+n1_subregion_poly_plot <- ggplot(n1_subregion_poly) + 
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
@@ -1043,6 +1045,14 @@ ggplot(n1_subregion_poly) +
         axis.title = element_blank(),
         legend.position = "bottom")
 
+n1_subregion_poly_plot
+
+ggsave(file = "Outputs/Figures/Density_of_studies_subregion.svg", plot = n1_subregion_poly_plot, width = 7, height = 5, dpi = 600)
+```
+```{r, include = F}
+png("Outputs/Figures/Density_of_studies_subregion.png", units="in", width=7, height=5, res=600)
+n1_subregion_poly_plot
+dev.off()
 ```
 
 ```{r results='asis'}
@@ -1287,7 +1297,7 @@ cat("Pre 1990 within the corpus, there are",
 ```
   
 ```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
-ggplot(poly_1990) + # Names 1 all studies 
+plot1990 <- ggplot(poly_1990) + # Names 1 all studies 
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
@@ -1326,6 +1336,10 @@ ggplot(poly_1990) + # Names 1 all studies
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dotted") +
     geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies", title = "Pre 1990")
+
+plot1990
+ggsave(file = "Outputs/Figures/Density_of_studies_pre1990.png", plot = plot1990, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_pre1990.svg", plot = plot1990, width = 7, height = 5, dpi = 600)
 ```
   
 *The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
@@ -1344,7 +1358,7 @@ cat("Between 1990 and 2000 within the corpus, there are",
 ```
   
 ```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
-ggplot(poly_2000) + # Names 1 all studies 
+plot2000 <- ggplot(poly_2000) + # Names 1 all studies 
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
@@ -1383,6 +1397,10 @@ ggplot(poly_2000) + # Names 1 all studies
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dotted") +
     geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies", title = "1990 - 2000") 
+
+plot2000
+ggsave(file = "Outputs/Figures/Density_of_studies_1990-2000.png", plot = plot2000, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_1990-2000.svg", plot = plot2000, width = 7, height = 5, dpi = 600)
 ```
   
 *The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
@@ -1401,7 +1419,7 @@ cat("Between 2000 and 2010 within the corpus, there are",
 ```
   
 ```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
-ggplot(poly_2010) + # Names 1 all studies 
+plot2010 <- ggplot(poly_2010) + # Names 1 all studies 
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
@@ -1440,6 +1458,10 @@ ggplot(poly_2010) + # Names 1 all studies
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dotted") +
     geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies", title = "2000 - 2010")
+
+plot2010
+ggsave(file = "Outputs/Figures/Density_of_studies_2000-2010.png", plot = plot2010, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_2000-2010.svg", plot = plot2010, width = 7, height = 5, dpi = 600)
 ```
   
 *The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
@@ -1458,7 +1480,7 @@ cat("From 2010 and later within the corpus, there are",
 ```
   
 ```{r, fig.align='center', fig.height = 5, fig.width = 8, dpi=300, cache=TRUE}
-ggplot(poly_2020) + # Names 1 all studies 
+plot2020 <- ggplot(poly_2020) + # Names 1 all studies 
   geom_sf(data = grid, 
           colour = "gray60",
           linetype = "dashed") +
@@ -1497,6 +1519,11 @@ ggplot(poly_2020) + # Names 1 all studies
     geom_sf(data = dotted_borders, fill = NA, colour = "gray40", linetype = "dotted") +
     geom_sf(data = major_lakes, fill = "white", colour = "gray40") +
   labs(fill = "Density of Studies", title = "Post 2010")
+
+plot2020
+ggsave(file = "Outputs/Figures/Density_of_studies_2010-2020.png", plot = plot2020, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_2010-2020.svg", plot = plot2020, width = 7, height = 5, dpi = 600)
+
 ```
   
 *The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
