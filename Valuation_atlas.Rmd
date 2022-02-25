@@ -523,7 +523,7 @@ plotA_log <- ggplot(poly_2010) + # Names 2 log all studies
         axis.title = element_blank(),
         legend.position = "bottom")
 
-ggsave(file = "Outputs/Figures/Density_of_studies_after_2010_log.svg", plot = plotA_log, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_after_2010_log.pdf", plot = plotA_log, width = 7, height = 5)
 ggsave(file = "Outputs/Figures/Density_of_studies_after_2010_log.png", plot = plotA_log, width = 7, height = 5, dpi = 600)
 plot_grid(plotA, plotA_log, labels = "auto", ncol = 1)
 ```
@@ -1047,7 +1047,7 @@ n1_subregion_poly_plot <- ggplot(n1_subregion_poly) +
 
 n1_subregion_poly_plot
 
-ggsave(file = "Outputs/Figures/Density_of_studies_subregion.svg", plot = n1_subregion_poly_plot, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_subregion.pdf", plot = n1_subregion_poly_plot, width = 7, height = 5)
 ```
 ```{r, include = F}
 png("Outputs/Figures/Density_of_studies_subregion.png", units="in", width=7, height=5, res=600)
@@ -1339,7 +1339,7 @@ plot1990 <- ggplot(poly_1990) + # Names 1 all studies
 
 plot1990
 ggsave(file = "Outputs/Figures/Density_of_studies_pre1990.png", plot = plot1990, width = 7, height = 5, dpi = 600)
-ggsave(file = "Outputs/Figures/Density_of_studies_pre1990.svg", plot = plot1990, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_pre1990.pdf", plot = plot1990, width = 7, height = 5)
 ```
   
 *The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
@@ -1400,7 +1400,7 @@ plot2000 <- ggplot(poly_2000) + # Names 1 all studies
 
 plot2000
 ggsave(file = "Outputs/Figures/Density_of_studies_1990-2000.png", plot = plot2000, width = 7, height = 5, dpi = 600)
-ggsave(file = "Outputs/Figures/Density_of_studies_1990-2000.svg", plot = plot2000, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_1990-2000.pdf", plot = plot2000, width = 7, height = 5)
 ```
   
 *The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
@@ -1461,7 +1461,7 @@ plot2010 <- ggplot(poly_2010) + # Names 1 all studies
 
 plot2010
 ggsave(file = "Outputs/Figures/Density_of_studies_2000-2010.png", plot = plot2010, width = 7, height = 5, dpi = 600)
-ggsave(file = "Outputs/Figures/Density_of_studies_2000-2010.svg", plot = plot2010, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_2000-2010.pdf", plot = plot2010, width = 7, height = 5)
 ```
   
 *The designations employed and the presentation of material on the maps shown here do not imply the expression of any opinion whatsoever on the part of the IPBES concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.*
@@ -1522,7 +1522,7 @@ plot2020 <- ggplot(poly_2020) + # Names 1 all studies
 
 plot2020
 ggsave(file = "Outputs/Figures/Density_of_studies_2010-2020.png", plot = plot2020, width = 7, height = 5, dpi = 600)
-ggsave(file = "Outputs/Figures/Density_of_studies_2010-2020.svg", plot = plot2020, width = 7, height = 5, dpi = 600)
+ggsave(file = "Outputs/Figures/Density_of_studies_2010-2020.pdf", plot = plot2020, width = 7, height = 5)
 
 ```
   
