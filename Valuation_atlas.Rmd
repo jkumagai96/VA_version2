@@ -1048,6 +1048,8 @@ n1_subregion_poly_plot <- ggplot(n1_subregion_poly) +
 n1_subregion_poly_plot
 
 ggsave(file = "Outputs/Figures/Density_of_studies_subregion.pdf", plot = n1_subregion_poly_plot, width = 7, height = 5)
+
+ggsave(file = "Outputs/Figures/Density_of_studies_subregion_big.pdf", plot = n1_subregion_poly_plot, width = 14, height = 10)
 ```
 ```{r, include = F}
 png("Outputs/Figures/Density_of_studies_subregion.png", units="in", width=7, height=5, res=600)
